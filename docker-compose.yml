@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine #run the official postgres image(v16) with alpine linux for a smaller image size
+    environment: # environment variables to configure the postgres server with a database name, user and password
+      POSTGRES_DB: scribblitz_db
+      POSTGRES_USER: scribblitz
+      POSTGRES_PASSWORD: scribblitz_dev_secret
+    ports: #forward the host port 5432 to the container port 5432 [HOST_PORT : CONTAINER_PORT]
+      - "5432:5432" 
+    volumes: #persist the postgres data in a named volume to prevent data loss when the container is removed
+      - postgres_data:/var/lib/postgresql/data 
+    healthcheck: #check if the postgres server is ready to accept connections at an interval of 10 seconds, with a timeout of 5 seconds and up to 5 retries
+      test: ["CMD-SHELL", "pg_isready -U scribblitz"] #use CMD-SHELL to run the pg_isready command with the specified user  
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine #run the official redis image(v7) with alpine linux for a smaller image size
+    ports: #forward the host port 6379 to the container port 6379 [HOST_PORT : CONTAINER_PORT]
+      - "6379:6379" 
+    command: redis-server --appendonly yes #run the redis server with the append-only option enabled to persist data to disk
+    volumes: #persist the redis data in a named volume to prevent data loss when the container is removed
+      - redis_data:/data
+    healthcheck: #check if the redis server is ready to accept connections at an interval of 10 seconds, with a timeout of 5 seconds and up to 5 retries
+      test: ["CMD", "redis-cli", "ping"] #use CMD to run the redis-cli command with the ping argument to check if the server is responsive
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#define the named volumes for postgres and redis data persistence that are used in the services above 
+#(by convention we define the volumes at the end of the file, but they can be defined anywhere in the file
+#as long as they are referenced correctly)
+volumes: 
+  postgres_data:
+  redis_data:
+    
