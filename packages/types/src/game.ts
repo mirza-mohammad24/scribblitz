@@ -1,6 +1,6 @@
 /**
- * This file defines the types and interfaces related to the game state, player information, and room configuration
- * for scribblitz.
+ * This file defines the types and interfaces related to the game state, player information,room configuration
+ * and room state for scribblitz.
  */
 
 /**
@@ -60,4 +60,27 @@ export interface RoomConfig {
   drawTimeSeconds: number;
   mode: 'standard' | 'team-battle'; //which game mode to play
   customWordList?: string[]; // Optional custom word list for the game (provided by the host)
+}
+
+/**
+ * RoomState interface represents the overall state of a game room, including the room code,
+ * host ID, list of players and so on.
+ */
+export interface RoomState {
+  roomCode: string;
+  hostId: string;
+  players: Map<string, Player>;
+  config: RoomConfig;
+  gameState: GameState;
+  currentRound: number;
+  currentDrawerId: string | null;
+  currentWord: string | null;
+  wordChoices: string[] | null;
+  correctGuessers: Set<string>;
+  roundStartTime: number | null;
+  roundTimer: ReturnType<typeof setTimeout> | null;
+  strokeStreamKey: string;
+  teamA?: Set<string>;
+  teamB?: Set<string>;
+  roundWinner?: 'team-a' | 'team-b' | null;
 }
