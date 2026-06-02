@@ -16,9 +16,11 @@
   "dependencies": {
     "@scribblitz/shared": "workspace:^",
     "@scribblitz/types": "workspace:^",
+    "@scribblitz/validation": "workspace:^",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "nanoid": "^5.1.11",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {

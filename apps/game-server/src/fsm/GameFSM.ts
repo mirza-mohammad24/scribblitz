@@ -31,21 +31,39 @@ export class GameFSM {
     this.state = initialState;
   }
 
-  //Other part of the server can ask which is the current state
+  /**
+   * Other part of the server can ask which is the current state
+   * @param none
+   * @returns The current game state
+   */
   getState(): GameState {
     return this.state;
   }
 
-  //Other part of the server can ask if we are in a specific state
+  /**
+   * This method checks if the current state matches a given state.
+   * @param state
+   * @returns boolean indicating if the current state matches the provided state
+   */
   isState(state: GameState): boolean {
     return this.state === state;
   }
-  //Checks if a requested state change is in our allowed transactions
+  /**
+   * This method checks if a requested state change is in our allowed transactions.
+   * @param nextState
+   * @returns boolean indicating if the transition is allowed
+   */
   canTransition(nextState: GameState): boolean {
     return LEGAL_TRANSITIONS[this.state].includes(nextState);
   }
 
-  //FSM Changes state if it is allowed or throws an error
+  /**
+   * This method performs the state transition if it's legal, and calls the onTransition hook for any side effects.
+   * @param nextState
+   * @returns void
+   * @throws Error if the transition is not allowed according to LEGAL_TRANSITIONS
+   *
+   */
   transition(nextState: GameState): void {
     if (!this.canTransition(nextState)) {
       throw new Error(
