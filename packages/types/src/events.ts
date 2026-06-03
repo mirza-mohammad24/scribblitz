@@ -42,4 +42,5 @@ export const ServerEvents = {
   PLAYER_GUESSED: 'player:guessed',
   EMOTE_BROADCAST: 'emote:broadcast',
   GLOW_UP_READY: 'glow_up:ready',
+  ERROR: 'server:error',
 } as const;
