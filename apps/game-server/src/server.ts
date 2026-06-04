@@ -71,7 +71,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('disconnecting', () => {
     console.log(`[Socket] Disconnected: ${userId} | Remaining: ${io.sockets.sockets.size - 1}`);
 
-    const roomCode = socket.data.roomCode; //added in handler
+    const roomCode = socket.data.roomCode; //added in handler while adding player to room
     if (roomCode && userId) {
       //Till phase 1 we are removing them.
       //In later phases we will add a grace period to allow for reconnect

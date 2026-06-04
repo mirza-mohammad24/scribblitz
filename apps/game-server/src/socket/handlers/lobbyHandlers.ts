@@ -60,6 +60,9 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   const roomState: ServerRoomState = roomManager.createRoom(userId, payload.config || {});
   roomManager.addPlayer(roomState.roomCode, player);
 
+  //logging for debugging and analytics
+  console.log(`[Lobby] User ${payload.username} created room: ${roomState.roomCode}`);
+
   //Socket infra
   socket.join(roomState.roomCode);
   socket.data.roomCode = roomState.roomCode;
@@ -97,6 +100,7 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
     return;
   }
 
+  //Only allow joining if game hasn't started yet
   if (room.getState().gameState !== GameState.LOBBY) {
     emitError(socket, 'INVALID_STATE', 'Game already in progress');
     return;
