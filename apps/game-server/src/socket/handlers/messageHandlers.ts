@@ -12,7 +12,7 @@ import { ServerEvents, GameState } from '@scribblitz/types';
 import { chatMessageSchema } from '@scribblitz/validation';
 import { ServerRoomState } from '../../rooms/Room';
 import { roomManager } from '../../rooms/RoomManager';
-import { getSocketUserId } from '../utils/getSocketUserId';
+import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { endRound } from '../../fsm/roundManager';
 
 /**
@@ -40,7 +40,7 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
   if (!result.success) return; //Silently drop invalid payloads
 
   const roomCode = socket.data.roomCode;
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
   if (!roomCode || !userId) return;
 
   const room = roomManager.getRoom(roomCode);
@@ -79,6 +79,7 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
   if (correctWord && guess === correctWord) {
     //CORRECT GUESS
     state.correctGuessers.add(userId);
+    player.hasGuessedCorrectly = true; // Keep Player object in sync with correctGuessers Set
 
     //Time-Decay Scoring Math (Early guesser gets more time)
     const timeElapsed = Date.now() - (state.roundStartTime || Date.now());

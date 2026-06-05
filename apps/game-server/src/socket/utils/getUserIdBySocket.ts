@@ -10,7 +10,7 @@ import { Socket } from 'socket.io';
  * @param socket
  * @returns The user ID if found, otherwise null.
  */
-export function getSocketUserId(socket: Socket): string | null {
+export function getUserIdBySocket(socket: Socket): string | null {
   //socket.data.userId is guaranteed to exist because of our Express middleware
   const userId = socket.data.userId;
 

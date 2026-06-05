@@ -11,6 +11,7 @@ import { getWordPool, pickRandomWords, getAvailableWordPool } from '../words/wor
 import { Server } from 'socket.io';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 import { generateHint, getRandomHiddenIndex } from '../utils/hintUtils';
+import { getSocketByUserId } from '../socket/utils/getSocketByUserId';
 
 /**
  * Helper utility to pick a random item from an array. Returns undefined if the array is empty.
@@ -79,6 +80,10 @@ export const startNextRound = (io: Server, roomCode: string): void => {
   state.currentRound++;
   state.correctGuessers.clear();
   state.roundWinner = null;
+  // Reset per-round guess flag on every player so serialized state is always accurate
+  state.players.forEach((p) => {
+    p.hasGuessedCorrectly = false;
+  });
 
   //Select the next drawer (simple round-robin based on map insertion order)
   const playerIds = [...state.players.keys()];
@@ -94,6 +99,17 @@ export const startNextRound = (io: Server, roomCode: string): void => {
     totalRounds: state.config.roundCount,
     drawerId: state.currentDrawerId,
   });
+
+  // Send word choices exclusively to the drawer's socket.
+  // If the drawer is disconnected, we emit nothing here — the AFK timer below
+  // will auto-select a word after WORD_SELECTION_TIMEOUT_SECONDS, so the game
+  // continues without any special handling needed.
+  if (state.currentDrawerId) {
+    const drawerSocket = getSocketByUserId(io, state.currentDrawerId);
+    if (drawerSocket) {
+      drawerSocket.emit(ServerEvents.WORD_CHOICES, { words: state.wordChoices });
+    }
+  }
 
   //CRITICAL: Always clear existing timers before starting a new one
   state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
@@ -269,20 +285,14 @@ export const endGame = (io: Server, roomCode: string): void => {
 
   const state = room.getState();
 
+  if (state.gameState === GameState.GAME_END) return; //Guard against multiple game end calls
+
   // FULL LIFECYCLE CLEANUP: Kill all active timers to prevent any future callbacks from
   // executing after the game has ended intentionally or abruptly due to disconnections
-  if (state.wordSelectionTimer) {
-    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
-  }
-  if (state.drawingTimer) {
-    state.drawingTimer = clearTimer(state.drawingTimer);
-  }
-  if (state.hintTimer) {
-    state.hintTimer = clearIntervalTimer(state.hintTimer);
-  }
-  if (state.intermissionTimer) {
-    state.intermissionTimer = clearTimer(state.intermissionTimer);
-  }
+  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+  state.drawingTimer = clearTimer(state.drawingTimer);
+  state.hintTimer = clearIntervalTimer(state.hintTimer);
+  state.intermissionTimer = clearTimer(state.intermissionTimer);
 
   room.transitionState(GameState.GAME_END);
 

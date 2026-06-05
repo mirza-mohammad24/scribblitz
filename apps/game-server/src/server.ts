@@ -12,7 +12,7 @@ import { handleCreateRoom, handleJoinRoom } from './socket/handlers/lobbyHandler
 import { handleGameStart, handleWordSelect } from './socket/handlers/gameHandlers';
 import { endRound, endGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
-import { getSocketUserId } from './socket/utils/getSocketUserId';
+import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
 interface SocketData {
@@ -67,7 +67,7 @@ IMPORTANT DISTINCTION BETWEEN RECONNECT AND FRESH JOIN:
 - Fresh Join: A user who is connecting to the server for the first time or is not currently associated with any existing room and hence the for loop is skipped. In this case, they will go through the normal lobby flow where they can create a new room or join an existing one by providing a room code. The corresponding lobby handlers (handleCreateRoom and handleJoinRoom) will be called based on the client's emitted event.
 */
 io.on('connection', (socket: Socket) => {
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
   if (!userId) return;
 
   console.log(`[Socket] User Connected: ${userId}`);

@@ -14,7 +14,7 @@ import { roomManager } from '../../rooms/RoomManager';
 import { ServerRoomState } from '../../rooms/Room';
 import { emitError } from '../utils/emitError';
 import { serializeRoom } from '../utils/serializeRoom';
-import { getSocketUserId } from '../utils/getSocketUserId';
+import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 
 /**
  * Handles the creation of a new game room. Validates input,
@@ -41,7 +41,7 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
 
   const payload = result.data;
 
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
 
   if (!userId) {
     emitError(socket, 'UNAUTHORIZED', 'User not authenticated');
@@ -109,7 +109,7 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
     return;
   }
 
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
 
   if (!userId) {
     emitError(socket, 'UNAUTHORIZED', 'User not authenticated');

@@ -1,0 +1,22 @@
+/**
+ * Looks up an active Socket.IO socket instance by the userId stored in socket.data.
+ * This is the inverse of getUserIdBySocket — instead of reading a userId from a known socket,
+ * this finds the socket for a known userId. Used to push targeted events to specific players
+ * (e.g., sending word choices only to the current drawer).
+ */
+import { Server, Socket } from 'socket.io';
+
+/**
+ * Finds and returns the active socket for a given userId.
+ * Returns undefined if the player is not currently connected.
+ * A disconnected drawer is handled gracefully by the AFK word-selection timer.
+ * @param io - The Socket.IO server instance
+ * @param userId - The UUID identifying the player
+ * @returns The active Socket for that player, or undefined if not connected
+ */
+export function getSocketByUserId(io: Server, userId: string): Socket | undefined {
+  for (const [, socket] of io.sockets.sockets) {
+    if (socket.data.userId === userId) return socket;
+  }
+  return undefined;
+}

@@ -9,7 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { roomManager } from '../../rooms/RoomManager';
 import { startGame, selectWord } from '../../fsm/roundManager';
 import { emitError } from '../utils/emitError';
-import { getSocketUserId } from '../utils/getSocketUserId';
+import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { wordSelectSchema } from '@scribblitz/validation';
 
 /**
@@ -21,7 +21,7 @@ import { wordSelectSchema } from '@scribblitz/validation';
  */
 export const handleGameStart = (io: Server, socket: Socket) => () => {
   const roomCode = socket.data.roomCode;
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
   if (!roomCode || !userId) return;
 
   const room = roomManager.getRoom(roomCode);
@@ -57,7 +57,7 @@ export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknow
   }
 
   const roomCode = socket.data.roomCode;
-  const userId = getSocketUserId(socket);
+  const userId = getUserIdBySocket(socket);
   if (!roomCode || !userId) return;
 
   const room = roomManager.getRoom(roomCode);
