@@ -33,6 +33,7 @@ export interface StrokeEvent {
   brushSize: number;
   sessionId: string;
   timestamp: number;
+  roundId: number; // Used to prevent stroke events from being applied to the wrong round in case of timer leaks
 }
 
 /**
@@ -73,13 +74,20 @@ export interface RoomState {
   config: RoomConfig;
   gameState: GameState;
   currentRound: number;
+  roundId: number; //Prevents timer leaks across rounds by providing a way to identify stale timers
   currentDrawerId: string | null;
   currentWord: string | null;
+  revealedHintIndexes: Set<number>;
+  currentHint: string;
   wordChoices: string[] | null;
+  usedWords: string[]; //Tracks all words used in previous rounds to prevent repeats
   correctGuessers: Set<string>;
   roundStartTime: number | null;
-  roundTimer: ReturnType<typeof setTimeout> | null;
   strokeStreamKey: string;
+  wordSelectionTimer: ReturnType<typeof setTimeout> | null;
+  drawingTimer: ReturnType<typeof setTimeout> | null;
+  intermissionTimer: ReturnType<typeof setTimeout> | null;
+  hintTimer: ReturnType<typeof setInterval> | null;
   teamA?: Set<string>;
   teamB?: Set<string>;
   roundWinner?: 'team-a' | 'team-b' | null;

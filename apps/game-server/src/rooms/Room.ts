@@ -7,6 +7,7 @@
 import { nanoid } from 'nanoid';
 import { RoomState, Player, RoomConfig, GameState } from '@scribblitz/types';
 import { GameFSM } from '../fsm/GameFSM';
+import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 
 /**
  * ServerRoomState extends the shared RoomState to include the server-side GameFSM.
@@ -47,13 +48,20 @@ export class Room {
       },
       gameState: fsm.getState(),
       currentRound: 0,
+      roundId: 0,
       currentDrawerId: null,
       currentWord: null,
+      usedWords: [],
+      revealedHintIndexes: new Set(),
+      currentHint: '',
       wordChoices: null,
       correctGuessers: new Set(),
       roundStartTime: null,
-      roundTimer: null,
       strokeStreamKey: `strokes:${roomCode}`,
+      wordSelectionTimer: null,
+      drawingTimer: null,
+      intermissionTimer: null,
+      hintTimer: null,
       fsm,
     };
 
@@ -156,8 +164,9 @@ export class Room {
    * after the room is deleted.
    */
   cleanup(): void {
-    if (this.state.roundTimer) {
-      clearTimeout(this.state.roundTimer);
-    }
+    this.state.wordSelectionTimer = clearTimer(this.state.wordSelectionTimer);
+    this.state.drawingTimer = clearTimer(this.state.drawingTimer);
+    this.state.intermissionTimer = clearTimer(this.state.intermissionTimer);
+    this.state.hintTimer = clearIntervalTimer(this.state.hintTimer);
   }
 }

@@ -1,5 +1,7 @@
 /**
- * This file contains Zod schemas for validating lobby-related data, such as creating and joining rooms. These schemas ensure that the data sent from the client to the server adheres to the expected format and constraints, providing a layer of validation before processing the requests.
+ * This file contains Zod schemas for validating lobby-related data, such as creating and joining rooms.
+ * These schemas ensure that the data sent from the client to the server adheres to the expected format
+ * and constraints, providing a layer of validation before processing the requests.
  */
 
 import { z } from 'zod';

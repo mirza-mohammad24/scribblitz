@@ -43,4 +43,5 @@ export const ServerEvents = {
   EMOTE_BROADCAST: 'emote:broadcast',
   GLOW_UP_READY: 'glow_up:ready',
   ERROR: 'server:error',
+  WORD_HINT_UPDATED: 'word:hint_updated',
 } as const;

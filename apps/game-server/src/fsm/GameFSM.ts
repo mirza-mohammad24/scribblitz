@@ -14,12 +14,26 @@ import { GameState } from '@scribblitz/types';
 
 type TransitionMap = Record<GameState, readonly GameState[]>;
 
-//our legal moves
+/**
+ * FSM LEGAL TRANSITIONS MAP
+ * * This map dictates the strict, mathematically enforced pathways our game loop can take.
+ * * 1. THE HAPPY PATH:
+ * Under normal network conditions, the FSM strictly flows sequentially:
+ * LOBBY -> ROUND_STARTING -> DRAWING/PARALLEL_DRAWING -> ROUND_END -> (Repeat or GAME_END).
+ * * 2. THE ABORT HATCH (Rage Quit Handling):
+ * `GAME_END` is explicitly permitted from all active gameplay states.
+ * This is an intentional "Abort Hatch". In multiplayer games, clients can disconnect
+ * (rage quit, power outage) at any millisecond. If the room drops below the minimum
+ * required players mid-round, the server must be able to instantly pull the ripcord,
+ * halt the loop, and safely transition to GAME_END without crashing. Without these
+ * specific pathways, the FSM Bouncer would throw an Illegal Transition Error and
+ * crash the Node server.
+ */
 const LEGAL_TRANSITIONS: TransitionMap = {
   [GameState.LOBBY]: [GameState.ROUND_STARTING],
-  [GameState.ROUND_STARTING]: [GameState.DRAWING, GameState.PARALLEL_DRAWING],
-  [GameState.DRAWING]: [GameState.ROUND_END],
-  [GameState.PARALLEL_DRAWING]: [GameState.ROUND_END],
+  [GameState.ROUND_STARTING]: [GameState.DRAWING, GameState.PARALLEL_DRAWING, GameState.GAME_END],
+  [GameState.DRAWING]: [GameState.ROUND_END, GameState.GAME_END],
+  [GameState.PARALLEL_DRAWING]: [GameState.ROUND_END, GameState.GAME_END],
   [GameState.ROUND_END]: [GameState.ROUND_STARTING, GameState.GAME_END],
   [GameState.GAME_END]: [GameState.LOBBY],
 } as const;
