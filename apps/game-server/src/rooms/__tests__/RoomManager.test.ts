@@ -88,4 +88,44 @@ describe('RoomManager', () => {
     // The room should no longer exist
     expect(roomManager.getRoom(roomCode)).toBeUndefined();
   });
+  // TEST 4: Host Reassignment (The Critical Edge Case)
+  it('should automatically reassign a new host if the current host leaves', () => {
+    const room = roomManager.createRoom('host-A', mockConfig);
+    const state = extractState(room);
+    const roomCode = state.roomCode;
+
+    // Add Host, Player B, and Player C
+    roomManager.addPlayer(roomCode, createMockPlayer('host-A', 'Alice'));
+    roomManager.addPlayer(roomCode, createMockPlayer('player-B', 'Bob'));
+    roomManager.addPlayer(roomCode, createMockPlayer('player-C', 'Charlie'));
+
+    expect(extractState(roomManager.getRoom(roomCode)).hostId).toBe('host-A'); // Confirm initial host
+
+    // The host leaves the room
+    roomManager.removePlayer(roomCode, 'host-A');
+
+    // Confirm that the new host is NOT 'host-A', and is either Bob or Charlie
+    const newHostId = extractState(roomManager.getRoom(roomCode)).hostId;
+    expect(newHostId).not.toBe('host-A');
+    expect(['player-B', 'player-C']).toContain(newHostId);
+  });
+
+  // TEST 5: Duplicate Prevention
+  it('should block the same player ID from joining twice', () => {
+    const room = roomManager.createRoom('host-123', mockConfig);
+    const state = extractState(room);
+    const roomCode = state.roomCode;
+    const p1 = createMockPlayer('p1', 'Alice');
+
+    // Join once
+    expect(roomManager.addPlayer(roomCode, p1).success).toBe(true);
+
+    // Try to join again with the exact same ID
+    const duplicateResult = roomManager.addPlayer(roomCode, p1);
+    expect(duplicateResult.success).toBe(false);
+
+    if (!duplicateResult.success) {
+      expect(duplicateResult.reason).toBe('ALREADY_IN_ROOM');
+    }
+  });
 });
