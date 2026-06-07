@@ -30,6 +30,9 @@ export interface StrokeEvent {
   type: 'draw' | 'erase' | 'fill' | 'clear';
   x: number;
   y: number;
+  lastX: number;
+  lastY: number;
+  strokeId: string;
   color: string;
   brushSize: number;
   sessionId: string;

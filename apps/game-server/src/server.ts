@@ -11,10 +11,12 @@ import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { handleCreateRoom, handleJoinRoom } from './socket/handlers/lobbyHandlers';
 import { handleGameStart, handleWordSelect } from './socket/handlers/gameHandlers';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
+import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
 import { endRound, endGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
+import { clearTimer, clearIntervalTimer } from './utils/timerCleanUp';
 interface SocketData {
   userId: string;
   roomCode?: string;
@@ -22,6 +24,12 @@ interface SocketData {
 
 const app = express();
 const httpServer = createServer(app);
+
+//Track disconnect timers for each user ID to allow cancellation of previous timer on reconnect
+//or else only the previous timer will keep on running and will provide less time for reconnection
+// on subsequent disconnects
+//This map is used in both the reconnect and disconnect logic in the socket connection handler below
+const disconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 //Socket.io initialized with Strict CORS for Next.js frontend
 const io = new Server<any, any, any, SocketData>(httpServer, {
@@ -90,6 +98,13 @@ io.on('connection', (socket: Socket) => {
 
     if (player && !player.isConnected) {
       player.isConnected = true;
+
+      //Clear the disconnect timeout since the player has reconnected
+      if (disconnectTimers.has(userId)) {
+        clearTimer(disconnectTimers.get(userId) || null);
+        disconnectTimers.delete(userId);
+      }
+
       socket.join(state.roomCode);
       socket.data.roomCode = state.roomCode; //reattach room code to socket session for future reference
 
@@ -114,6 +129,9 @@ io.on('connection', (socket: Socket) => {
   socket.on(ClientEvents.GAME_START, handleGameStart(io, socket));
   socket.on(ClientEvents.WORD_SELECT, handleWordSelect(io, socket));
   socket.on(ClientEvents.CHAT_MESSAGE, handleChatMessage(io, socket));
+
+  //Register the canvas batched stroke events
+  registerCanvasHandlers(io, socket);
 
   // ---------------------------------------------------------
   // DISCONNECT & GRACE PERIOD LOGIC
@@ -161,8 +179,14 @@ io.on('connection', (socket: Socket) => {
       endRound(io, roomCode, 'drawer-disconnected');
     }
 
+    //Clear any existing timer just in case (this handles the case where a user disconnects, reconnects,
+    // and disconnects again within the grace period)
+    if (disconnectTimers.has(userId)) {
+      clearTimer(disconnectTimers.get(userId) || null);
+    }
+
     //60 second cleanup timeout
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       const roomCheck = roomManager.getRoom(roomCode);
       if (!roomCheck) return;
 
@@ -184,7 +208,12 @@ io.on('connection', (socket: Socket) => {
           `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout`,
         );
       }
+
+      disconnectTimers.delete(userId); //Clean up the timer reference from the map after execution
     }, 60_000);
+
+    // Store the disconnect timer so it can be cleared if the user reconnects within the grace period
+    disconnectTimers.set(userId, timer);
   });
 });
 
