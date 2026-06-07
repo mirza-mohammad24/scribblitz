@@ -1,42 +1,25 @@
 'use client';
 
-import { useGameSocket } from '../hooks/useGameSocket';
-import { ClientEvents } from '@scribblitz/types';
+import { DrawingCanvas } from '../components/Canvas/DrawingCanvas';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function Home() {
-  const { socket, isConnected } = useGameSocket();
-
-  const handleCreateQuickGame = () => {
-    if (!socket) return;
-
-    socket.emit(ClientEvents.ROOM_CREATE, {
-      username: 'TestPlayer1',
-    });
-  };
-
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>Scribblitz Server Connection Test</h1>
-
-      <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc' }}>
-        <h2>Status: {isConnected ? '🟢 Connected' : '🔴 Disconnected'}</h2>
-        <p>
-          If this is green, your Next.js app has successfully established a WebSocket connection
-          with your Express server!
-        </p>
+    <main className="flex min-h-screen flex-col items-center p-8 md:p-24 transition-colors duration-300">
+      {/* Header Area */}
+      <div className="w-full max-w-4xl flex justify-between items-center mb-8">
+        <div>
+          {/* Using your new Fredoka font! */}
+          <h1 className="font-scribble text-4xl text-blue-600 dark:text-blue-400">Scribblitz</h1>
+          <p className="text-gray-600 dark:text-gray-400 font-sans mt-2">
+            Canvas Engine Testing Ground
+          </p>
+        </div>
+        <ThemeToggle />
       </div>
 
-      <button
-        onClick={handleCreateQuickGame}
-        disabled={!isConnected}
-        style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
-      >
-        Test: Create Room
-      </button>
-
-      <p style={{ marginTop: '1rem', fontSize: '14px', color: 'gray' }}>
-        (Click the button and check your backend terminal for the log!)
-      </p>
-    </div>
+      {/* The Workspace */}
+      <DrawingCanvas isDrawer={true} roomCode="TEST-123" />
+    </main>
   );
 }
