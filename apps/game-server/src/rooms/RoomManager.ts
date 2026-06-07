@@ -20,7 +20,7 @@ export class RoomManager {
   createRoom(hostId: string, config: Partial<RoomConfig>): ServerRoomState {
     let room: Room;
 
-    // Extremely rare
+    // Extremely rare chance of nanoid collision, but we must guarantee uniqueness of room codes.
     do {
       room = new Room(hostId, config);
     } while (this.rooms.has(room.getRoomCode()));

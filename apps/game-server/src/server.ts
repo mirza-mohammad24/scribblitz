@@ -10,11 +10,11 @@ import { ClientEvents, ServerEvents, GameState } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { handleCreateRoom, handleJoinRoom } from './socket/handlers/lobbyHandlers';
 import { handleGameStart, handleWordSelect } from './socket/handlers/gameHandlers';
+import { handleChatMessage } from './socket/handlers/messageHandlers';
 import { endRound, endGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
-import { handleChatMessage } from './socket/handlers/messageHandlers';
 interface SocketData {
   userId: string;
   roomCode?: string;
@@ -62,14 +62,22 @@ io.use((socket, next) => {
 
 /*
 IMPORTANT DISTINCTION BETWEEN RECONNECT AND FRESH JOIN:
-- Reconnect: A user who was previously connected to a room but got disconnected (e.g., due to network issues) and is now trying to rejoin. In this case, we want to restore their previous state in the room, including their player information and any ongoing game state. The server will check if the user ID matches a player in any existing room (the for loop) and reattach them to that room if found and no lobby handlers are called.
+- Reconnect: A user who was previously connected to a room but got disconnected (e.g., due to network issues) 
+  and is now trying to rejoin. In this case, we want to restore their previous state in the room, including 
+  their player information and any ongoing game state. The server will check if the user ID matches a 
+  player in any existing room (the for loop is used for this purpose) and reattach them to that room if found 
+  and no lobby handlers are called.
 
-- Fresh Join: A user who is connecting to the server for the first time or is not currently associated with any existing room and hence the for loop is skipped. In this case, they will go through the normal lobby flow where they can create a new room or join an existing one by providing a room code. The corresponding lobby handlers (handleCreateRoom and handleJoinRoom) will be called based on the client's emitted event.
+- Fresh Join: A user who is connecting to the server for the first time or is not currently associated with 
+  any existing room and hence the for loop is skipped. In this case, they will go through the normal lobby 
+  flow where they can create a new room or join an existing one by providing a room code. The corresponding 
+  lobby handlers (handleCreateRoom and handleJoinRoom) will be called based on the client's emitted event.
 */
 io.on('connection', (socket: Socket) => {
   const userId = getUserIdBySocket(socket);
   if (!userId) return;
 
+  // Log new connections with user ID for better traceability in logs
   console.log(`[Socket] User Connected: ${userId}`);
 
   // Connection count logging
@@ -91,6 +99,7 @@ io.on('connection', (socket: Socket) => {
         room: serializedRoom,
       });
 
+      // Log reconnection event with user ID and room code for better traceability in logs
       console.log(`[Socket] User Reconnected: ${userId} to Room: ${state.roomCode}`);
 
       //tell the other players in the room that this player has rejoined
@@ -110,6 +119,7 @@ io.on('connection', (socket: Socket) => {
   // DISCONNECT & GRACE PERIOD LOGIC
   // ---------------------------------------------------------
   socket.on('disconnect', () => {
+    // Log disconnections with user ID and remaining connection count for better traceability in logs
     console.log(
       `[Socket] Disconnected: ${userId} | Remaining: ${Math.max(0, io.sockets.sockets.size - 1)}`,
     );
@@ -127,19 +137,27 @@ io.on('connection', (socket: Socket) => {
       player.isConnected = false; //Mark as offline, but keep in memory for potential reconnection within grace period
     }
 
+    // Notify other players in the room that this player has disconnected (but not yet removed from room)
     io.to(roomCode).emit(ServerEvents.PLAYER_LEFT, { playerId: userId });
 
     // --- DRAWER DISCONNECT & MIN PLAYER LOGIC ---
     const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
     const isGameActive =
-      state.gameState === GameState.DRAWING || state.gameState === GameState.ROUND_STARTING;
+      state.gameState === GameState.DRAWING ||
+      state.gameState === GameState.ROUND_STARTING ||
+      state.gameState === GameState.PARALLEL_DRAWING;
 
     if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS && isGameActive) {
-      //Too few players to continue playing
+      //Too few players to continue playing - end the game immediately (server emit is handled in endGame function)
       endGame(io, roomCode);
-    } else if (state.currentDrawerId === userId && isGameActive) {
+    } else if (
+      state.currentDrawerId === userId &&
+      isGameActive &&
+      activePlayers.length >= GAME_CONSTANTS.MIN_PLAYERS
+    ) {
       //Drawer disconnected, but enough players remain to continue to next round -
-      // end current round immediately to trigger drawer rotation
+      //end current round immediately to trigger drawer rotation and keep the game moving
+      // (server emit is handled in endRound function)
       endRound(io, roomCode, 'drawer-disconnected');
     }
 
@@ -154,12 +172,14 @@ io.on('connection', (socket: Socket) => {
       if (p && !p.isConnected) {
         roomManager.removePlayer(roomCode, userId);
 
+        // Notify other players in the room that this player has been permanently removed after grace period
         io.to(roomCode).emit(ServerEvents.PLAYER_LEFT, {
           playerId: userId,
           //indicates to clients that this player has been removed from the room
-          // and cannot rejoin without joining again
+          //and cannot rejoin without joining again
           permanent: true,
         });
+        // Log permanent removal after grace period with user ID and room code for better traceability in logs
         console.log(
           `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout`,
         );

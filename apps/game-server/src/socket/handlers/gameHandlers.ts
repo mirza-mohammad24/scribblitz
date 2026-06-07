@@ -17,7 +17,7 @@ import { wordSelectSchema } from '@scribblitz/validation';
  * @param io
  * @param socket
  * @returns a function that processes the game start logic, including validating the user's permissions
- *  and initiating the game loop through the FSM controller.
+ * and initiating the game loop through the FSM controller.
  */
 export const handleGameStart = (io: Server, socket: Socket) => () => {
   const roomCode = socket.data.roomCode;
@@ -36,7 +36,7 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
     return;
   }
 
-  //Start the game loop
+  //Start the game loop in the FSM controller (roundManager.ts)
   startGame(io, roomCode);
 };
 
@@ -45,7 +45,7 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
  * @param io
  * @param socket
  * @returns a function that processes the word selection logic, including validating the user's permissions
- *  and passing the selected word to the FSM controller.
+ * and passing the selected word to the FSM controller.
  */
 export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknown) => {
   //Strict validation

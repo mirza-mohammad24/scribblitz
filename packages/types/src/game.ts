@@ -21,8 +21,9 @@ export enum GameState {
 /**
  * StrokeEvent interface defines the structure of a drawing event that occurs during the game. It includes
  * information about the type of stroke (drawing, erasing, filling, or clearing), the coordinates of the stroke,
- * the color used, the brush size, the session ID of the player who made the stroke, and a timestamp for
- * when the event occurred. This information is crucial for synchronizing the drawing actions across all
+ * the color used, the brush size, the session ID of the player who made the stroke, a timestamp for
+ * when the event occurred and the round ID to which the stroke belongs.
+ * This information is crucial for synchronizing the drawing actions across all
  * clients in real-time.
  */
 export interface StrokeEvent {
@@ -51,8 +52,8 @@ export interface Player {
 }
 
 /**
- * RoomConfig interface defines the configuration settings for a game room, including the room code, maximum number of players,
- * and other game-specific settings.
+ * RoomConfig interface defines the configuration settings for a game room, including the room code, maximum
+ * number of players, and other game-specific settings.
  */
 export interface RoomConfig {
   roomCode: string;
@@ -74,7 +75,7 @@ export interface RoomState {
   config: RoomConfig;
   gameState: GameState;
   currentRound: number;
-  roundId: number; //Prevents timer leaks across rounds by providing a way to identify stale timers
+  roundId: number; //used in preventing timer leaks across rounds by providing a way to identify stale timers
   currentDrawerId: string | null;
   currentWord: string | null;
   revealedHintIndexes: Set<number>;

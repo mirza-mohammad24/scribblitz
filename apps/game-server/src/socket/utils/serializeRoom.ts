@@ -22,12 +22,10 @@ export function serializeRoom(room: ServerRoomState) {
 
     //Convert set to array
     correctGuessers: Array.from(room.correctGuessers),
-
     revealedHintIndexes: Array.from(room.revealedHintIndexes),
 
     //Optional team serializer
     teamA: room.teamA ? Array.from(room.teamA) : undefined,
-
     teamB: room.teamB ? Array.from(room.teamB) : undefined,
 
     fsm: undefined,

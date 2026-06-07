@@ -44,7 +44,7 @@ export class Room {
         roundCount: 3,
         drawTimeSeconds: 90,
         mode: 'standard',
-        ...config,
+        ...config, // Override defaults with any provided config values
       },
       gameState: fsm.getState(),
       currentRound: 0,
@@ -96,7 +96,6 @@ export class Room {
   // =========================
   // Player Lifecycle
   // =========================
-
   /**
    * Attempts to add a player to the room, enforcing capacity limits and uniqueness.
    * @param player The player object to add.
@@ -111,8 +110,8 @@ export class Room {
       return { success: false, reason: 'ALREADY_IN_ROOM' };
     }
 
+    // Add player to the room's player map
     this.state.players.set(player.id, player);
-
     return { success: true, message: 'ADDED' };
   }
 

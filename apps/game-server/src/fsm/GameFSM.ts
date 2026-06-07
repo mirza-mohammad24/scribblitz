@@ -11,7 +11,6 @@
 import { GameState } from '@scribblitz/types';
 
 //This will map out exactly which states are allowed to transition to which other states.
-
 type TransitionMap = Record<GameState, readonly GameState[]>;
 
 /**
@@ -55,7 +54,7 @@ export class GameFSM {
   }
 
   /**
-   * This method checks if the current state matches a given state.
+   * This method checks if the current state of the fsm matches a given state.
    * @param state
    * @returns boolean indicating if the current state matches the provided state
    */

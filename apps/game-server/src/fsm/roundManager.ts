@@ -245,6 +245,7 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
 
   room.transitionState(GameState.ROUND_END);
 
+  // Emit round end event with correct word, reason, and updated scores
   io.to(roomCode).emit(ServerEvents.ROUND_END, {
     correctWord: state.currentWord,
     reason,
@@ -300,5 +301,6 @@ export const endGame = (io: Server, roomCode: string): void => {
     .sort((a, b) => b.score - a.score)
     .map((p, i) => ({ ...p, rank: i + 1 }));
 
+  // Emit game end event with final standings
   io.to(roomCode).emit(ServerEvents.GAME_END, { standings });
 };

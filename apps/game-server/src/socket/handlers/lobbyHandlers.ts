@@ -68,9 +68,7 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   socket.data.roomCode = roomState.roomCode;
 
   //Client Communication (Feedback of valid creation)
-
   const serializedRoom = serializeRoom(roomState);
-
   socket.emit(ServerEvents.ROOM_CREATED, { room: serializedRoom });
 };
 
