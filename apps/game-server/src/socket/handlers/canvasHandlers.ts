@@ -13,6 +13,7 @@ import { Server, Socket } from 'socket.io';
 import { ClientEvents, ServerEvents } from '@scribblitz/types';
 import { CanvasBatchSchema } from '@scribblitz/validation';
 import { redis } from '../../lib/redis';
+import { roomManager } from '../../rooms/RoomManager';
 
 /**
  * Registers the canvas event handlers for the given Socket.IO server and socket.
@@ -22,6 +23,7 @@ import { redis } from '../../lib/redis';
  * @param socket
  */
 export const registerCanvasHandlers = (io: Server, socket: Socket) => {
+  // Listen for canvas batch updates from clients and handle them accordingly
   socket.on(ClientEvents.CANVAS_BATCH, (payload) => {
     try {
       //1. Validate: Protect the server from malformed or malicious data that could cause crashes or exploits
@@ -32,10 +34,17 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       }
 
       const { strokes } = result.data; //safe data to work with
-      if (strokes.length === 0) return;
+      if (strokes.length === 0) return; //Ignore empty batches
 
       //Extract the roomCode from the first stroke (our frontend hooks attaches it)
-      const roomCode = strokes[0]?.sessionId;
+      const roomCode = strokes[0]?.sessionId as string; //will never be undefined due to validation (line 37)
+
+      //Security fix: Verify that the sender is actually the drawer in the room before accepting their batch
+      const room = roomManager.getRoom(roomCode);
+      if (!room || room.getState().currentDrawerId !== socket.data.userId) {
+        console.warn(`[Security] Blocked unauthorized drawing from ${socket.data.userId}`);
+        return;
+      }
 
       //2. Broadcast Immediately: Send to all other players in the room
       //We do this before Redis to guarantee ultra-low latency for watches
@@ -61,6 +70,52 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       });
     } catch (error) {
       console.error('[Canvas] Handler fatal error: ', error);
+    }
+  });
+
+  // ==========================================
+  // THE TIME MACHINE: Canvas History Sync
+  // ==========================================
+  socket.on(ClientEvents.CANVAS_SYNC_REQUEST, async (payload: { roomCode: string }) => {
+    try {
+      const { roomCode } = payload;
+      if (!roomCode) return;
+
+      const streamKey = `room:${roomCode}:canvas`;
+
+      //1. XRANGE fetched everything from the start ('-') to the end ('+') of the stream
+      const rawStream = await redis.xrange(streamKey, '-', '+');
+
+      if (!rawStream || rawStream.length === 0) {
+        socket.emit(ServerEvents.CANVAS_HISTORY, { strokes: [] });
+        return;
+      }
+
+      //2. Parse the stream entries to extract strokes
+      // ioredis return: [ [ id, [ "batch", "[{...}]" ] ], ... ]\
+      // flatMap automatically merges the array of batches into one giant continuous timeline of strokes
+      const historyStrokes = rawStream.flatMap((entry) => {
+        try {
+          // entry[1] is the array of fields/values. Index 0 is 'batch', Index 1 is the JSON string.
+          const jsonString = entry[1][1];
+
+          if (!jsonString) return [];
+
+          return JSON.parse(jsonString);
+        } catch (err) {
+          console.error('[Redis] Failed to parse history batch: ', err);
+          return []; //Skip malformed entries but keep going
+        }
+      });
+
+      //3. Send the entire history back to the requester
+      socket.emit(ServerEvents.CANVAS_HISTORY, { strokes: historyStrokes });
+      //log it
+      console.log(
+        `[Canvas] Sent history of ${historyStrokes.length} strokes to ${socket.id} for room ${roomCode}`,
+      );
+    } catch (error) {
+      console.error('[Canvas] History sync fatal error: ', error);
     }
   });
 };

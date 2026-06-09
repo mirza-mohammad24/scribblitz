@@ -12,6 +12,7 @@ import { Server } from 'socket.io';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 import { generateHint, getRandomHiddenIndex } from '../utils/hintUtils';
 import { getSocketByUserId } from '../socket/utils/getSocketByUserId';
+import { redis } from '../lib/redis';
 
 /**
  * Helper utility to pick a random item from an array. Returns undefined if the array is empty.
@@ -243,6 +244,14 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   state.drawingTimer = clearTimer(state.drawingTimer);
   state.hintTimer = clearIntervalTimer(state.hintTimer);
 
+  // ==========================================
+  // REDIS CLEANUP: Wipe the canvas history so the Time Machine
+  // doesn't serve overlapping drawings for the next round.
+  // ==========================================
+  redis
+    .del(`room:${roomCode}:canvas`)
+    .catch((err) => console.error(`[Redis] Failed to clear canvas for room ${roomCode}:`, err));
+
   room.transitionState(GameState.ROUND_END);
 
   // Emit round end event with correct word, reason, and updated scores
@@ -294,6 +303,15 @@ export const endGame = (io: Server, roomCode: string): void => {
   state.drawingTimer = clearTimer(state.drawingTimer);
   state.hintTimer = clearIntervalTimer(state.hintTimer);
   state.intermissionTimer = clearTimer(state.intermissionTimer);
+
+  // ==========================================
+  // REDIS CLEANUP: Destroy the canvas history to free server RAM immediately
+  // ==========================================
+  redis
+    .del(`room:${roomCode}:canvas`)
+    .catch((err) =>
+      console.error(`[Redis] Failed to clear canvas for ended room ${roomCode}:`, err),
+    );
 
   room.transitionState(GameState.GAME_END);
 

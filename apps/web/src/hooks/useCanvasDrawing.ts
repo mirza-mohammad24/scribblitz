@@ -69,6 +69,13 @@ export const useCanvasDrawing = (
     }
   }, [canvasRef]);
 
+  useEffect(() => {
+    if (!socket || !roomCode || !canvasRef.current) return;
+
+    //As soon as the canvas exists, ask the server for the past drawing history
+    socket.emit(ClientEvents.CANVAS_SYNC_REQUEST, { roomCode });
+  }, [socket, roomCode, canvasRef]);
+
   /**
    * Draws a stroke on the canvas at the specified coordinates. If isInitial is true, it means this is the
    * start of a new stroke (a dot), otherwise it's a continuation of an existing stroke (a line). The function
@@ -244,5 +251,47 @@ export const useCanvasDrawing = (
     };
   }, [isDrawer, socket]);
 
+  //Receive the full canvas history when we first join as a watcher, or if we refresh while
+  // already in the room. This ensures we can reconstruct the entire drawing state even
+  // if we missed some real-time batches due to network issues or joining late.
+  useEffect(() => {
+    if (!socket || !canvasRef.current) return;
+
+    const handleHistorySync = (payload: { strokes: StrokeEvent[] }) => {
+      const ctx = ctxRef.current;
+      const canvas = canvasRef.current;
+
+      if (!ctx || !canvas || payload.strokes.length === 0) return;
+
+      console.log(`[Canvas] Replaying ${payload.strokes.length} historical strokes`);
+
+      const tempColor = ctx.strokeStyle;
+      const tempSize = ctx.lineWidth;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      payload.strokes.forEach((stroke) => {
+        if (stroke.type === 'draw') {
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.brushSize;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          ctx.beginPath();
+          ctx.moveTo(stroke.lastX, stroke.lastY);
+          ctx.lineTo(stroke.x, stroke.y);
+          ctx.stroke();
+        }
+      });
+      ctx.strokeStyle = tempColor;
+      ctx.lineWidth = tempSize;
+    };
+
+    socket.on(ServerEvents.CANVAS_HISTORY, handleHistorySync);
+
+    return () => {
+      socket.off(ServerEvents.CANVAS_HISTORY, handleHistorySync);
+    };
+  }, [socket, canvasRef]);
   return { handlePointerDown, handlePointerMove, handlePointerUp };
 };

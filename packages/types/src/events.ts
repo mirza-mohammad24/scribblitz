@@ -15,6 +15,7 @@ export const ClientEvents = {
   WORD_SELECT: 'word:select',
   CANVAS_BATCH: 'canvas:batch',
   CANVAS_CLEAR: 'canvas:clear',
+  CANVAS_SYNC_REQUEST: 'canvas:sync_request',
   CHAT_MESSAGE: 'chat:message',
   EMOTE_SEND: 'emote:send',
 } as const;
@@ -36,6 +37,7 @@ export const ServerEvents = {
   CANVAS_BATCH: 'canvas:batch',
   CANVAS_REPLAY: 'canvas:replay',
   CANVAS_CLEARED: 'canvas:cleared',
+  CANVAS_HISTORY: 'canvas:history',
   CHAT_BROADCAST: 'chat:broadcast',
   GUESS_CORRECT: 'guess:correct',
   GUESS_CLOSE: 'guess:close',
