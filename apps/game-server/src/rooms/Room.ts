@@ -57,7 +57,6 @@ export class Room {
       wordChoices: null,
       correctGuessers: new Set(),
       roundStartTime: null,
-      strokeStreamKey: `strokes:${roomCode}`,
       wordSelectionTimer: null,
       drawingTimer: null,
       intermissionTimer: null,

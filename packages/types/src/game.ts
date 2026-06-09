@@ -87,7 +87,6 @@ export interface RoomState {
   usedWords: string[]; //Tracks all words used in previous rounds to prevent repeats
   correctGuessers: Set<string>;
   roundStartTime: number | null;
-  strokeStreamKey: string;
   wordSelectionTimer: ReturnType<typeof setTimeout> | null;
   drawingTimer: ReturnType<typeof setTimeout> | null;
   intermissionTimer: ReturnType<typeof setTimeout> | null;

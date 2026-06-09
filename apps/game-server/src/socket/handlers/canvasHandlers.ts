@@ -10,10 +10,18 @@
  */
 
 import { Server, Socket } from 'socket.io';
-import { ClientEvents, ServerEvents } from '@scribblitz/types';
-import { CanvasBatchSchema } from '@scribblitz/validation';
+import { ClientEvents, ServerEvents, GameState } from '@scribblitz/types';
+import {
+  CanvasBatchSchema,
+  HistoryPayloadSchema,
+  CanvasSyncRequestSchema,
+} from '@scribblitz/validation';
+import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { redis } from '../../lib/redis';
 import { roomManager } from '../../rooms/RoomManager';
+
+// In-memory rate limiting map (cleared on disconnect)
+const syncRateLimitMap = new Map<string, number>();
 
 /**
  * Registers the canvas event handlers for the given Socket.IO server and socket.
@@ -23,6 +31,11 @@ import { roomManager } from '../../rooms/RoomManager';
  * @param socket
  */
 export const registerCanvasHandlers = (io: Server, socket: Socket) => {
+  // Cleanup rate limit on disconnect
+  socket.on('disconnect', () => {
+    syncRateLimitMap.delete(socket.id);
+  });
+
   // Listen for canvas batch updates from clients and handle them accordingly
   socket.on(ClientEvents.CANVAS_BATCH, (payload) => {
     try {
@@ -36,17 +49,26 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       const { strokes } = result.data; //safe data to work with
       if (strokes.length === 0) return; //Ignore empty batches
 
-      //Extract the roomCode from the first stroke (our frontend hooks attaches it)
-      const roomCode = strokes[0]?.sessionId as string; //will never be undefined due to validation (line 37)
+      // SECURITY: Use server-authoritative roomCode, not client sessionId
+      const roomCode = socket.data.roomCode;
+      if (!roomCode) return;
+
+      const room = roomManager.getRoom(roomCode);
+      if (!room) return;
+      const state = room.getState();
 
       //Security fix: Verify that the sender is actually the drawer in the room before accepting their batch
-      const room = roomManager.getRoom(roomCode);
-      if (!room || room.getState().currentDrawerId !== socket.data.userId) {
+      // and the drawing or parallel_drawing is going on. This prevents malicious clients from sending fake
+      // batches to rooms they're not in or when they're not supposed to be drawing.
+      if (
+        state.currentDrawerId !== socket.data.userId ||
+        (state.gameState !== GameState.DRAWING && state.gameState !== GameState.PARALLEL_DRAWING)
+      ) {
         console.warn(`[Security] Blocked unauthorized drawing from ${socket.data.userId}`);
         return;
       }
 
-      //2. Broadcast Immediately: Send to all other players in the room
+      //2. Broadcast Immediately after verification: Send to all other players in the room
       //We do this before Redis to guarantee ultra-low latency for watches
       socket.to(roomCode as string).emit(ServerEvents.CANVAS_BATCH, { strokes });
 
@@ -76,10 +98,33 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
   // ==========================================
   // THE TIME MACHINE: Canvas History Sync
   // ==========================================
-  socket.on(ClientEvents.CANVAS_SYNC_REQUEST, async (payload: { roomCode: string }) => {
+  socket.on(ClientEvents.CANVAS_SYNC_REQUEST, async (payload: unknown) => {
     try {
-      const { roomCode } = payload;
-      if (!roomCode) return;
+      //Zod validation for the sync request payload
+      const result = CanvasSyncRequestSchema.safeParse(payload);
+      if (!result.success) {
+        console.warn(`[Canvas] Invalid sync request from ${socket.id}:`, result.error.errors);
+        return;
+      }
+
+      //Rate limiting
+      const now = Date.now();
+      const lastSync = syncRateLimitMap.get(socket.id) ?? 0;
+      if (now - lastSync < GAME_CONSTANTS.SYNC_RATE_LIMIT_MS) {
+        console.warn(`[Canvas] Sync request rate limit exceeded for ${socket.id}`);
+        return;
+      }
+      syncRateLimitMap.set(socket.id, now);
+
+      const { roomCode } = result.data; //safe data to work with
+
+      //Room membership check: Ensure the requester is actually in the room they're asking to sync
+      if (socket.data.roomCode !== roomCode) {
+        console.warn(
+          `[Security] Blocked unauthorized sync request from ${socket.id} for room ${roomCode}`,
+        );
+        return;
+      }
 
       const streamKey = `room:${roomCode}:canvas`;
 
@@ -98,10 +143,25 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         try {
           // entry[1] is the array of fields/values. Index 0 is 'batch', Index 1 is the JSON string.
           const jsonString = entry[1][1];
-
           if (!jsonString) return [];
 
-          return JSON.parse(jsonString);
+          const parsed = JSON.parse(jsonString);
+
+          //Re validate each batch against the schema to ensure data integrity, even if it
+          //means dropping malformed entries
+          const validatedBatchResult = HistoryPayloadSchema.safeParse(
+            Array.isArray(parsed) ? parsed : [parsed],
+          );
+
+          if (!validatedBatchResult.success) {
+            console.warn(
+              `[Canvas] Invalid batch in history stream for room ${roomCode}:`,
+              validatedBatchResult.error.errors,
+            );
+            return [];
+          }
+
+          return validatedBatchResult.data; //This is the array of strokes from this batch
         } catch (err) {
           console.error('[Redis] Failed to parse history batch: ', err);
           return []; //Skip malformed entries but keep going

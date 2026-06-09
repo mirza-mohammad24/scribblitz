@@ -10,6 +10,8 @@ import { Room, ServerRoomState } from './Room';
 export class RoomManager {
   // Using a Map for O(1) lookups and efficient addition/removal of rooms
   private readonly rooms = new Map<string, Room>();
+  // Additional index to quickly find a player's room without iterating through all rooms
+  private readonly playerRoomIndex = new Map<string, string>();
 
   /**
    * Instantiates a new Room and registers it in the manager. Ensures no room code collisions occur.
@@ -59,12 +61,18 @@ export class RoomManager {
    */
   addPlayer(roomCode: string, player: Player) {
     const room = this.rooms.get(roomCode);
-
     if (!room) {
       return { success: false, reason: 'ROOM_NOT_FOUND' } as const;
     }
 
-    return room.addPlayer(player);
+    const result = room.addPlayer(player);
+
+    // If the player was successfully added, index their ID to the room code for easy lookup on disconnect
+    if (result.success) {
+      this.playerRoomIndex.set(player.id, roomCode);
+    }
+
+    return result;
   }
 
   /**
@@ -75,14 +83,28 @@ export class RoomManager {
    */
   removePlayer(roomCode: string, playerId: string): void {
     const room = this.rooms.get(roomCode);
-
     if (!room) return;
 
+    //Remove from our player-room index
+    this.playerRoomIndex.delete(playerId);
+
+    // Remove the player from the room, and check if the room is now empty and should be deleted
     const shouldDeleteRoom = room.removePlayer(playerId);
 
     if (shouldDeleteRoom) {
       this.deleteRoom(roomCode);
     }
+  }
+
+  /**
+   * O(1) Lookup: Finds a room directly using a player's ID.
+   * Eliminates the need to iterate through all rooms on reconnects.
+   * @param userId The ID of the player.
+   * @returns The Room instance if found, otherwise undefined.
+   */
+  getRoomByUserId(userId: string): Room | undefined {
+    const roomCode = this.playerRoomIndex.get(userId);
+    return roomCode ? this.rooms.get(roomCode) : undefined;
   }
 
   /**

@@ -17,4 +17,5 @@ export const GAME_CONSTANTS = {
   HINT_INTERVAL_SECONDS: 10,
   MAX_RECENT_WORDS: 10,
   WORD_CHOICES_COUNT: 3,
+  SYNC_RATE_LIMIT_MS: 2000, // Minimum time between canvas syncs to prevent abuse
 } as const;

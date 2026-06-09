@@ -27,7 +27,8 @@ export const ServerEvents = {
   ROOM_CREATED: 'room:created',
   ROOM_JOINED: 'room:joined',
   PLAYER_JOINED: 'player:joined',
-  PLAYER_LEFT: 'player:left',
+  PLAYER_DISCONNECTED: 'player:disconnected', //for temporary disconnect (will be able to rejoin the same session 60 sec grace period)
+  PLAYER_LEFT: 'player:left', //for permanent leave (can not rejoin the left session)
   GAME_STATE_CHANGED: 'game:state_changed',
   ROUND_STARTING: 'round:starting',
   WORD_CHOICES: 'word:choices',

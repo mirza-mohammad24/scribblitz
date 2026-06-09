@@ -75,6 +75,22 @@ export const startNextRound = (io: Server, roomCode: string): void => {
 
   const state = room.getState();
 
+  //Guard: Ensure we have enough players to start the next round
+  const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
+  if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS) {
+    // If we don't have enough active players, end the game immediately
+    endGame(io, roomCode);
+    return;
+  }
+
+  // FSM Transition for more than one Round - If we're starting the next round after the first one,
+  // we need to transition the FSM back to ROUND_STARTING
+  if (state.gameState === GameState.ROUND_END) {
+    room.transitionState(GameState.ROUND_STARTING);
+    io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
+      state: GameState.ROUND_STARTING,
+    });
+  }
   state.roundId++;
   const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
 
@@ -148,6 +164,8 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
   if (!room) return;
 
   const state = room.getState();
+  //Guard
+  if (state.gameState !== GameState.ROUND_STARTING) return; //Can only select a word during the ROUND_STARTING phase
   if (!state.wordChoices?.includes(word)) return; //Invalid word choice
 
   const currentRoundId = state.roundId; //capture the current round ID for timer callbacks

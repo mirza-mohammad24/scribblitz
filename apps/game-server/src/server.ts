@@ -73,7 +73,7 @@ IMPORTANT DISTINCTION BETWEEN RECONNECT AND FRESH JOIN:
 - Reconnect: A user who was previously connected to a room but got disconnected (e.g., due to network issues) 
   and is now trying to rejoin. In this case, we want to restore their previous state in the room, including 
   their player information and any ongoing game state. The server will check if the user ID matches a 
-  player in any existing room (the for loop is used for this purpose) and reattach them to that room if found 
+  player in any existing room (using the playerRoomIndex for O(1) lookup) and reattach them to that room if found 
   and no lobby handlers are called.
 
 - Fresh Join: A user who is connecting to the server for the first time or is not currently associated with 
@@ -87,13 +87,14 @@ io.on('connection', (socket: Socket) => {
 
   // Log new connections with user ID for better traceability in logs
   console.log(`[Socket] User Connected: ${userId}`);
-
   // Connection count logging
   console.log(`[Socket] Connected: ${userId} | Total online: ${io.sockets.sockets.size}`);
 
   //RECONNECT LOGIC: Check if user is returning within 60 seconds grace period
-  for (const room of roomManager.getAllRooms()) {
-    const state = room.getState();
+  const existingRoom = roomManager.getRoomByUserId(userId);
+
+  if (existingRoom) {
+    const state = existingRoom.getState();
     const player = state.players.get(userId);
 
     if (player && !player.isConnected) {
@@ -119,7 +120,6 @@ io.on('connection', (socket: Socket) => {
 
       //tell the other players in the room that this player has rejoined
       socket.to(state.roomCode).emit(ServerEvents.PLAYER_JOINED, { player });
-      break; //stop searching after first match (a player should only be in one room at a time)
     }
   }
 
@@ -142,13 +142,12 @@ io.on('connection', (socket: Socket) => {
       `[Socket] Disconnected: ${userId} | Remaining: ${Math.max(0, io.sockets.sockets.size - 1)}`,
     );
 
-    const roomCode = socket.data.roomCode; //added in handler while adding player to room
-    if (!roomCode) return;
+    //Use O(1) lookup to find the room code associated with this user ID safely
+    const activeRoom = roomManager.getRoomByUserId(userId);
+    if (!activeRoom) return; //User was not in any room or already cleaned up after grace period, so we skip the rest of the disconnect logic
 
-    const room = roomManager.getRoom(roomCode);
-    if (!room) return;
-
-    const state = room.getState();
+    const state = activeRoom.getState();
+    const roomCode = state.roomCode; //We can safely get the room code from the active room's state
     const player = state.players.get(userId);
 
     if (player) {
@@ -156,26 +155,24 @@ io.on('connection', (socket: Socket) => {
     }
 
     // Notify other players in the room that this player has disconnected (but not yet removed from room)
-    io.to(roomCode).emit(ServerEvents.PLAYER_LEFT, { playerId: userId });
+    io.to(roomCode).emit(ServerEvents.PLAYER_DISCONNECTED, {
+      playerId: userId,
+      gracePeriodSeconds: 60, //Inform clients about the grace period duration for better UX on their end
+    });
 
     // --- DRAWER DISCONNECT & MIN PLAYER LOGIC ---
-    const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
+
     const isGameActive =
       state.gameState === GameState.DRAWING ||
+      state.gameState === GameState.PARALLEL_DRAWING ||
       state.gameState === GameState.ROUND_STARTING ||
-      state.gameState === GameState.PARALLEL_DRAWING;
+      state.gameState === GameState.ROUND_END;
 
-    if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS && isGameActive) {
-      //Too few players to continue playing - end the game immediately (server emit is handled in endGame function)
-      endGame(io, roomCode);
-    } else if (
-      state.currentDrawerId === userId &&
-      isGameActive &&
-      activePlayers.length >= GAME_CONSTANTS.MIN_PLAYERS
-    ) {
-      //Drawer disconnected, but enough players remain to continue to next round -
-      //end current round immediately to trigger drawer rotation and keep the game moving
-      // (server emit is handled in endRound function)
+    // We DO NOT immediately endGame here to allow the 60-second grace period for watchers.
+    // However, if the DRAWER disconnects, we immediately skip their turn so the game doesn't freeze.
+    // We do this regardless of player count. If the player count is now < 2 (less than MIN PLAYERS),
+    // the startNextRound() function will gracefully catch it and trigger endGame().
+    if (state.currentDrawerId === userId && isGameActive) {
       endRound(io, roomCode, 'drawer-disconnected');
     }
 
@@ -207,6 +204,23 @@ io.on('connection', (socket: Socket) => {
         console.log(
           `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout`,
         );
+
+        const remainingPlayers = Array.from(roomCheck.getState().players.values()).filter(
+          (p) => p.isConnected,
+        );
+        const stillActive =
+          roomCheck.getState().gameState === GameState.DRAWING ||
+          roomCheck.getState().gameState === GameState.PARALLEL_DRAWING ||
+          roomCheck.getState().gameState === GameState.ROUND_STARTING ||
+          roomCheck.getState().gameState === GameState.ROUND_END;
+
+        if (remainingPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && stillActive) {
+          //Too few players to continue playing - end the game immediately (server emit is handled in endGame function)
+          console.log(
+            `[Socket] Ending game in Room: ${roomCode} due to insufficient players after timeout`,
+          );
+          endGame(io, roomCode);
+        }
       }
 
       disconnectTimers.delete(userId); //Clean up the timer reference from the map after execution

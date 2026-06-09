@@ -16,14 +16,19 @@ import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { endRound } from '../../fsm/roundManager';
 
 /**
- * Checks if all non-drawer players have guessed the word correctly.
+ * Checks if all non-drawer and connected players have guessed the word correctly.
  * @param roomState
  * @returns a boolean indicating whether all guessers have guessed correctly, which is
  * used to determine if the round should end early.
  */
 const hasEveryoneGuessedCorrectly = (roomState: ServerRoomState): boolean => {
-  const totalGuessers = roomState.players.size - 1; //Exclude the drawer
-  return totalGuessers > 0 && roomState.correctGuessers.size >= totalGuessers;
+  const connectedGuessers = Array.from(roomState.players.values()).filter(
+    (p) => p.id !== roomState.currentDrawerId && p.isConnected,
+  );
+  return (
+    connectedGuessers.length > 0 &&
+    connectedGuessers.every((p) => roomState.correctGuessers.has(p.id))
+  );
 };
 
 /**

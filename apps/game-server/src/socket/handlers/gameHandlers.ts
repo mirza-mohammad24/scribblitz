@@ -11,6 +11,7 @@ import { startGame, selectWord } from '../../fsm/roundManager';
 import { emitError } from '../utils/emitError';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { wordSelectSchema } from '@scribblitz/validation';
+import { GameState } from '@scribblitz/types';
 
 /**
  * Handles the game start event
@@ -27,6 +28,12 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
   const room = roomManager.getRoom(roomCode);
   if (!room) {
     emitError(socket, 'NOT_FOUND', 'Room not found');
+    return;
+  }
+
+  // SECURITY GUARD: Explicit FSM state guard.
+  if (room.getState().gameState !== GameState.LOBBY) {
+    emitError(socket, 'INVALID_STATE', 'Game can only be started from the lobby');
     return;
   }
 
