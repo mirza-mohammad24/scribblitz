@@ -55,7 +55,7 @@ export const DrawingCanvas = ({ isDrawer, roomCode }: DrawingCanvasProps) => {
   }, []);
 
   const { handlePointerDown, handlePointerMove, handlePointerUp, executeClear, executeUndo } =
-    useCanvasDrawing(canvasRef, isDrawer, roomCode, roundId, color, size, tool, socket);
+    useCanvasDrawing(canvasRef, isDrawer, roomCode, color, size, tool, socket);
 
   return (
     <div className="w-full flex flex-col items-center gap-4">

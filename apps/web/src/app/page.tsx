@@ -60,7 +60,7 @@ export default function Home() {
       setRoomState({ players: useGameStore.getState().players.filter((p) => p.id !== playerId) }),
     );
 
-    // 🌟 FIX (F5): Handle disconnections and host migrations
+    //  Handle disconnections and host migrations
     socket.on(ServerEvents.PLAYER_DISCONNECTED, ({ playerId }) => {
       const updatedPlayers = useGameStore
         .getState()
@@ -191,24 +191,27 @@ export default function Home() {
   // ==========================================
   // ACTIONS
   // ==========================================
-  const handleCreateRoom = () =>
+  const handleCreateRoom = () => {
+    if (!socket?.connected) socket?.connect(); // Ensure the socket is connected before emitting
+
     socket?.emit(ClientEvents.ROOM_CREATE, {
       username,
       config: { maxPlayer: 8, drawTimeSeconds: 80, roundCount: 3, mode: 'standard' },
     });
+  };
 
-  const handleJoinRoom = () =>
+  const handleJoinRoom = () => {
+    if (!socket?.connected) socket?.connect(); // Ensure the socket is connected before emitting
     socket?.emit(ClientEvents.ROOM_JOIN, { username, roomCode: joinCodeInput });
+  };
 
   const handleStartGame = () => socket?.emit(ClientEvents.GAME_START, {});
 
-  // 🌟 FIX (F15): No more 'any'. Strictly typed configuration updates!
   const updateConfig = (newConfig: Partial<RoomConfig>) =>
     socket?.emit(ClientEvents.ROOM_UPDATE_CONFIG, newConfig);
 
   const handleWordSelect = (word: string) => socket?.emit(ClientEvents.WORD_SELECT, { word });
 
-  // 🌟 NEW: Client Actions for Phase 7
   const handleLeaveRoom = () => {
     socket?.emit(ClientEvents.ROOM_LEAVE);
     resetGame();
@@ -252,8 +255,8 @@ export default function Home() {
           />
           <button
             onClick={handleCreateRoom}
-            disabled={!isConnected || !username}
-            className="bg-blue-600 text-white py-3 rounded font-bold"
+            disabled={!username}
+            className="bg-blue-600 text-white py-3 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Create Room
           </button>
@@ -269,8 +272,8 @@ export default function Home() {
             />
             <button
               onClick={handleJoinRoom}
-              disabled={!isConnected || !joinCodeInput || !username}
-              className="bg-purple-600 text-white px-6 rounded font-bold"
+              disabled={!joinCodeInput || !username}
+              className="bg-purple-600 text-white px-6 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Join
             </button>

@@ -30,7 +30,7 @@ const getSocket = (): Socket => {
   //Initialize the connection
   socketInstance = io(SERVER_URL, {
     auth: { token }, // Send the token for authentication during the handshake
-    autoConnect: true, // Automatically connect on initialization
+    autoConnect: false,
   });
 
   return socketInstance;
@@ -76,6 +76,13 @@ export const useGameSocket = () => {
 
   useEffect(() => {
     if (!socket) return; //Socket not initialized yet (shouldn't happen due to lazy init, but just in case)
+
+    // SMART CONNECT: If they already have a token, wake up the socket immediately
+    // to check if they belong in an active room.
+    const existingToken = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (existingToken && !socket.connected) {
+      socket.connect();
+    }
 
     const onConnect = () => {
       console.log('[Socket] Connected: ', socket.id);

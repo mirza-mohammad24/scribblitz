@@ -10,6 +10,7 @@ import { Socket } from 'socket.io-client';
 import { StrokeEvent, ClientEvents, ServerEvents } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { applyFloodFill } from '@/utils/floodFill';
+import { useGameStore } from '@/store/gameStore';
 
 // Centralize logical dimensions to prevent magic-number drift and ensure multiplayer sync
 export const CANVAS_CONFIG = {
@@ -52,7 +53,6 @@ export const useCanvasDrawing = (
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   isDrawer: boolean,
   roomCode: string,
-  roundId: number,
   currentColor: string,
   brushSize: number,
   activeTool: 'draw' | 'erase' | 'fill',
@@ -64,6 +64,7 @@ export const useCanvasDrawing = (
   const lastPos = useRef<{ x: number; y: number } | null>(null);
   const currentStrokeId = useRef<string>(''); //Tracks the current continuous line
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const hasRequestedSync = useRef(false); //To prevent multiple sync requests on re-renders
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -75,6 +76,9 @@ export const useCanvasDrawing = (
     if (!socket || !roomCode || !canvasRef.current) return;
 
     //As soon as the canvas exists, ask the server for the past drawing history
+    if (hasRequestedSync.current) return; //Prevent React strict mode double useEffect call from sending two sync requests
+    hasRequestedSync.current = true;
+
     socket.emit(ClientEvents.CANVAS_SYNC_REQUEST, { roomCode });
   }, [socket, roomCode]);
 
@@ -85,6 +89,8 @@ export const useCanvasDrawing = (
     lastX: number,
     lastY: number,
   ) => {
+    const currentRoundId = useGameStore.getState().roundId;
+
     const event: StrokeEvent = {
       type: type === 'draw' && activeTool === 'erase' ? 'erase' : type,
       x,
@@ -96,7 +102,7 @@ export const useCanvasDrawing = (
       brushSize,
       sessionId: roomCode,
       timestamp: Date.now(),
-      roundId: roundId,
+      roundId: currentRoundId,
     };
     buffer.current.push(event);
     localHistory.current.push(event);
@@ -297,12 +303,6 @@ export const useCanvasDrawing = (
       socket.off(ServerEvents.CANVAS_HISTORY, handleHistorySync);
     };
   }, [socket, isDrawer]);
-
-  //Clear local history when a player changes roles (Drawer <-> Watcher) to prevent desync issues.
-  useEffect(() => {
-    localHistory.current = [];
-    redrawFromHistory();
-  }, [isDrawer]);
 
   const executeClear = () => {
     if (!isDrawer || !socket) return;
