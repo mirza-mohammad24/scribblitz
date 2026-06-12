@@ -80,8 +80,12 @@ export class RoomManager {
    * the room if it becomes empty.
    * @param roomCode The 6-character room identifier.
    * @param playerId The ID of the player leaving.
+   * @returns The result object from the Room, or undefined if the room didn't exist.
    */
-  removePlayer(roomCode: string, playerId: string): void {
+  removePlayer(
+    roomCode: string,
+    playerId: string,
+  ): { isEmpty: boolean; wasHost: boolean; newHostId?: string | null } | undefined {
     const room = this.rooms.get(roomCode);
     if (!room) return;
 
@@ -89,11 +93,13 @@ export class RoomManager {
     this.playerRoomIndex.delete(playerId);
 
     // Remove the player from the room, and check if the room is now empty and should be deleted
-    const shouldDeleteRoom = room.removePlayer(playerId);
+    const result = room.removePlayer(playerId);
 
-    if (shouldDeleteRoom) {
+    if (result.isEmpty) {
       this.deleteRoom(roomCode);
     }
+
+    return result;
   }
 
   /**

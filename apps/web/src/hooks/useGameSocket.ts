@@ -3,7 +3,7 @@
  * Ensures a single persistent socket connection across the Next.js app.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -29,8 +29,8 @@ const getSocket = (): Socket => {
 
   //Initialize the connection
   socketInstance = io(SERVER_URL, {
-    auth: { token },
-    autoConnect: true,
+    auth: { token }, // Send the token for authentication during the handshake
+    autoConnect: true, // Automatically connect on initialization
   });
 
   return socketInstance;
@@ -67,6 +67,12 @@ export const useGameSocket = () => {
   });
 
   const [connectionError, setConnectionError] = useState<string | null>(null);
+
+  // Derive the ID synchronously
+  const userId = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(LOCAL_STORAGE_KEY);
+  }, []);
 
   useEffect(() => {
     if (!socket) return; //Socket not initialized yet (shouldn't happen due to lazy init, but just in case)
@@ -105,5 +111,5 @@ export const useGameSocket = () => {
     };
   }, [socket]);
 
-  return { socket, isConnected, connectionError };
+  return { socket, isConnected, connectionError, userId };
 };

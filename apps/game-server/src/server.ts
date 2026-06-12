@@ -1,6 +1,5 @@
 /**
  * Main entry point for the Scribblitz game server.
- * Bootstraps the Express HTTP server and attaches the Socket.io instance.
  */
 
 import express from 'express';
@@ -8,8 +7,17 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { ClientEvents, ServerEvents, GameState } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
-import { handleCreateRoom, handleJoinRoom } from './socket/handlers/lobbyHandlers';
-import { handleGameStart, handleWordSelect } from './socket/handlers/gameHandlers';
+import {
+  handleCreateRoom,
+  handleJoinRoom,
+  handleLeaveRoom,
+  handleUpdateConfig,
+} from './socket/handlers/lobbyHandlers';
+import {
+  handleGameStart,
+  handleWordSelect,
+  handleReturnToLobby,
+} from './socket/handlers/gameHandlers';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
 import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
 import { endRound, endGame } from './fsm/roundManager';
@@ -17,6 +25,7 @@ import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
 import { clearTimer, clearIntervalTimer } from './utils/timerCleanUp';
+import { redis } from './lib/redis';
 interface SocketData {
   userId: string;
   roomCode?: string;
@@ -43,9 +52,18 @@ const io = new Server<any, any, any, SocketData>(httpServer, {
 // =========================
 // Socket Middleware
 // =========================
-
+/**
+ * This middleware runs on every incoming socket connection and validates the presence and
+ * format of the authentication token. It ensures that only clients providing a valid UUID
+ * token can establish a socket connection. The token is expected to be sent in the auth
+ * payload during the handshake phase of the Socket.IO connection. If the token is valid,
+ * it is stored in the socket's data for use in subsequent event handlers.
+ * If the token is missing or invalid, the connection is rejected with an appropriate error message.
+ * This middleware acts as a gatekeeper to ensure that only authenticated clients can interact with the game server.
+ */
 io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
+  const token = socket.handshake.auth.token; //We expect the client (useGameSocket.ts) to send the token in
+  // the auth payload during the handshake
 
   if (!token || typeof token !== 'string') {
     return next(new Error('No auth token provided'));
@@ -60,6 +78,7 @@ io.use((socket, next) => {
   }
 
   // Store the validated UUID on the socket session
+  // This userId will be used for all subsequent authentication and room management logic
   socket.data.userId = token;
   next();
 });
@@ -77,7 +96,7 @@ IMPORTANT DISTINCTION BETWEEN RECONNECT AND FRESH JOIN:
   and no lobby handlers are called.
 
 - Fresh Join: A user who is connecting to the server for the first time or is not currently associated with 
-  any existing room and hence the for loop is skipped. In this case, they will go through the normal lobby 
+  any existing room and hence the reconnection logic is skipped. In this case, they will go through the normal lobby 
   flow where they can create a new room or join an existing one by providing a room code. The corresponding 
   lobby handlers (handleCreateRoom and handleJoinRoom) will be called based on the client's emitted event.
 */
@@ -86,19 +105,22 @@ io.on('connection', (socket: Socket) => {
   if (!userId) return;
 
   // Log new connections with user ID for better traceability in logs
-  console.log(`[Socket] User Connected: ${userId}`);
+  console.log(`[Socket] User Connected: ${userId} (from file server.ts)`);
   // Connection count logging
-  console.log(`[Socket] Connected: ${userId} | Total online: ${io.sockets.sockets.size}`);
+  console.log(
+    `[Socket] Connected: ${userId} | Total online: ${io.sockets.sockets.size} (from file server.ts)`,
+  );
 
   //RECONNECT LOGIC: Check if user is returning within 60 seconds grace period
   const existingRoom = roomManager.getRoomByUserId(userId);
 
   if (existingRoom) {
     const state = existingRoom.getState();
-    const player = state.players.get(userId);
+    const player = state.players.get(userId); //We can safely get the player from the room's state since
+    // we have the room reference from the O(1) lookup
 
     if (player && !player.isConnected) {
-      player.isConnected = true;
+      player.isConnected = true; //Mark the player as reconnected in the server state
 
       //Clear the disconnect timeout since the player has reconnected
       if (disconnectTimers.has(userId)) {
@@ -106,45 +128,66 @@ io.on('connection', (socket: Socket) => {
         disconnectTimers.delete(userId);
       }
 
+      // Rejoin the socket room
       socket.join(state.roomCode);
       socket.data.roomCode = state.roomCode; //reattach room code to socket session for future reference
 
       // Send the exact same payload as a fresh join
       const serializedRoom = serializeRoom(state);
+      // Emit the ROOM_JOINED event to the rejoining player with the current room state so
+      // their client can sync up
       socket.emit(ServerEvents.ROOM_JOINED, {
         room: serializedRoom,
       });
 
       // Log reconnection event with user ID and room code for better traceability in logs
-      console.log(`[Socket] User Reconnected: ${userId} to Room: ${state.roomCode}`);
+      console.log(
+        `[Socket] User Reconnected: ${userId} to Room: ${state.roomCode} (from file server.ts)`,
+      );
 
-      //tell the other players in the room that this player has rejoined
+      //tell the other players (all sockets except the rejoining player) in the room
+      // that this player has rejoined
       socket.to(state.roomCode).emit(ServerEvents.PLAYER_JOINED, { player });
     }
   }
 
-  //Route incoming events to Zod validated handlers
+  //Route incoming  client events to Zod validated handlers
+
+  //Listener for fresh room creation and joining - these will trigger the lobby flow
   socket.on(ClientEvents.ROOM_CREATE, handleCreateRoom(io, socket));
   socket.on(ClientEvents.ROOM_JOIN, handleJoinRoom(io, socket));
+
+  //Listener for room-related events like leaving, config updates, and game actions
+  // these will trigger the game flow
+  socket.on(ClientEvents.ROOM_LEAVE, handleLeaveRoom(io, socket));
+  socket.on(ClientEvents.ROOM_UPDATE_CONFIG, handleUpdateConfig(io, socket));
+  socket.on(ClientEvents.RETURN_TO_LOBBY, handleReturnToLobby(io, socket));
   socket.on(ClientEvents.GAME_START, handleGameStart(io, socket));
   socket.on(ClientEvents.WORD_SELECT, handleWordSelect(io, socket));
   socket.on(ClientEvents.CHAT_MESSAGE, handleChatMessage(io, socket));
 
-  //Register the canvas batched stroke events
+  /**
+   * Canvas event listener - this will trigger the drawing flow
+   * We register the canvas handlers separately because they are more performance-sensitive
+   * and have their own validation and security logic.
+   * This separation allows us to optimize the canvas event handling without affecting the
+   * other game logic handlers.
+   */
   registerCanvasHandlers(io, socket);
 
   // ---------------------------------------------------------
   // DISCONNECT & GRACE PERIOD LOGIC
   // ---------------------------------------------------------
   socket.on('disconnect', () => {
-    // Log disconnections with user ID and remaining connection count for better traceability in logs
     console.log(
-      `[Socket] Disconnected: ${userId} | Remaining: ${Math.max(0, io.sockets.sockets.size - 1)}`,
+      `[Socket] Disconnected: ${userId} | Remaining: ${Math.max(0, io.sockets.sockets.size - 1)} (from file server.ts)`,
     );
 
     //Use O(1) lookup to find the room code associated with this user ID safely
     const activeRoom = roomManager.getRoomByUserId(userId);
-    if (!activeRoom) return; //User was not in any room or already cleaned up after grace period, so we skip the rest of the disconnect logic
+    //User was not in any room or already cleaned up after grace period, so we
+    // skip the rest of the disconnect logic
+    if (!activeRoom) return;
 
     const state = activeRoom.getState();
     const roomCode = state.roomCode; //We can safely get the room code from the active room's state
@@ -171,7 +214,8 @@ io.on('connection', (socket: Socket) => {
     // We DO NOT immediately endGame here to allow the 60-second grace period for watchers.
     // However, if the DRAWER disconnects, we immediately skip their turn so the game doesn't freeze.
     // We do this regardless of player count. If the player count is now < 2 (less than MIN PLAYERS),
-    // the startNextRound() function will gracefully catch it and trigger endGame().
+    // the startNextRound() (will be called inside endRound() which we called after appropriate checks)
+    //  will gracefully catch it and trigger endGame().
     if (state.currentDrawerId === userId && isGameActive) {
       endRound(io, roomCode, 'drawer-disconnected');
     }
@@ -191,7 +235,7 @@ io.on('connection', (socket: Socket) => {
 
       // If player is still marked as disconnected after grace period, remove them from the room
       if (p && !p.isConnected) {
-        roomManager.removePlayer(roomCode, userId);
+        const removeResult = roomManager.removePlayer(roomCode, userId);
 
         // Notify other players in the room that this player has been permanently removed after grace period
         io.to(roomCode).emit(ServerEvents.PLAYER_LEFT, {
@@ -200,9 +244,15 @@ io.on('connection', (socket: Socket) => {
           //and cannot rejoin without joining again
           permanent: true,
         });
+
+        // If the guy who permanently timed out was the host, broadcast the new host cleanly to everyone in the room
+        if (removeResult && removeResult.wasHost && removeResult.newHostId) {
+          io.to(roomCode).emit(ServerEvents.HOST_CHANGED, { newHostId: removeResult.newHostId });
+        }
+
         // Log permanent removal after grace period with user ID and room code for better traceability in logs
         console.log(
-          `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout`,
+          `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout (from file server.ts)`,
         );
 
         const remainingPlayers = Array.from(roomCheck.getState().players.values()).filter(
@@ -217,7 +267,7 @@ io.on('connection', (socket: Socket) => {
         if (remainingPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && stillActive) {
           //Too few players to continue playing - end the game immediately (server emit is handled in endGame function)
           console.log(
-            `[Socket] Ending game in Room: ${roomCode} due to insufficient players after timeout`,
+            `[Socket] Ending game in Room: ${roomCode} due to insufficient players after timeout (from file server.ts)`,
           );
           endGame(io, roomCode);
         }
@@ -245,6 +295,14 @@ app.get('/health', (req, res) => {
 // =========================
 
 const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () => {
-  console.log(`Scribblitz Game Server running on port ${PORT}`);
-});
+redis
+  .connect()
+  .then(() => {
+    console.log('[Redis] Connected successfully (from file server.ts)');
+    httpServer.listen(PORT, () => {
+      console.log(`Scribblitz Game Server running on port ${PORT} (from file server.ts)`);
+    });
+  })
+  .catch((err) => {
+    console.error('[Redis] Fatal connection error (from file server.ts):', err);
+  });

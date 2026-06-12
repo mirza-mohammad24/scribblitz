@@ -27,10 +27,20 @@ type TransitionMap = Record<GameState, readonly GameState[]>;
  * halt the loop, and safely transition to GAME_END without crashing. Without these
  * specific pathways, the FSM Bouncer would throw an Illegal Transition Error and
  * crash the Node server.
+ *
+ * Moreover if the drawer disconnects, we immediately skip their turn by transitioning to ROUND_END,
+ * which will then trigger the next round or end the game if player count is too low.
+ * This ensures the game doesn't freeze and can continue smoothly even with unexpected disconnections. Therefore we
+ * allow ROUND_END to be transitioned to from all active gameplay states as well, to handle this scenario gracefully.
  */
 const LEGAL_TRANSITIONS: TransitionMap = {
   [GameState.LOBBY]: [GameState.ROUND_STARTING],
-  [GameState.ROUND_STARTING]: [GameState.DRAWING, GameState.PARALLEL_DRAWING, GameState.GAME_END],
+  [GameState.ROUND_STARTING]: [
+    GameState.DRAWING,
+    GameState.PARALLEL_DRAWING,
+    GameState.ROUND_END,
+    GameState.GAME_END,
+  ],
   [GameState.DRAWING]: [GameState.ROUND_END, GameState.GAME_END],
   [GameState.PARALLEL_DRAWING]: [GameState.ROUND_END, GameState.GAME_END],
   [GameState.ROUND_END]: [GameState.ROUND_STARTING, GameState.GAME_END],

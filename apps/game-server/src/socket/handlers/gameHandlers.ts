@@ -1,17 +1,19 @@
 /**
- * This module contains the socket event handlers related to game actions, such as
- * starting the game and selecting a word. Each handler performs strict validation
- * on incoming data, checks user permissions, interacts with the RoomManager and
- * FSM controllers, and emits appropriate success or error events back to the client.
+ * This module contains the socket event handlers related to game actions, such as starting the game,
+ * selecting a word, and returning to the lobby after a game ends. Each handler includes necessary
+ * security guards to validate the user's permissions and the current game state before allowing the action
+ * to proceed. The handlers interact with the RoomManager and FSM controllers to update the game state
+ * and emit relevant events back to the clients, ensuring a secure and consistent game flow.
  */
 
 import { Server, Socket } from 'socket.io';
 import { roomManager } from '../../rooms/RoomManager';
 import { startGame, selectWord } from '../../fsm/roundManager';
-import { emitError } from '../utils/emitError';
+import { emitError } from '../../utils/emitError';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { wordSelectSchema } from '@scribblitz/validation';
-import { GameState } from '@scribblitz/types';
+import { GameState, ServerEvents } from '@scribblitz/types';
+import { serializeRoom } from '../utils/serializeRoom';
 
 /**
  * Handles the game start event
@@ -78,4 +80,38 @@ export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknow
 
   //Pass it to the FSM controller
   selectWord(io, roomCode, result.data.word);
+};
+
+/**
+ * Handles the return to lobby event after a game ends, allowing the host
+ * to reset the game state and return everyone to the lobby view.
+ * This includes a security guard to ensure only the host can trigger this
+ * action and that it can only be done from the GAME_END state.
+ * @param io
+ * @param socket
+ * @returns A function that processes the return to lobby logic,
+ * including validating the user's permissions, resetting the room state
+ * for a new game, and emitting the updated lobby state to all clients in the room.
+ */
+export const handleReturnToLobby = (io: Server, socket: Socket) => () => {
+  const roomCode = socket.data.roomCode;
+  const userId = getUserIdBySocket(socket);
+  if (!roomCode || !userId) return;
+
+  const room = roomManager.getRoom(roomCode);
+  if (!room) return;
+
+  //SECURITY GUARD
+  if (room.getState().gameState !== GameState.GAME_END) return;
+
+  if (room.getState().hostId !== userId) {
+    emitError(socket, 'UNAUTHORIZED', 'Only the host can return to the lobby');
+    return;
+  }
+
+  room.resetForNewGame();
+
+  //Send the refreshed lobby state to everyone
+  //We use LOBBY_RESET here because we actually want the UI to completely reset
+  io.to(roomCode).emit(ServerEvents.LOBBY_RESET, { room: serializeRoom(room.getState()) });
 };

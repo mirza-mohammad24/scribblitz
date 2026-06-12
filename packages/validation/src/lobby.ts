@@ -14,7 +14,8 @@ const usernameSchema = z
   })
   .max(20, {
     message: 'Username cannot exceed 20 characters',
-  });
+  })
+  .regex(/^[a-zA-Z0-9_ ]+$/, 'Username can only contain letters, numbers, underscores, and spaces');
 
 const roomCodeSchema = z.string().trim().toUpperCase().length(6, {
   message: 'Room code must be exactly 6 characters long',

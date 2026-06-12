@@ -29,7 +29,9 @@ export function serializeRoom(room: ServerRoomState) {
     teamB: room.teamB ? Array.from(room.teamB) : undefined,
 
     fsm: undefined,
-
+    currentWord: undefined, // SECRET: only sent to drawer via WORD_CHOICES
+    wordChoices: undefined, // SECRET: only sent to drawer via WORD_CHOICES
+    usedWords: undefined, // SECRET: never sent to clients, only tracked on server to prevent repeats
     roundTimer: undefined,
     wordSelectionTimer: undefined,
     drawingTimer: undefined,

@@ -4,8 +4,9 @@
  * player roster, and internal lifecycle events like host reassignment and memory cleanup.
  */
 
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 import { RoomState, Player, RoomConfig, GameState } from '@scribblitz/types';
+import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { GameFSM } from '../fsm/GameFSM';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 
@@ -24,7 +25,7 @@ export type AddPlayerResult =
   | { success: true; message: 'ADDED' }
   | {
       success: false;
-      reason: 'ROOM_NOT_FOUND' | 'ROOM_FULL' | 'ALREADY_IN_ROOM';
+      reason: 'ROOM_NOT_FOUND' | 'ROOM_FULL' | 'ALREADY_IN_ROOM' | 'DUPLICATE_USERNAME';
     };
 
 export class Room {
@@ -40,9 +41,9 @@ export class Room {
       players: new Map(),
       config: {
         roomCode,
-        maxPlayer: 10,
-        roundCount: 3,
-        drawTimeSeconds: 90,
+        maxPlayer: GAME_CONSTANTS.MAX_PLAYERS,
+        roundCount: GAME_CONSTANTS.DEFAULT_ROUND_COUNT,
+        drawTimeSeconds: GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS,
         mode: 'standard',
         ...config, // Override defaults with any provided config values
       },
@@ -78,7 +79,9 @@ export class Room {
    * Generates a 6-character uppercase alphanumeric string for the room code.
    */
   private static generateRoomCode(): string {
-    return nanoid(6).toUpperCase();
+    //Only uppercase letters and numbers are allowed
+    const generateSafeCode = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 6);
+    return generateSafeCode();
   }
 
   // =========================
@@ -90,6 +93,18 @@ export class Room {
 
   getState(): ServerRoomState {
     return this.state;
+  }
+
+  /**
+   * Merges new configuration settings into the room's current config.
+   * Only overrides the specific keys provided.
+   * @param newConfig Partial configuration object
+   */
+  updateConfig(newConfig: Partial<RoomConfig>): void {
+    this.state.config = {
+      ...this.state.config,
+      ...newConfig,
+    };
   }
 
   // =========================
@@ -109,6 +124,11 @@ export class Room {
       return { success: false, reason: 'ALREADY_IN_ROOM' };
     }
 
+    const existingUsernames = [...this.state.players.values()].map((p) => p.username.toLowerCase());
+    if (existingUsernames.includes(player.username.toLowerCase())) {
+      return { success: false, reason: 'DUPLICATE_USERNAME' };
+    }
+
     // Add player to the room's player map
     this.state.players.set(player.id, player);
     return { success: true, message: 'ADDED' };
@@ -117,9 +137,13 @@ export class Room {
   /**
    * Removes a player from the room and handles internal housekeeping (like host reassignment).
    * @param playerId The unique ID of the player to remove.
-   * @returns `true` if the room is now empty and should be deleted; `false` otherwise.
+   * @returns An object detailing if the room is empty, and if the host was changed.
    */
-  removePlayer(playerId: string): boolean {
+  removePlayer(playerId: string): {
+    isEmpty: boolean;
+    wasHost: boolean;
+    newHostId?: string | null;
+  } {
     this.state.players.delete(playerId);
 
     // Clean up team sets if they exist
@@ -128,16 +152,34 @@ export class Room {
 
     // If room is empty, destroy it
     if (this.state.players.size === 0) {
-      return true;
+      return { isEmpty: true, wasHost: false };
     }
+
+    let wasHost = false;
+    let newHostId: string | undefined;
 
     // Host reassignment: If the host leaves, randomly assign a new host from remaining players
     if (this.state.hostId === playerId) {
-      const remainingPlayers = Array.from(this.state.players.keys());
-      this.state.hostId = remainingPlayers[Math.floor(Math.random() * remainingPlayers.length)]!;
+      wasHost = true;
+
+      //Filter out players who are currently in their 60 second AFK grace period
+      // to avoid assigning host to a disconnected player
+
+      const connectedPlayers = Array.from(this.state.players.values()).filter((p) => p.isConnected);
+
+      if (connectedPlayers.length > 0) {
+        newHostId = connectedPlayers[Math.floor(Math.random() * connectedPlayers.length)]!.id;
+        this.state.hostId = newHostId;
+      } else {
+        //Absolute fallback: if all remaining players are disconnected, assign host to a random
+        // player anyway to avoid leaving the room without a host
+        const remainingPlayers = Array.from(this.state.players.keys());
+        newHostId = remainingPlayers[Math.floor(Math.random() * remainingPlayers.length)]!;
+        this.state.hostId = newHostId;
+      }
     }
 
-    return false;
+    return { isEmpty: false, wasHost, newHostId };
   }
 
   // =========================
@@ -151,6 +193,32 @@ export class Room {
   transitionState(nextState: GameState): void {
     this.state.fsm.transition(nextState);
     this.state.gameState = this.state.fsm.getState();
+  }
+
+  /**
+   * Resets all game-related state back to the initial values, preparing for a new game session
+   */
+  resetForNewGame(): void {
+    this.cleanup(); // Clear any active timers from the previous game
+
+    this.state.currentRound = 0;
+    this.state.roundId = 0;
+    this.state.currentDrawerId = null;
+    this.state.currentWord = null;
+    this.state.usedWords = [];
+    this.state.revealedHintIndexes.clear();
+    this.state.currentHint = '';
+    this.state.wordChoices = null;
+    this.state.correctGuessers.clear();
+    this.state.roundStartTime = null;
+
+    // Reset all player scores and guess flags
+    this.state.players.forEach((p) => {
+      p.score = 0;
+      p.hasGuessedCorrectly = false;
+    });
+
+    this.transitionState(GameState.LOBBY);
   }
 
   // =========================

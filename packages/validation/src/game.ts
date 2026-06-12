@@ -50,5 +50,9 @@ export const HistoryPayloadSchema = z.array(StrokeEventSchema);
 
 //Validates the client's request to sync canvas history on reconnection
 export const CanvasSyncRequestSchema = z.object({
-  roomCode: z.string().trim().toUpperCase().length(6, 'Room code must be 6 characters'),
+  roomCode: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .length(6, { message: 'Room code must be 6 characters' }),
 });

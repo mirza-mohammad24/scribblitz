@@ -38,11 +38,19 @@ const hasEveryoneGuessedCorrectly = (roomState: ServerRoomState): boolean => {
  * clients. It also includes guards to prevent processing of messages from old rounds.
  * @param io
  * @param socket
- * @returns
+ * @returns a function that processes incoming chat messages, including guess evaluation and game state updates.
  */
 export const handleChatMessage = (io: Server, socket: Socket) => (payload: unknown) => {
+  //Validation
   const result = chatMessageSchema.safeParse(payload);
-  if (!result.success) return; //Silently drop invalid payloads
+
+  if (!result.success) {
+    console.log(
+      `[Chat] Invalid message payload from ${socket.id}: (from file messageHandlers.ts)`,
+      result.error.errors,
+    );
+    return; //Silently drop invalid payloads
+  }
 
   const roomCode = socket.data.roomCode;
   const userId = getUserIdBySocket(socket);
@@ -57,12 +65,18 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
   if (!player) return;
 
   //RACE CONDITION GUARD: Drop delayed messages from old rounds
-  if (result.data.roundId !== state.currentRound) return;
+  if (result.data.roundId !== state.roundId) {
+    console.log(
+      `[Chat] Round Mismatch! Client sent: ${result.data.roundId}, Server expects: ${state.roundId} (from file messageHandlers.ts)`,
+    );
+    return;
+  }
 
   const text = result.data.message.trim();
   const isDrawer = state.currentDrawerId === userId;
   const hasAlreadyGuessed = state.correctGuessers.has(userId);
-  const isDrawingPhase = state.gameState === GameState.DRAWING;
+  const isDrawingPhase =
+    state.gameState === GameState.DRAWING || state.gameState === GameState.PARALLEL_DRAWING;
 
   //NORMAL CHAT LOGIC
   //If this is not the drawing phase, or the user is the drawer, or they already guessed the word
@@ -72,7 +86,7 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
       senderId: userId,
       senderName: player.username,
       message: text,
-      isSystem: false,
+      isSystem: false, //Clients can use this flag to style system messages differently if needed
     });
     return;
   }
@@ -86,7 +100,7 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
     state.correctGuessers.add(userId);
     player.hasGuessedCorrectly = true; // Keep Player object in sync with correctGuessers Set
 
-    //Time-Decay Scoring Math (Early guesser gets more time)
+    //Time-Decay Scoring Math (Early guesser gets more points)
     const timeElapsed = Date.now() - (state.roundStartTime || Date.now());
     const totalTime = state.config.drawTimeSeconds * 1000;
     // 1.0 is instant and 0.0 is the last second
@@ -96,6 +110,13 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
     const pointsEarned = Math.floor(100 + 400 * timeRatio);
     player.score += pointsEarned;
 
+    //Drawer Points: The drawer gets 10% of the points the guesser earned
+    if (state.currentDrawerId) {
+      const drawer = state.players.get(state.currentDrawerId);
+      if (drawer) {
+        drawer.score += Math.floor(pointsEarned * 0.1);
+      }
+    }
     //Broadcast to the room that someone got it (Hides the word)
     io.to(roomCode).emit(ServerEvents.PLAYER_GUESSED, {
       playerId: userId,

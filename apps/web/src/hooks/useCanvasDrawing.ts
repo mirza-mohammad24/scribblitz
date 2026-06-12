@@ -8,7 +8,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import { StrokeEvent, ClientEvents, ServerEvents } from '@scribblitz/types';
-import { GAME_CONSTANTS } from '../../../../packages/shared/dist';
+import { GAME_CONSTANTS } from '@scribblitz/shared';
+import { applyFloodFill } from '@/utils/floodFill';
 
 // Centralize logical dimensions to prevent magic-number drift and ensure multiplayer sync
 export const CANVAS_CONFIG = {
@@ -27,11 +28,9 @@ export const CANVAS_CONFIG = {
  */
 const getCoordinates = (e: React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCanvasElement) => {
   const rect = canvas.getBoundingClientRect();
-  const scaleX = CANVAS_CONFIG.WIDTH / rect.width;
-  const scaleY = CANVAS_CONFIG.HEIGHT / rect.height;
   return {
-    x: (e.clientX - rect.left) * scaleX,
-    y: (e.clientY - rect.top) * scaleY,
+    x: (e.clientX - rect.left) * (CANVAS_CONFIG.WIDTH / rect.width),
+    y: (e.clientY - rect.top) * (CANVAS_CONFIG.HEIGHT / rect.height),
   };
 };
 
@@ -45,6 +44,7 @@ const getCoordinates = (e: React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCa
  * @param roomCode
  * @param currentColor
  * @param brushSize
+ * @param activeTool
  * @param socket
  * @returns An object containing pointer event handlers to be attached to the canvas element
  */
@@ -52,15 +52,17 @@ export const useCanvasDrawing = (
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   isDrawer: boolean,
   roomCode: string,
+  roundId: number,
   currentColor: string,
   brushSize: number,
+  activeTool: 'draw' | 'erase' | 'fill',
   socket?: Socket | null,
 ) => {
   const buffer = useRef<StrokeEvent[]>([]);
+  const localHistory = useRef<StrokeEvent[]>([]);
   const isDrawing = useRef(false);
   const lastPos = useRef<{ x: number; y: number } | null>(null);
   const currentStrokeId = useRef<string>(''); //Tracks the current continuous line
-
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
@@ -74,7 +76,31 @@ export const useCanvasDrawing = (
 
     //As soon as the canvas exists, ask the server for the past drawing history
     socket.emit(ClientEvents.CANVAS_SYNC_REQUEST, { roomCode });
-  }, [socket, roomCode, canvasRef]);
+  }, [socket, roomCode]);
+
+  const captureStroke = (
+    type: 'draw' | 'fill',
+    x: number,
+    y: number,
+    lastX: number,
+    lastY: number,
+  ) => {
+    const event: StrokeEvent = {
+      type: type === 'draw' && activeTool === 'erase' ? 'erase' : type,
+      x,
+      y,
+      lastX,
+      lastY,
+      strokeId: currentStrokeId.current,
+      color: activeTool === 'erase' ? CANVAS_CONFIG.PAPER_COLOR : currentColor,
+      brushSize,
+      sessionId: roomCode,
+      timestamp: Date.now(),
+      roundId: roundId,
+    };
+    buffer.current.push(event);
+    localHistory.current.push(event);
+  };
 
   /**
    * Draws a stroke on the canvas at the specified coordinates. If isInitial is true, it means this is the
@@ -88,11 +114,10 @@ export const useCanvasDrawing = (
     const ctx = ctxRef.current;
     if (!ctx) return;
 
-    ctx.strokeStyle = currentColor;
+    ctx.strokeStyle = activeTool === 'erase' ? CANVAS_CONFIG.PAPER_COLOR : currentColor;
     ctx.lineWidth = brushSize;
     ctx.lineCap = 'round'; //Makes the ends of lines rounded for a more natural look
     ctx.lineJoin = 'round'; //Smooths the corners where lines meet, especially at higher brush sizes
-
     ctx.beginPath();
 
     if (isInitial || !lastPos.current) {
@@ -106,38 +131,28 @@ export const useCanvasDrawing = (
     ctx.stroke();
   };
 
-  /**
-   * Captures a stroke event and adds it to the buffer for later transmission. Each stroke
-   * event includes the current and last coordinates, stroke ID, color, brush size, session ID,
-   * timestamp, and round ID. The buffer is used to batch multiple stroke events together before
-   * sending them to the server, which helps reduce network overhead and ensures smoother real-time
-   * synchronization with other players.
-   * @param x
-   * @param y
-   * @param lastX
-   * @param lastY
-   */
-  const captureStroke = (x: number, y: number, lastX: number, lastY: number) => {
-    //Backpressure Protection: Prevent infinite memory growth if connection lags
-    if (buffer.current.length >= CANVAS_CONFIG.MAX_BUFFER_SIZE) {
-      buffer.current.shift(); // Drop the oldest stroke to make room for new ones
-    }
+  const redrawFromHistory = () => {
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+    ctx.fillStyle = CANVAS_CONFIG.PAPER_COLOR;
+    ctx.fillRect(0, 0, CANVAS_CONFIG.WIDTH, CANVAS_CONFIG.HEIGHT);
 
-    buffer.current.push({
-      type: 'draw',
-      x,
-      y,
-      lastX,
-      lastY,
-      strokeId: currentStrokeId.current,
-      color: currentColor,
-      brushSize,
-      sessionId: roomCode,
-      timestamp: Date.now(),
-      roundId: 0,
+    localHistory.current.forEach((stroke) => {
+      if (stroke.type === 'draw' || stroke.type === 'erase') {
+        ctx.strokeStyle = stroke.type === 'erase' ? CANVAS_CONFIG.PAPER_COLOR : stroke.color;
+        ctx.lineWidth = stroke.brushSize;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(stroke.lastX, stroke.lastY);
+        ctx.lineTo(stroke.x, stroke.y);
+        ctx.stroke();
+      } else if (stroke.type === 'fill') {
+        const dpr = window.devicePixelRatio || 1;
+        applyFloodFill(ctx, stroke.x * dpr, stroke.y * dpr, stroke.color);
+      }
     });
   };
-
   /**
    * Handles the pointer down event on the canvas. When the user presses down on the canvas,
    * this function checks if they are the drawer and if the canvas reference is valid. It then
@@ -154,14 +169,21 @@ export const useCanvasDrawing = (
     // GENERATE ID: Start a new Stroke ID every time the pen touches the paper
     currentStrokeId.current = crypto.randomUUID();
 
-    isDrawing.current = true;
     const { x, y } = getCoordinates(e, canvasRef.current);
+
+    if (activeTool === 'fill') {
+      const ctx = ctxRef.current;
+      const dpr = window.devicePixelRatio || 1;
+      if (ctx) applyFloodFill(ctx, Math.floor(x * dpr), Math.floor(y * dpr), currentColor);
+      captureStroke('fill', x, y, x, y); //For fills, lastX and lastY are irrelevant since it's not a line
+      return;
+    }
+
+    isDrawing.current = true;
     drawStroke(x, y, true);
     lastPos.current = { x, y };
 
-    // For the very first dot, current and last coordinates are the same
-    captureStroke(x, y, x, y);
-    lastPos.current = { x, y };
+    captureStroke('draw', x, y, x, y); //For the initial point, lastX and lastY are the same as x and y
   };
 
   /**
@@ -173,18 +195,22 @@ export const useCanvasDrawing = (
    * @param e
    */
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!isDrawer || !isDrawing.current || !canvasRef.current || !lastPos.current) return;
+    if (
+      !isDrawer ||
+      !isDrawing.current ||
+      !canvasRef.current ||
+      !lastPos.current ||
+      activeTool === 'fill'
+    )
+      return;
 
     const { x, y } = getCoordinates(e, canvasRef.current);
-
-    //Grab the previous coordinates BEFORE we update them
-    const lx = lastPos.current.x;
-    const ly = lastPos.current.y;
+    const lastX = lastPos.current.x;
+    const lastY = lastPos.current.y;
 
     drawStroke(x, y, false);
+    captureStroke('draw', x, y, lastX, lastY);
 
-    //Pass the old and new coordinates to the buffer for more accurate stroke reconstruction on the watchers' side
-    captureStroke(x, y, lx, ly);
     lastPos.current = { x, y }; //Update for the next curve
   };
 
@@ -214,84 +240,82 @@ export const useCanvasDrawing = (
     return () => clearInterval(interval);
   }, [isDrawer, socket]);
 
-  //Incoming Network Strokes (For Watchers)
+  //Incoming Network Strokes (For Watchers and not drawer)
   useEffect(() => {
-    if (isDrawer || !socket) return; //Only watchers need to listen
+    if (!socket) return;
 
     const handleIncomingBatch = (payload: { strokes: StrokeEvent[] }) => {
-      payload.strokes.forEach((stroke) => {
-        if (stroke.type === 'draw') {
-          //Temporarily override brush settings to match the incoming stroke
-          const ctx = ctxRef.current!;
-          const tempColor = ctx.strokeStyle;
-          const tempSize = ctx.lineWidth;
+      const ctx = ctxRef.current;
+      if (!ctx || isDrawer) return;
+      const dpr = window.devicePixelRatio || 1;
 
-          ctx.strokeStyle = stroke.color;
+      payload.strokes.forEach((stroke) => {
+        localHistory.current.push(stroke);
+        if (stroke.type === 'draw' || stroke.type === 'erase') {
+          ctx.strokeStyle = stroke.type === 'erase' ? CANVAS_CONFIG.PAPER_COLOR : stroke.color;
           ctx.lineWidth = stroke.brushSize;
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
 
-          //Start at lastX/lastY, draw to x/y
           ctx.beginPath();
           ctx.moveTo(stroke.lastX, stroke.lastY);
           ctx.lineTo(stroke.x, stroke.y);
           ctx.stroke();
-
-          //Restore
-          ctx.strokeStyle = tempColor;
-          ctx.lineWidth = tempSize;
+        } else if (stroke.type === 'fill') {
+          applyFloodFill(ctx, Math.floor(stroke.x * dpr), Math.floor(stroke.y * dpr), stroke.color);
         }
       });
+    };
+
+    const handleServerClear = () => {
+      localHistory.current = [];
+      redrawFromHistory();
+    };
+    const handleServerUndo = (payload: { strokeId: string }) => {
+      localHistory.current = localHistory.current.filter((s) => s.strokeId !== payload.strokeId);
+      redrawFromHistory();
+    };
+    const handleHistorySync = (payload: { strokes: StrokeEvent[] }) => {
+      localHistory.current = payload.strokes;
+      redrawFromHistory();
     };
 
     socket.on(ServerEvents.CANVAS_BATCH, handleIncomingBatch);
-
-    return () => {
-      socket.off(ServerEvents.CANVAS_BATCH, handleIncomingBatch);
-    };
-  }, [isDrawer, socket]);
-
-  //Receive the full canvas history when we first join as a watcher, or if we refresh while
-  // already in the room. This ensures we can reconstruct the entire drawing state even
-  // if we missed some real-time batches due to network issues or joining late.
-  useEffect(() => {
-    if (!socket || !canvasRef.current) return;
-
-    const handleHistorySync = (payload: { strokes: StrokeEvent[] }) => {
-      const ctx = ctxRef.current;
-      const canvas = canvasRef.current;
-
-      if (!ctx || !canvas || payload.strokes.length === 0) return;
-
-      console.log(`[Canvas] Replaying ${payload.strokes.length} historical strokes`);
-
-      const tempColor = ctx.strokeStyle;
-      const tempSize = ctx.lineWidth;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      payload.strokes.forEach((stroke) => {
-        if (stroke.type === 'draw') {
-          ctx.strokeStyle = stroke.color;
-          ctx.lineWidth = stroke.brushSize;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-
-          ctx.beginPath();
-          ctx.moveTo(stroke.lastX, stroke.lastY);
-          ctx.lineTo(stroke.x, stroke.y);
-          ctx.stroke();
-        }
-      });
-      ctx.strokeStyle = tempColor;
-      ctx.lineWidth = tempSize;
-    };
-
+    socket.on(ServerEvents.CANVAS_CLEARED, handleServerClear);
+    //Automatically wipe the canvas clean when a new round starts and ends
+    socket.on(ServerEvents.ROUND_STARTING, handleServerClear);
+    socket.on(ServerEvents.ROUND_END, handleServerClear);
+    socket.on(ServerEvents.CANVAS_UNDONE, handleServerUndo);
     socket.on(ServerEvents.CANVAS_HISTORY, handleHistorySync);
 
     return () => {
+      socket.off(ServerEvents.CANVAS_BATCH, handleIncomingBatch);
+      socket.off(ServerEvents.CANVAS_CLEARED, handleServerClear);
+      socket.off(ServerEvents.ROUND_STARTING, handleServerClear);
+      socket.off(ServerEvents.ROUND_END, handleServerClear);
+      socket.off(ServerEvents.CANVAS_UNDONE, handleServerUndo);
       socket.off(ServerEvents.CANVAS_HISTORY, handleHistorySync);
     };
-  }, [socket, canvasRef]);
-  return { handlePointerDown, handlePointerMove, handlePointerUp };
+  }, [socket, isDrawer]);
+
+  //Clear local history when a player changes roles (Drawer <-> Watcher) to prevent desync issues.
+  useEffect(() => {
+    localHistory.current = [];
+    redrawFromHistory();
+  }, [isDrawer]);
+
+  const executeClear = () => {
+    if (!isDrawer || !socket) return;
+    localHistory.current = [];
+    buffer.current = [];
+    redrawFromHistory();
+    socket.emit(ClientEvents.CANVAS_CLEAR);
+  };
+
+  const executeUndo = () => {
+    if (!isDrawer || !socket) return;
+    socket.emit(ClientEvents.CANVAS_UNDO);
+  };
+
+  return { handlePointerDown, handlePointerMove, handlePointerUp, executeClear, executeUndo };
 };

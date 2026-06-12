@@ -15,8 +15,11 @@ export const ClientEvents = {
   WORD_SELECT: 'word:select',
   CANVAS_BATCH: 'canvas:batch',
   CANVAS_CLEAR: 'canvas:clear',
+  CANVAS_UNDO: 'canvas:undo',
   CANVAS_SYNC_REQUEST: 'canvas:sync_request',
   CHAT_MESSAGE: 'chat:message',
+  ROOM_UPDATE_CONFIG: 'room:update_config',
+  RETURN_TO_LOBBY: 'game:return_to_lobby',
   EMOTE_SEND: 'emote:send',
 } as const;
 
@@ -38,6 +41,7 @@ export const ServerEvents = {
   CANVAS_BATCH: 'canvas:batch',
   CANVAS_REPLAY: 'canvas:replay',
   CANVAS_CLEARED: 'canvas:cleared',
+  CANVAS_UNDONE: 'canvas:undone',
   CANVAS_HISTORY: 'canvas:history',
   CHAT_BROADCAST: 'chat:broadcast',
   GUESS_CORRECT: 'guess:correct',
@@ -47,4 +51,7 @@ export const ServerEvents = {
   GLOW_UP_READY: 'glow_up:ready',
   ERROR: 'server:error',
   WORD_HINT_UPDATED: 'word:hint_updated',
+  ROOM_CONFIG_UPDATED: 'room:config_updated',
+  HOST_CHANGED: 'room:host_changed',
+  LOBBY_RESET: 'room:lobby_reset',
 } as const;

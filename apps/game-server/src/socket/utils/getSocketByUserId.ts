@@ -12,11 +12,16 @@ import { Server, Socket } from 'socket.io';
  * A disconnected drawer is handled gracefully by the AFK word-selection timer.
  * @param io - The Socket.IO server instance
  * @param userId - The UUID identifying the player
+ * @param roomCode - The code identifying the room the player is in, used to ensure we find the correct socket in case of multiple rooms
  * @returns The active Socket for that player, or undefined if not connected
  */
-export function getSocketByUserId(io: Server, userId: string): Socket | undefined {
+export function getSocketByUserId(
+  io: Server,
+  userId: string,
+  roomCode: string,
+): Socket | undefined {
   for (const [, socket] of io.sockets.sockets) {
-    if (socket.data.userId === userId) return socket;
+    if (socket.data.userId === userId && socket.data.roomCode === roomCode) return socket;
   }
   return undefined;
 }

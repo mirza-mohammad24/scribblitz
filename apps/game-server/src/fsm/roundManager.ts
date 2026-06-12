@@ -1,8 +1,15 @@
 /**
- * This module manages the game rounds, including starting the game, handling word selection,
- * managing timers for each phase of the round, and ending rounds and the game.
- * It interacts with the RoomManager to access and update the game state, and uses Socket.IO to
- * emit events to clients about state changes and round updates.
+ * This module serves as the central controller for managing the game rounds and overall game flow.
+ * It includes functions to start the game, transition between rounds, handle word selection, and
+ * end rounds and games. Each function is designed with robust guards to ensure that actions are
+ * only taken when appropriate (e.g., validating game state, checking player counts) and includes
+ * comprehensive timer management to prevent memory leaks and ensure smooth game progression
+ * even in cases of player disconnections or AFK behavior.
+ * The module interacts closely with the RoomManager to access and update the game state, and it emits
+ * relevant events to clients via Socket.io to keep all players in sync with the current game status.
+ * Additionally, it includes cleanup logic to clear timers and Redis data to maintain server performance
+ * and prevent stale data from affecting new rounds or games.
+ *
  */
 import { ServerEvents, GameState } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
@@ -115,6 +122,7 @@ export const startNextRound = (io: Server, roomCode: string): void => {
     round: state.currentRound,
     totalRounds: state.config.roundCount,
     drawerId: state.currentDrawerId,
+    roundId: state.roundId,
   });
 
   // Send word choices exclusively to the drawer's socket.
@@ -122,7 +130,7 @@ export const startNextRound = (io: Server, roomCode: string): void => {
   // will auto-select a word after WORD_SELECTION_TIMEOUT_SECONDS, so the game
   // continues without any special handling needed.
   if (state.currentDrawerId) {
-    const drawerSocket = getSocketByUserId(io, state.currentDrawerId);
+    const drawerSocket = getSocketByUserId(io, state.currentDrawerId, roomCode);
     if (drawerSocket) {
       drawerSocket.emit(ServerEvents.WORD_CHOICES, { words: state.wordChoices });
     }
@@ -261,6 +269,7 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
   state.drawingTimer = clearTimer(state.drawingTimer);
   state.hintTimer = clearIntervalTimer(state.hintTimer);
+  state.intermissionTimer = clearTimer(state.intermissionTimer);
 
   // ==========================================
   // REDIS CLEANUP: Wipe the canvas history so the Time Machine
@@ -286,17 +295,17 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   state.currentWord = null;
 
   //Display scores briefly before starting the next round or ending the game
-  // Set the intermission timer
+  //Set the intermission timer
   state.intermissionTimer = setTimeout(() => {
     const latestState = room.getState();
 
     // GUARD: Abort if this timer leaked
     if (latestState.roundId !== currentRoundId) return;
 
-    if (state.currentRound >= state.config.roundCount) {
-      endGame(io, roomCode);
+    if (latestState.currentRound >= latestState.config.roundCount) {
+      endGame(io, roomCode); //end the game if we've reached the configured number of rounds
     } else {
-      startNextRound(io, roomCode);
+      startNextRound(io, roomCode); //otherwise start the next round
     }
   }, GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS * 1000);
 };

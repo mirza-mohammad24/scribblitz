@@ -20,5 +20,5 @@ export function getUserIdBySocket(socket: Socket): string | null {
     return null;
   }
 
-  return userId;
+  return userId; //36 character UUID string
 }
