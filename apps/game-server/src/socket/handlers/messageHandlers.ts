@@ -79,15 +79,24 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
     state.gameState === GameState.DRAWING || state.gameState === GameState.PARALLEL_DRAWING;
 
   //NORMAL CHAT LOGIC
-  //If this is not the drawing phase, or the user is the drawer, or they already guessed the word
-  //We treat the message as a normal chat message and broadcast it to everyone without guess evaluation
-  if (!isDrawingPhase || isDrawer || hasAlreadyGuessed) {
+  //due to placement of if conditions below everyone will be able to chat during the non drawing phase
+  //but if this is not true then only players who are not the drawer or have not guessed correctly will
+  // be able to chat during the drawing phase
+  if (!isDrawingPhase) {
+    //if we are in the lobby or Game End, everyone can chat freely
     io.to(roomCode).emit(ServerEvents.CHAT_BROADCAST, {
       senderId: userId,
       senderName: player.username,
       message: text,
       isSystem: false, //Clients can use this flag to style system messages differently if needed
     });
+    return;
+  }
+
+  // GUARD: Muzzle the Drawer and Correct Guessers during the round
+  if (isDrawer || hasAlreadyGuessed) {
+    // Silently drop their chat message. They are not allowed to talk
+    // to the rest of the room while a drawing is active.
     return;
   }
 
