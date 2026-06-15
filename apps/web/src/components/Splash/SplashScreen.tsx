@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Dices, Play, ArrowRightCircle } from 'lucide-react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
 import { createRoomSchema, joinRoomSchema } from '@scribblitz/validation';
 
 const AVATAR_STORAGE_KEY = 'scribblitz_avatar_seed';
@@ -26,11 +28,15 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
   const [nameShake, setNameShake] = useState(false);
   const [codeShake, setCodeShake] = useState(false);
 
+  // Track keyboard state to push the bottom-sheet up
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [showMobileCard, setShowMobileCard] = useState(false);
+
   useEffect(() => {
     const hydrationTimer = setTimeout(() => {
       let saveSeed = localStorage.getItem(AVATAR_STORAGE_KEY);
       if (!saveSeed) {
-        saveSeed = crypto.randomUUID(); // Generate a new seed if none exists
+        saveSeed = uuidv4(); // Generate a new seed if none exists
         localStorage.setItem(AVATAR_STORAGE_KEY, saveSeed);
       }
       setAvatarSeed(saveSeed);
@@ -50,7 +56,7 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
   }, [avatarSeed]);
 
   const handleRandomize = () => {
-    const newSeed = crypto.randomUUID();
+    const newSeed = uuidv4();
     setAvatarSeed(newSeed);
     setImageError(false); // Reset image error state when randomizing
     localStorage.setItem(AVATAR_STORAGE_KEY, newSeed);
@@ -128,8 +134,11 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
   };
 
   return (
-    <div className="flex-1 w-full flex flex-col items-center justify-center p-4 min-h-0">
-      <div className="text-center mb-8">
+    <div className="flex-1 w-full flex flex-col items-center justify-center p-4 min-h-0 relative">
+      {/* HEADER: Stays static on mobile & desktop */}
+      <div
+        className={`text-center transition-all duration-500 z-10 relative ${showMobileCard ? 'mb-2 md:mb-8' : 'mb-8'}`}
+      >
         <div className="text-2xl lg:text-3xl font-bold text-gray-700 dark:text-gray-200 mb-2 flex items-center justify-center gap-2">
           <span className="relative inline-block">
             Skribbl.io
@@ -143,7 +152,7 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
                 repeatDelay: 3,
                 ease: 'easeInOut',
               }}
-              className="absolute top-1/2 -left-[5%] h-[4px] bg-red-500 -translate-y-1/2 -rotate-2 rounded-full z-10 opacity-90"
+              className="absolute top-1/2 left-[-5%] h-1 bg-red-500 -translate-y-1/2 -rotate-2 rounded-full z-10 opacity-90"
             />
           </span>
           <span className="text-gray-500 dark:text-gray-400">grew up.</span>
@@ -151,7 +160,7 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
 
         <h1 className="text-5xl lg:text-7xl font-black tracking-tight drop-shadow-sm flex items-center justify-center flex-wrap gap-x-4">
           <motion.span
-            className="flex flex-wrap justify-center gap-x-[1rem] lg:gap-x-[1.5rem]"
+            className="flex flex-wrap justify-center gap-x-4 lg:gap-x-6"
             initial="hidden"
             animate="visible"
             variants={{
@@ -190,12 +199,10 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
                       transition: { type: 'spring', damping: 12, stiffness: 200 },
                     },
                   }}
-                  whileHover={{
-                    y: -10,
-                    scale: 1.1,
-                    transition: { type: 'spring', bounce: 0.6 },
-                  }}
-                  className="text-green-600 dark:text-neon-blue hover:text-red-600 dark:hover:text-neon-pink inline-block cursor-default transition-colors duration-75"
+                  whileHover={{ y: -10, scale: 1.1, transition: { type: 'spring', bounce: 0.6 } }}
+                  // Added whileTap for mobile screens to provide tactile feedback on tap
+                  whileTap={{ y: -15, scale: 1.25, transition: { type: 'spring', bounce: 0.6 } }}
+                  className="text-green-600 dark:text-neon-blue hover:text-red-600 dark:hover:text-neon-pink active:text-red-600 dark:active:text-neon-pink inline-block cursor-default transition-colors duration-75"
                 >
                   {letter}
                 </motion.span>
@@ -205,118 +212,188 @@ export const SplashScreen = ({ onActionCreate, onActionJoin }: SplashScreenProps
         </h1>
       </div>
 
-      <div className="bg-white dark:bg-discord-card p-6 lg:p-8 rounded-[2rem] border-4 border-gray-200 dark:border-discord-main shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] w-full max-w-md flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            {!mounted ? (
-              <div className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main bg-gray-100 dark:bg-discord-main shadow-sm animate-pulse" />
-            ) : imageError ? (
-              // THE FALLBACK: If DiceBear fails we show a simple colored circle with the user's initial.
-              <motion.div
-                className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main shadow-sm flex items-center justify-center bg-gradient-to-br from-green-400 to-red-500 dark:from-neon-blue dark:to-neon-pink text-white text-5xl font-black uppercase"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                {username ? username.charAt(0) : '?'}
-              </motion.div>
-            ) : (
-              // The DiceBear Avatar
-              <motion.img
-                src={avatarUri}
-                alt="Your Avatar"
-                onError={() => setImageError(true)} // If this fails to load it instantly switches to the Fallback
-                className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main shadow-sm bg-gray-50 dark:bg-discord-main"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            )}
-
-            <motion.button
-              onClick={handleRandomize}
-              whileHover={{ scale: 1.1, rotate: 15 }}
-              whileTap={{ scale: 0.9 }}
-              className="absolute -bottom-2 -right-2 bg-yellow-400 text-yellow-900 p-3 rounded-full border-4 border-white dark:border-discord-card shadow-md hover:bg-yellow-300 transition-colors z-10"
-              title="Randomize Avatar"
-            >
-              <Dices size={24} strokeWidth={3} />
-            </motion.button>
-          </div>
-        </div>
-
-        <hr className="border-2 border-gray-100 dark:border-discord-main rounded-full" />
-
-        <div className="flex flex-col gap-1">
-          <motion.div
-            animate={{ x: nameShake ? [-10, 10, -10, 10, 0] : 0 }}
-            transition={{ duration: 0.4 }}
+      {/* MOBILE ONLY: Initial Play Button */}
+      <AnimatePresence>
+        {!showMobileCard && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            onClick={() => setShowMobileCard(true)}
+            className="md:hidden z-10 mt-8 flex items-center justify-center gap-3 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white px-10 py-5 rounded-full font-black text-2xl shadow-lg border-b-[6px] border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1.5 transition-all w-full max-w-xs mx-auto"
           >
-            <input
-              type="text"
-              placeholder="Your Username"
-              value={username}
-              onChange={(e) => handleNameChange(e.target.value)}
-              maxLength={20}
-              className={`w-full p-4 border-4 rounded-2xl font-black text-xl text-center focus:outline-none transition-colors bg-gray-50 dark:bg-discord-main ${
-                nameError
-                  ? 'border-red-500 focus:border-red-600 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400'
-                  : 'border-gray-200 dark:border-discord-main dark:text-gray-100 focus:border-green-500 dark:focus:border-neon-blue'
-              }`}
-            />
-          </motion.div>
-          {nameError && (
-            <span className="text-red-500 font-bold text-sm text-center">{nameError}</span>
-          )}
-        </div>
+            <Play fill="currentColor" size={28} /> PLAY NOW
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-        <motion.button
-          onClick={handleCreate}
-          whileTap={{ scale: 0.97 }}
-          className="w-full flex items-center justify-center gap-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white p-4 rounded-2xl font-black text-xl border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all"
+      {/* The Dark Background Overlay for Mobile */}
+      <AnimatePresence>
+        {showMobileCard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowMobileCard(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* RESPONSIVE CARD: Bottom Sheet on Mobile, Centered on Desktop */}
+      <div
+        className={`
+        fixed bottom-0 left-0 w-full z-40 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
+        md:relative md:w-full md:max-w-md md:translate-y-0
+        ${showMobileCard ? 'translate-y-0' : 'translate-y-[120%]'}
+      `}
+      >
+        <motion.div
+          animate={{ paddingBottom: isKeyboardOpen ? '2.5rem' : '1.5rem' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          className="bg-white/95 dark:bg-discord-card/95 backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 rounded-t-[2.5rem] md:rounded-4xl border-t-4 border-l-4 border-r-4 md:border-b-4 border-gray-200 dark:border-discord-main shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] md:dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex flex-col gap-6"
         >
-          <Play fill="currentColor" size={24} /> Create Room
-        </motion.button>
+          {/* Mobile swipe-down drag handle */}
+          <div
+            onClick={() => setShowMobileCard(false)}
+            className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto -mb-2 md:hidden cursor-pointer hover:bg-gray-400 transition-colors"
+          />
 
-        <div className="flex items-center gap-4 py-2">
-          <hr className="flex-1 border-2 border-gray-100 dark:border-discord-main rounded-full" />
-          <span className="font-black text-gray-300 dark:text-gray-500 uppercase tracking-widest text-sm">
-            Or Join
-          </span>
-          <hr className="flex-1 border-2 border-gray-100 dark:border-discord-main rounded-full" />
-        </div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              {!mounted ? (
+                <div className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main bg-gray-100 dark:bg-discord-main shadow-sm animate-pulse" />
+              ) : imageError ? (
+                <motion.div
+                  className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main shadow-sm flex items-center justify-center bg-linear-to-br from-green-400 to-red-500 dark:from-neon-blue dark:to-neon-pink text-white text-5xl font-black uppercase"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  {username ? username.charAt(0) : '?'}
+                </motion.div>
+              ) : (
+                <motion.img
+                  src={avatarUri}
+                  alt="Your Avatar"
+                  onError={() => setImageError(true)}
+                  className="w-32 h-32 rounded-full border-4 border-gray-200 dark:border-discord-main shadow-sm bg-gray-50 dark:bg-discord-main"
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              )}
 
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-3">
+              <motion.button
+                onClick={handleRandomize}
+                whileHover={{ scale: 1.1, rotate: 15 }}
+                whileTap={{ scale: 0.9 }}
+                className="absolute -bottom-2 -right-2 bg-yellow-400 text-yellow-900 p-3 rounded-full border-4 border-white dark:border-discord-card shadow-md hover:bg-yellow-300 transition-colors z-10"
+                title="Randomize Avatar"
+              >
+                <Dices size={24} strokeWidth={3} />
+              </motion.button>
+            </div>
+          </div>
+
+          <hr className="border-2 border-gray-100 dark:border-discord-main rounded-full" />
+
+          <div className="flex flex-col gap-1">
             <motion.div
-              className="flex-1"
-              animate={{ x: codeShake ? [-10, 10, -10, 10, 0] : 0 }}
+              animate={{ x: nameShake ? [-10, 10, -10, 10, 0] : 0 }}
               transition={{ duration: 0.4 }}
             >
               <input
+                suppressHydrationWarning
                 type="text"
-                placeholder="XXXXXX"
-                value={joinCode}
-                onChange={(e) => handleCodeChange(e.target.value)}
-                maxLength={6}
-                className={`w-full p-4 border-4 rounded-2xl font-black text-xl text-center tracking-[0.2em] uppercase focus:outline-none transition-colors bg-gray-50 dark:bg-discord-main ${
-                  codeError
+                placeholder="Your Username"
+                value={username}
+                onChange={(e) => handleNameChange(e.target.value)}
+                onFocus={() => setIsKeyboardOpen(true)}
+                onBlur={() => setIsKeyboardOpen(false)}
+                maxLength={20}
+                className={`w-full p-4 border-4 rounded-2xl font-black text-xl text-center focus:outline-none transition-colors bg-gray-50 dark:bg-discord-main ${
+                  nameError
                     ? 'border-red-500 focus:border-red-600 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400'
-                    : 'border-gray-200 dark:border-discord-main dark:text-gray-100 focus:border-red-600 dark:focus:border-neon-pink'
+                    : 'border-gray-200 dark:border-discord-main dark:text-gray-100 focus:border-green-500 dark:focus:border-neon-blue'
                 }`}
               />
             </motion.div>
-            <motion.button
-              onClick={handleJoin}
-              whileTap={{ scale: 0.95 }}
-              //
-              className="bg-red-600 dark:bg-neon-pink hover:bg-red-700 dark:hover:bg-neon-pink-hover text-white px-6 rounded-2xl font-black text-xl flex items-center justify-center border-b-4 border-red-800 dark:border-neon-pink-border active:border-b-0 active:translate-y-1 transition-all"
-            >
-              <ArrowRightCircle size={28} strokeWidth={2.5} />
-            </motion.button>
+            {nameError && (
+              <span className="text-red-500 font-bold text-sm text-center">{nameError}</span>
+            )}
           </div>
-          {codeError && (
-            <span className="text-red-500 font-bold text-sm text-center">{codeError}</span>
-          )}
-        </div>
+
+          <motion.button
+            onClick={handleCreate}
+            whileTap={{ scale: 0.97 }}
+            className="w-full flex items-center justify-center gap-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white p-4 rounded-2xl font-black text-xl border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all"
+          >
+            <Play fill="currentColor" size={24} /> Create Room
+          </motion.button>
+
+          <div className="flex items-center gap-4 py-2">
+            <hr className="flex-1 border-2 border-gray-100 dark:border-discord-main rounded-full" />
+            <span className="font-black text-gray-300 dark:text-gray-500 uppercase tracking-widest text-sm">
+              Or Join
+            </span>
+            <hr className="flex-1 border-2 border-gray-100 dark:border-discord-main rounded-full" />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-3">
+              <motion.div
+                className="flex-1"
+                animate={{ x: codeShake ? [-10, 10, -10, 10, 0] : 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <input
+                  suppressHydrationWarning
+                  type="text"
+                  placeholder="XXXXXX"
+                  value={joinCode}
+                  onChange={(e) => handleCodeChange(e.target.value)}
+                  onFocus={() => setIsKeyboardOpen(true)}
+                  onBlur={() => setIsKeyboardOpen(false)}
+                  maxLength={6}
+                  className={`w-full p-4 border-4 rounded-2xl font-black text-xl text-center tracking-[0.2em] uppercase focus:outline-none transition-colors bg-gray-50 dark:bg-discord-main ${
+                    codeError
+                      ? 'border-red-500 focus:border-red-600 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400'
+                      : 'border-gray-200 dark:border-discord-main dark:text-gray-100 focus:border-red-600 dark:focus:border-neon-pink'
+                  }`}
+                />
+              </motion.div>
+              <motion.button
+                onClick={handleJoin}
+                whileTap={{ scale: 0.95 }}
+                className="bg-red-600 dark:bg-neon-pink hover:bg-red-700 dark:hover:bg-neon-pink-hover text-white px-6 rounded-2xl font-black text-xl flex items-center justify-center border-b-4 border-red-800 dark:border-neon-pink-border active:border-b-0 active:translate-y-1 transition-all"
+              >
+                <ArrowRightCircle size={28} strokeWidth={2.5} />
+              </motion.button>
+            </div>
+            {codeError && (
+              <span className="text-red-500 font-bold text-sm text-center">{codeError}</span>
+            )}
+          </div>
+
+          {/* Mobile Footer Links */}
+          <div className="md:hidden mt-2 flex justify-center gap-6 text-gray-400 dark:text-gray-500">
+            <a
+              href="https://github.com/mirza-mohammad24/scribblitz/"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <FaGithub size={24} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/mirza-mohammad-abbas/"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-blue-500 dark:hover:text-neon-blue transition-colors"
+            >
+              <FaLinkedin size={24} />
+            </a>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

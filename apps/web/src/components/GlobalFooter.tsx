@@ -9,7 +9,7 @@ export const GlobalFooter = () => {
 
   if (gameState !== null) {
     return (
-      <footer className="w-full bg-white dark:bg-discord-main border-t-2 border-gray-200 dark:border-discord-card p-2 shrink-0 z-50 text-xs font-bold text-gray-400 flex justify-center items-center gap-4 transition-colors duration-300">
+      <footer className="hidden md:flex w-full bg-white dark:bg-discord-main border-t-2 border-gray-200 dark:border-discord-card p-2 shrink-0 z-50 text-xs font-bold text-gray-400 flex justify-center items-center gap-4 transition-colors duration-300">
         <span>Scribblitz Engine</span>
         <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-discord-card"></span>
         <a
@@ -25,7 +25,7 @@ export const GlobalFooter = () => {
   }
 
   return (
-    <footer className="w-full border-t-4 border-gray-200 dark:border-discord-card bg-white dark:bg-discord-main shrink-0 z-50 mt-auto transition-colors duration-300">
+    <footer className="hidden md:block w-full border-t-4 border-gray-200 dark:border-discord-card bg-white dark:bg-discord-main shrink-0 z-50 mt-auto transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-black text-gray-800 dark:text-gray-100 tracking-tight">
