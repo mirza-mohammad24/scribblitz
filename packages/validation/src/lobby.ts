@@ -5,6 +5,7 @@
  */
 
 import { z } from 'zod';
+import { GAME_CONSTANTS } from '@scribblitz/shared';
 
 const usernameSchema = z
   .string()
@@ -29,11 +30,11 @@ export const roomConfigSchema = z.object({
     .int({
       message: 'Maximum players must be a whole number',
     })
-    .min(2, {
-      message: 'A room must allow at least 2 players',
+    .min(GAME_CONSTANTS.MIN_PLAYERS, {
+      message: `A room must allow at least ${GAME_CONSTANTS.MIN_PLAYERS} players`,
     })
-    .max(10, {
-      message: 'A room cannot exceed 10 players',
+    .max(GAME_CONSTANTS.MAX_PLAYERS, {
+      message: `A room cannot exceed ${GAME_CONSTANTS.MAX_PLAYERS} players`,
     })
     .optional(),
 
@@ -44,11 +45,11 @@ export const roomConfigSchema = z.object({
     .int({
       message: 'Round count must be a whole number',
     })
-    .min(1, {
-      message: 'There must be at least 1 round',
+    .min(GAME_CONSTANTS.MINIMUM_ROUND_COUNT, {
+      message: `There must be at least ${GAME_CONSTANTS.MINIMUM_ROUND_COUNT} round`,
     })
-    .max(10, {
-      message: 'Round count cannot exceed 10',
+    .max(GAME_CONSTANTS.MAXIMUM_ROUND_COUNT, {
+      message: `Round count cannot exceed ${GAME_CONSTANTS.MAXIMUM_ROUND_COUNT}`,
     })
     .optional(),
 
@@ -59,11 +60,11 @@ export const roomConfigSchema = z.object({
     .int({
       message: 'Draw time must be a whole number',
     })
-    .min(60, {
-      message: 'Draw time must be at least 60 seconds',
+    .min(GAME_CONSTANTS.MINIMUM_DRAW_TIME_SECONDS, {
+      message: `Draw time must be at least ${GAME_CONSTANTS.MINIMUM_DRAW_TIME_SECONDS} seconds`,
     })
-    .max(180, {
-      message: 'Draw time cannot exceed 180 seconds',
+    .max(GAME_CONSTANTS.MAXIMUM_DRAW_TIME_SECONDS, {
+      message: `Draw time cannot exceed ${GAME_CONSTANTS.MAXIMUM_DRAW_TIME_SECONDS} seconds`,
     })
     .optional(),
 
@@ -78,10 +79,12 @@ export const roomConfigSchema = z.object({
 
 export const createRoomSchema = z.object({
   username: usernameSchema,
+  avatarSeed: z.string().min(1),
   config: roomConfigSchema.optional(),
 });
 
 export const joinRoomSchema = z.object({
   roomCode: roomCodeSchema,
   username: usernameSchema,
+  avatarSeed: z.string().min(1),
 });

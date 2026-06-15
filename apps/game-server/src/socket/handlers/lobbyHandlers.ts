@@ -10,7 +10,7 @@
  */
 
 import { Server, Socket } from 'socket.io';
-import { ServerEvents, GameState, Player } from '@scribblitz/types';
+import { ServerEvents, GameState, Player, ErrorCode } from '@scribblitz/types';
 import { createRoomSchema, joinRoomSchema, roomConfigSchema } from '@scribblitz/validation';
 import { roomManager } from '../../rooms/RoomManager';
 import { ServerRoomState } from '../../rooms/Room';
@@ -56,7 +56,7 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   if (socket.data.roomCode) {
     emitError(
       socket,
-      'ALREADY_IN_ROOM',
+      ErrorCode.ALREADY_IN_ROOM,
       'You cannot create a new room while currently being in one',
     );
     return;
@@ -68,7 +68,7 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   if (!result.success) {
     emitError(
       socket,
-      'BAD_REQUEST',
+      ErrorCode.BAD_REQUEST,
       result.error.issues[0]?.message || 'Invalid room creation data',
     );
     return;
@@ -79,13 +79,14 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   const userId = getUserIdBySocket(socket);
 
   if (!userId) {
-    emitError(socket, 'UNAUTHORIZED', 'User not authenticated');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'User not authenticated');
     return;
   }
 
   const player: Player = {
     id: userId,
     username: payload.username,
+    avatarSeed: payload.avatarSeed,
     score: 0,
     isConnected: true,
     hasGuessedCorrectly: false,
@@ -124,7 +125,11 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
   const result = joinRoomSchema.safeParse(rawPayload);
 
   if (!result.success) {
-    emitError(socket, 'BAD_REQUEST', result.error.issues[0]?.message || 'Invalid join data');
+    emitError(
+      socket,
+      ErrorCode.BAD_REQUEST,
+      result.error.issues[0]?.message || 'Invalid join data',
+    );
     return;
   }
 
@@ -134,20 +139,20 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
 
   //Business logic checks
   if (!room) {
-    emitError(socket, 'NOT_FOUND', 'Room not found');
+    emitError(socket, ErrorCode.NOT_FOUND, 'Room not found');
     return;
   }
 
   //Only allow joining if game hasn't started yet
   if (room.getState().gameState !== GameState.LOBBY) {
-    emitError(socket, 'INVALID_STATE', 'Game already in progress');
+    emitError(socket, ErrorCode.INVALID_STATE, 'Game already in progress');
     return;
   }
 
   const userId = getUserIdBySocket(socket);
 
   if (!userId) {
-    emitError(socket, 'UNAUTHORIZED', 'User not authenticated');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'User not authenticated');
     return;
   }
   const player: Player = {
@@ -156,6 +161,7 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
     score: 0,
     isConnected: true,
     hasGuessedCorrectly: false,
+    avatarSeed: payload.avatarSeed,
   };
 
   //Server State Mutation
@@ -192,7 +198,11 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
   const result = roomConfigSchema.safeParse(rawPayload);
 
   if (!result.success) {
-    emitError(socket, 'BAD_REQUEST', result.error.issues[0]?.message || 'Invalid config data');
+    emitError(
+      socket,
+      ErrorCode.BAD_REQUEST,
+      result.error.issues[0]?.message || 'Invalid config data',
+    );
     return;
   }
 
@@ -201,7 +211,7 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
 
   const room = roomManager.getRoom(roomCode);
   if (!room) {
-    emitError(socket, 'NOT_FOUND', 'Room not found');
+    emitError(socket, ErrorCode.NOT_FOUND, 'Room not found');
     return;
   }
 
@@ -209,14 +219,14 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
 
   //Business Logic: Ensure we are still in the Lobby
   if (state.gameState !== GameState.LOBBY) {
-    emitError(socket, 'INVALID_STATE', 'Cannot change settings after the game has started');
+    emitError(socket, ErrorCode.INVALID_STATE, 'Cannot change settings after the game has started');
     return;
   }
 
   //Security: Ensure the sender is actually the Host
   const userId = getUserIdBySocket(socket);
   if (state.hostId !== userId) {
-    emitError(socket, 'UNAUTHORIZED', 'Only the host can update room settings');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'Only the host can update room settings');
     return;
   }
 

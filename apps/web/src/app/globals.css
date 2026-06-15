@@ -6,9 +6,50 @@
   --font-sans: var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
   --font-scribble: var(--font-fredoka), sans-serif;
+
+  /* 🎨 Our Custom Brand Colors */
+  --color-neon-blue: #00BFFF;
+  --color-neon-blue-hover: #00ACE6;
+  --color-neon-blue-border: #0099CC;
+
+  --color-neon-pink: #FF33CC;
+  --color-neon-pink-hover: #E62EB8;    
+  --color-neon-pink-border: #CC29A3;   
+
+  /* 🎮 Discord Backgrounds */
+  --color-discord-main: #1E1F22;
+  --color-discord-card: #2B2D31;
+
+  /* Shimmer Animation for the Lobby Skeleton */
+  --animate-shimmer: shimmer 2s infinite linear;
+}
+
+/* The Keyframes for the Shimmer */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* 3. CRITICAL: Override Tailwind's default dark mode behavior. 
    By default, v4 uses OS-level media queries. This tells it to 
    look for the "dark" class that `next-themes` injects into our HTML. */
 @variant dark (&:where(.dark, .dark *));
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+.dark::view-transition-old(root) {
+  z-index: 2;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}

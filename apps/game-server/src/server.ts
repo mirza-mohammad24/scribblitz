@@ -5,7 +5,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import { ClientEvents, ServerEvents, GameState } from '@scribblitz/types';
+import { ClientEvents, ServerEvents, GameState, ErrorCode } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import {
   handleCreateRoom,
@@ -26,6 +26,7 @@ import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
 import { clearTimer, clearIntervalTimer } from './utils/timerCleanUp';
 import { redis } from './lib/redis';
+import { emitError } from './utils/emitError';
 interface SocketData {
   userId: string;
   roomCode?: string;
@@ -110,6 +111,61 @@ io.on('connection', (socket: Socket) => {
   console.log(
     `[Socket] Connected: ${userId} | Total online: ${io.sockets.sockets.size} (from file server.ts)`,
   );
+
+  /* =====================================================================
+   * CONNECTION ARCHITECTURE & EDGE CASE HANDLING
+   * =====================================================================
+   * Our connection routing is designed to be self-healing and race-condition-free.
+   * It securely handles the three possible connection scenarios:
+   * * SCENARIO A: A Brand New Player (Fresh Join)
+   * - Trigger: A user visits the site for the first time; localStorage is empty.
+   * - Flow: The frontend sends `expectedRoom: null`. The Ghost Connection Sweeper
+   * is completely bypassed. The client connects safely, registers their UUID,
+   * and waits on the Splash Screen.
+   * * SCENARIO B: A Valid Reconnection (The Grace Period)
+   * - Trigger: A player accidentally closes their tab mid-game and reopens it.
+   * Their frontend sends `expectedRoom: 'ROOM_CODE'`.
+   * - Flow: The server checks the RoomManager. The room exists, and the userId
+   * is still in the player list. The Sweeper validation passes, and the code
+   * flows directly into the RECONNECT LOGIC block, cleanly dropping them back
+   * into the active game.
+   * * SCENARIO C: The Ghost Connection (Server Amnesia / Timeout Purge)
+   * - Trigger: The server restarts (wiping memory), or the 60-second grace period
+   * expires and the player is purged. The frontend sends `expectedRoom: 'ROOM_CODE'`.
+   * - Flow: The server checks memory, finds nothing, and the Sweeper catches the ghost:
+   * 1. We emit `ErrorCode.NOT_FOUND` to force the frontend to purge its stale state.
+   * 2. We explicitly set `expectedRoom = undefined` to prevent Socket.io's
+   * auto-reconnect engine from getting stuck in an infinite loop.
+   * 3. We deliberately DO NOT call `socket.disconnect()` or return early.
+   * The socket stays alive, dropping the user onto the Splash Screen with
+   * a healthy connection, immediately ready to start a new room.
+   * ===================================================================== */
+
+  const expectedRoom = socket.handshake.auth.expectedRoom; //This is set by the client when they attempt to reconnect with an active room in localStorage
+
+  if (expectedRoom) {
+    const room = roomManager.getRoom(expectedRoom);
+    // If the room doesn't exist (e.g., server restarted) OR the user isn't in it
+    if (!room || !room.getState().players.has(userId)) {
+      console.log(
+        `[Socket] Rejecting ghost connection for user ${userId} to dead room ${expectedRoom} (from file server.ts)`,
+      );
+
+      // Tell the frontend exactly what happened. The frontend's `isFatal`
+      // logic will catch this, purge localStorage, and boot them to the Splash screen.
+      emitError(
+        socket,
+        ErrorCode.SESSION_EXPIRED,
+        'Session expired or room closed (Silent Cleanup).',
+      );
+
+      // Clear the expected room from the socket so we don't infinitely loop
+      socket.handshake.auth.expectedRoom = undefined;
+
+      // Note: We deliberately DO NOT return here. The socket connection stays alive
+      // so the user can immediately click "Create New Room" without reconnecting again.
+    }
+  }
 
   //RECONNECT LOGIC: Check if user is returning within 60 seconds grace period
   const existingRoom = roomManager.getRoomByUserId(userId);

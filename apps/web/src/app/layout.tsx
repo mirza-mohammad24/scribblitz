@@ -1,7 +1,18 @@
 import type { Metadata } from 'next';
+import type { Viewport } from 'next';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { GlobalFooter } from '@/components/GlobalFooter';
 import { Geist, Geist_Mono, Fredoka } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/ThemeProvider';
+
+// Centralized viewport settings for consistent mobile behavior across all pages (helpful in MFS approach)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  interactiveWidget: 'resizes-content',
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,21 +40,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // suppressHydrationWarning is REQUIRED by next-themes so React doesn't throw a warning
-    // when next-themes injects the "dark" class into the HTML tag.
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300">
+      <body className="min-h-dvh flex flex-col bg-gray-50 text-gray-900 dark:bg-[#1E1F22] dark:text-gray-100 transition-colors duration-300">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex-1 overflow-hidden flex flex-col">{children}</div>
+          <GlobalFooter />
         </ThemeProvider>
       </body>
     </html>

@@ -8,7 +8,8 @@
     "dev": "tsc -w"
   },
   "dependencies": {
-    "zod": "^3.22.0"
+    "zod": "^3.22.0",
+    "@scribblitz/shared": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

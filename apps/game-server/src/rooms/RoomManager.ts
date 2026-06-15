@@ -4,7 +4,7 @@
  * acting as the primary interface between the Socket.io handlers and the individual Room entities.
  */
 
-import { Player, RoomConfig } from '@scribblitz/types';
+import { Player, RoomConfig, ErrorCode } from '@scribblitz/types';
 import { Room, ServerRoomState } from './Room';
 
 export class RoomManager {
@@ -62,7 +62,7 @@ export class RoomManager {
   addPlayer(roomCode: string, player: Player) {
     const room = this.rooms.get(roomCode);
     if (!room) {
-      return { success: false, reason: 'ROOM_NOT_FOUND' } as const;
+      return { success: false, reason: ErrorCode.NOT_FOUND } as const;
     }
 
     const result = room.addPlayer(player);

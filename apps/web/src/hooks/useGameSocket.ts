@@ -8,6 +8,7 @@ import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
 const LOCAL_STORAGE_KEY = 'scribblitz_token';
+export const ACTIVE_ROOM_KEY = 'scribblitz_active_room';
 const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
 
 //We declare the socket instance OUTSIDE the hook.
@@ -77,11 +78,17 @@ export const useGameSocket = () => {
   useEffect(() => {
     if (!socket) return; //Socket not initialized yet (shouldn't happen due to lazy init, but just in case)
 
-    // SMART CONNECT: If they already have a token, wake up the socket immediately
-    // to check if they belong in an active room.
-    const existingToken = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (existingToken && !socket.connected) {
-      socket.connect();
+    // SMART CONNECT: If they have an active room in localStorage, we attempt to connect
+    // immediately. Otherwise, we wait for them to click "Create/Join Room" which triggers the connection.
+    const activeRoom = localStorage.getItem(ACTIVE_ROOM_KEY);
+    if (activeRoom && !socket.connected) {
+      const ioSocket = getSocket(); // Get the socket instance (should be the same as `socket` state)
+
+      ioSocket.auth = {
+        ...socket.auth,
+        expectedRoom: activeRoom, //Inform the server that we are trying to reconnect to an active room
+      };
+      ioSocket.connect();
     }
 
     const onConnect = () => {

@@ -5,7 +5,7 @@
  */
 
 import { customAlphabet } from 'nanoid';
-import { RoomState, Player, RoomConfig, GameState } from '@scribblitz/types';
+import { RoomState, Player, RoomConfig, GameState, ErrorCode } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { GameFSM } from '../fsm/GameFSM';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
@@ -25,7 +25,11 @@ export type AddPlayerResult =
   | { success: true; message: 'ADDED' }
   | {
       success: false;
-      reason: 'ROOM_NOT_FOUND' | 'ROOM_FULL' | 'ALREADY_IN_ROOM' | 'DUPLICATE_USERNAME';
+      reason:
+        | ErrorCode.NOT_FOUND
+        | ErrorCode.ROOM_FULL
+        | ErrorCode.ALREADY_IN_ROOM
+        | ErrorCode.DUPLICATE_USERNAME;
     };
 
 export class Room {
@@ -117,16 +121,16 @@ export class Room {
    */
   addPlayer(player: Player): AddPlayerResult {
     if (this.state.players.size >= this.state.config.maxPlayer) {
-      return { success: false, reason: 'ROOM_FULL' };
+      return { success: false, reason: ErrorCode.ROOM_FULL };
     }
 
     if (this.state.players.has(player.id)) {
-      return { success: false, reason: 'ALREADY_IN_ROOM' };
+      return { success: false, reason: ErrorCode.ALREADY_IN_ROOM };
     }
 
     const existingUsernames = [...this.state.players.values()].map((p) => p.username.toLowerCase());
     if (existingUsernames.includes(player.username.toLowerCase())) {
-      return { success: false, reason: 'DUPLICATE_USERNAME' };
+      return { success: false, reason: ErrorCode.DUPLICATE_USERNAME };
     }
 
     // Add player to the room's player map

@@ -48,6 +48,7 @@ export interface StrokeEvent {
 export interface Player {
   id: string;
   username: string;
+  avatarSeed: string;
   score: number;
   isConnected: boolean;
   hasGuessedCorrectly: boolean;

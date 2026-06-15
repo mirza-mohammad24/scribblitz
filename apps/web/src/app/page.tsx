@@ -9,13 +9,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { DrawingCanvas } from '../components/Canvas/DrawingCanvas';
-import { ThemeToggle } from '../components/ThemeToggle';
-import { useGameSocket } from '../hooks/useGameSocket';
-import { useGameStore } from '../store/gameStore';
-import { ClientEvents, ServerEvents, GameState, RoomConfig } from '@scribblitz/types';
+import { DrawingCanvas } from '@/components/Canvas/DrawingCanvas';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { ChatBox } from '@/components/Chat/ChatBox';
 import { GameHUD } from '@/components/Game/GameHUD';
+import { SplashScreen } from '@/components/Splash/SplashScreen';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { GameOverModal } from '@/components/ui/GameOverModal';
+import { ToastManager } from '@/components/ui/ToastManager';
+import { useGameStore } from '@/store/gameStore';
+import { useToastStore } from '@/store/toastStore';
+import { useGameSocket, ACTIVE_ROOM_KEY } from '@/hooks/useGameSocket';
+import {
+  ClientEvents,
+  ServerEvents,
+  GameState,
+  RoomConfig,
+  GameError,
+  ErrorCode,
+} from '@scribblitz/types';
+import { LobbyScreen } from '@/components/Lobby/LobbyScreen';
 
 export default function Home() {
   const { socket, isConnected, userId } = useGameSocket();
@@ -32,8 +45,12 @@ export default function Home() {
     resetGame, //Needed for leaving the room
   } = useGameStore();
 
-  const [joinCodeInput, setJoinCodeInput] = useState('');
-  const [username, setUsername] = useState('');
+  const addToast = useToastStore((state) => state.addToast);
+
+  // State for the mobile player list toggle
+  const [showPlayersMobile, setShowPlayersMobile] = useState(false);
+
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
   // ==========================================
   // SOCKET LISTENERS
@@ -41,10 +58,16 @@ export default function Home() {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on(ServerEvents.ROOM_CREATED, ({ room }) => setRoomState(room));
-    socket.on(ServerEvents.ROOM_JOINED, ({ room }) => setRoomState(room));
+    socket.on(ServerEvents.ROOM_CREATED, ({ room }) => {
+      localStorage.setItem(ACTIVE_ROOM_KEY, room.code || room.roomCode); // Save active room code to localStorage for smart reconnection
+      setRoomState(room);
+    });
 
-    //  NEW: Listen for the new lobby reset event
+    socket.on(ServerEvents.ROOM_JOINED, ({ room }) => {
+      localStorage.setItem(ACTIVE_ROOM_KEY, room.code || room.roomCode); // Save active room code to localStorage for smart reconnection
+      setRoomState(room);
+    });
+
     socket.on(ServerEvents.LOBBY_RESET, ({ room }) => {
       resetGame();
       setRoomState(room);
@@ -73,10 +96,11 @@ export default function Home() {
     });
 
     socket.on(ServerEvents.ROOM_CONFIG_UPDATED, ({ config }) => setRoomState({ config }));
+
     socket.on(ServerEvents.GAME_STATE_CHANGED, ({ state }) => setRoomState({ gameState: state }));
 
     // ==========================================
-    // ROUND MANAGER FLOW (F6, F7, F8 Fixed)
+    // ROUND MANAGER FLOW
     // ==========================================
     socket.on(ServerEvents.ROUND_STARTING, ({ drawerId, round, totalRounds, roundId }) => {
       setRoomState({
@@ -102,26 +126,37 @@ export default function Home() {
       });
     });
 
-    socket.on(ServerEvents.ROUND_END, ({ correctWord, reason, scores }) => {
-      const updatedPlayers = useGameStore.getState().players.map((p) => {
-        const updated = scores.find((s) => s.id === p.id);
-        return updated ? { ...p, score: updated.score } : p;
-      });
-      setRoomState({
-        gameState: GameState.ROUND_END,
+    socket.on(
+      ServerEvents.ROUND_END,
+      ({
         correctWord,
-        roundEndReason: reason,
+        reason,
         scores,
-        players: updatedPlayers,
-      });
-    });
+      }: {
+        correctWord: string;
+        reason: string;
+        scores: Array<{ id: string; username: string; score: number }>;
+      }) => {
+        const updatedPlayers = useGameStore.getState().players.map((p) => {
+          const updated = scores.find((s) => s.id === p.id);
+          return updated ? { ...p, score: updated.score } : p;
+        });
+        setRoomState({
+          gameState: GameState.ROUND_END,
+          correctWord,
+          roundEndReason: reason,
+          scores,
+          players: updatedPlayers,
+        });
+      },
+    );
 
     socket.on(ServerEvents.GAME_END, ({ standings }) => {
       setRoomState({ gameState: GameState.GAME_END, standings });
     });
 
     // ==========================================
-    // CHAT & GAMEPLAY LISTENERS (F5 Fixed)
+    // CHAT & GAMEPLAY LISTENERS
     // ==========================================
     socket.on(ServerEvents.WORD_HINT_UPDATED, ({ hint }) => {
       setRoomState({ currentHint: hint });
@@ -133,7 +168,7 @@ export default function Home() {
     });
 
     socket.on(ServerEvents.PLAYER_GUESSED, ({ playerId, username }) => {
-      // Update the UI to show this player guessed correctly (e.g., turn their name green)
+      // Update the UI to show this player guessed correctly (turn their name green)
       const updatedPlayers = useGameStore
         .getState()
         .players.map((p) => (p.id === playerId ? { ...p, hasGuessedCorrectly: true } : p));
@@ -156,13 +191,30 @@ export default function Home() {
     });
 
     socket.on(ServerEvents.GUESS_CORRECT, ({ pointsEarned }) => {
-      // Temporary alert - can be replaced with a beautiful Toast notification later
-      alert(`Correct! You earned +${pointsEarned} points!`);
+      addToast(`Correct! You earned +${pointsEarned} points!`, 'success');
     });
 
-    socket.on(ServerEvents.ERROR, (error) =>
-      alert(`Server Error: ${error.message || JSON.stringify(error)}`),
-    );
+    // Deterministic Error Handling with standardized payload from the server
+    socket.on(ServerEvents.ERROR, (error: GameError) => {
+      // Fallback just in case a raw string slips through during transition
+      const isFatal = error?.isFatal ?? false;
+      const message = error?.message || JSON.stringify(error);
+
+      if (isFatal) {
+        // Backend explicitly commanded a disconnect (e.g., ROOM_FULL, ROOM_NOT_FOUND)
+        localStorage.removeItem(ACTIVE_ROOM_KEY); // Clear active room from localStorage on fatal error to
+        //  prevent reconnection loops
+        resetGame();
+
+        // Only show a scary red error toast if it was an active user failure
+        if (error.code !== ErrorCode.SESSION_EXPIRED) {
+          addToast(message, 'error');
+        }
+      } else {
+        // Just a standard notice (e.g., UNAUTHORIZED for clicking start as a non-host)
+        addToast(message, 'info');
+      }
+    });
 
     // CLEANUP
     return () => {
@@ -186,24 +238,11 @@ export default function Home() {
       socket.off(ServerEvents.GUESS_CORRECT);
       socket.off(ServerEvents.ERROR);
     };
-  }, [socket, setRoomState]);
+  }, [socket, setRoomState, resetGame]);
 
   // ==========================================
   // ACTIONS
   // ==========================================
-  const handleCreateRoom = () => {
-    if (!socket?.connected) socket?.connect(); // Ensure the socket is connected before emitting
-
-    socket?.emit(ClientEvents.ROOM_CREATE, {
-      username,
-      config: { maxPlayer: 8, drawTimeSeconds: 80, roundCount: 3, mode: 'standard' },
-    });
-  };
-
-  const handleJoinRoom = () => {
-    if (!socket?.connected) socket?.connect(); // Ensure the socket is connected before emitting
-    socket?.emit(ClientEvents.ROOM_JOIN, { username, roomCode: joinCodeInput });
-  };
 
   const handleStartGame = () => socket?.emit(ClientEvents.GAME_START, {});
 
@@ -214,7 +253,14 @@ export default function Home() {
 
   const handleLeaveRoom = () => {
     socket?.emit(ClientEvents.ROOM_LEAVE);
+    localStorage.removeItem(ACTIVE_ROOM_KEY); // Clear active room from localStorage on leave
     resetGame();
+  };
+
+  const requestLeaveRoom = () => {
+    if (gameState !== null) {
+      setIsLeaveModalOpen(true);
+    }
   };
 
   const handleReturnToLobby = () => {
@@ -226,150 +272,110 @@ export default function Home() {
   // ==========================================
   const isHost = hostId === userId;
   const isAssignedDrawer = currentDrawerId === userId;
-
   // SECURE CANVAS LOCK: Only true if it is explicitly your turn AND the timer is actively ticking
   const canDraw = isAssignedDrawer && gameState === GameState.DRAWING;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-6 transition-colors duration-300">
-      {/* HEADER */}
-      <div className="w-full max-w-5xl flex justify-between items-center mb-8 z-10">
-        <div>
-          <h1 className="text-4xl font-bold text-blue-600">Scribblitz Engine</h1>
-          <span className="text-sm font-medium text-gray-500">
-            {isConnected ? '🟢 Server Connected' : '🔴 Connecting...'}
-          </span>
-        </div>
+    // Updated main wrapper to use dark:bg-discord-main
+    <main className="flex h-dvh flex-col items-center p-4 lg:p-6 transition-colors duration-300 w-full max-w-6xl mx-auto min-h-0 bg-transparent dark:bg-discord-main">
+      {/* Toast Notifications */}
+      <ToastManager />
+
+      {/* GLOBAL HEADER: Appears on Splash, Lobby, and Game Arena */}
+      <div className="w-full flex justify-between items-center mb-4 z-10 shrink-0">
+        <button
+          onClick={requestLeaveRoom}
+          className="text-3xl lg:text-4xl font-black text-green-600 dark:text-neon-blue tracking-tight drop-shadow-sm hover:text-red-600 dark:hover:text-neon-pink transition-colors text-left"
+        >
+          Scribblitz.
+        </button>
         <ThemeToggle />
       </div>
 
-      {/* ZONE 1: SPLASH SCREEN */}
+      {/* ZONE 1: THE SPLASH SCREEN */}
       {gameState === null && (
-        <div className="bg-white p-8 rounded-xl shadow-lg border w-full max-w-md flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="p-3 border rounded"
-          />
-          <button
-            onClick={handleCreateRoom}
-            disabled={!username}
-            className="bg-blue-600 text-white py-3 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Create Room
-          </button>
-          <hr />
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="CODE"
-              value={joinCodeInput}
-              onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
-              maxLength={6}
-              className="flex-1 p-3 border rounded"
-            />
-            <button
-              onClick={handleJoinRoom}
-              disabled={!joinCodeInput || !username}
-              className="bg-purple-600 text-white px-6 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Join
-            </button>
-          </div>
-        </div>
+        <SplashScreen
+          onActionCreate={(username, avatarSeed) => {
+            if (!socket?.connected) socket?.connect();
+            socket?.emit(ClientEvents.ROOM_CREATE, {
+              username,
+              avatarSeed,
+              config: { maxPlayer: 8, drawTimeSeconds: 80, roundCount: 3, mode: 'standard' },
+            });
+          }}
+          onActionJoin={(username, roomCode, avatarSeed) => {
+            if (!socket?.connected) socket?.connect();
+            socket?.emit(ClientEvents.ROOM_JOIN, { username, roomCode, avatarSeed });
+          }}
+        />
       )}
 
-      {/* ZONE 2: VIP LOUNGE */}
-      {gameState === GameState.LOBBY && (
-        <div className="w-full max-w-4xl grid grid-cols-2 gap-6 bg-white p-6 rounded-xl border shadow">
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Settings</h2>
-              <button
-                onClick={handleLeaveRoom}
-                className="text-red-500 text-sm font-bold border border-red-500 px-3 py-1 rounded"
-              >
-                Leave Room
-              </button>
-            </div>
-            <label>
-              Rounds:{' '}
-              <input
-                type="range"
-                min="1"
-                max="10"
-                value={config?.roundCount || 3}
-                onChange={(e) => updateConfig({ roundCount: parseInt(e.target.value) })}
-                disabled={!isHost}
-              />
-            </label>
-            <label>
-              Time:{' '}
-              <input
-                type="range"
-                min="60"
-                max="180"
-                step="10"
-                value={config?.drawTimeSeconds || 80}
-                onChange={(e) => updateConfig({ drawTimeSeconds: parseInt(e.target.value) })}
-                disabled={!isHost}
-              />
-            </label>
-            {isHost ? (
-              <button
-                onClick={handleStartGame}
-                className="bg-green-500 text-white py-3 mt-4 rounded font-bold"
-              >
-                START GAME
-              </button>
-            ) : (
-              <div>Waiting for host...</div>
-            )}
-          </div>
-          <div>
-            <h2 className="text-xl font-bold mb-4">Players - Code: {roomCode}</h2>
-            {players.map((p) => (
-              <div key={p.id} className="p-2 border-b flex justify-between">
-                <span>
-                  {p.username} {p.id === hostId && '👑'}
-                </span>
-                {/* Visual feedback if a player is disconnected */}
-                {!p.isConnected && (
-                  <span className="text-red-500 text-xs font-bold">DISCONNECTED</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* ZONE 2: LOBBY */}
+      {gameState === GameState.LOBBY && config && (
+        <LobbyScreen
+          roomCode={roomCode!}
+          players={players}
+          config={config}
+          isHost={isHost}
+          hostId={hostId!}
+          onUpdateConfig={updateConfig}
+          onStartGame={handleStartGame}
+          onRequestLeave={requestLeaveRoom}
+        />
       )}
 
       {/* ZONE 3: THE GAME ARENA */}
       {gameState !== null && gameState !== GameState.LOBBY && (
-        <div className="w-full flex flex-col items-center gap-4">
-          <div className="w-full max-w-4xl flex justify-end">
+        <div className="w-full flex-1 flex flex-col items-center gap-4 min-h-0">
+          <div className="w-full flex justify-between items-center shrink-0">
+            {/* Mobile Player toggle */}
             <button
-              onClick={handleLeaveRoom}
-              className="text-red-500 text-sm font-bold hover:underline"
+              onClick={() => setShowPlayersMobile(!showPlayersMobile)}
+              className="lg:hidden bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-sm"
             >
-              Leave Game
+              👥 Players ({players.length})
+            </button>
+            <button
+              onClick={requestLeaveRoom}
+              className="text-red-500 text-sm font-black border-2 border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950 px-4 py-2 rounded-xl hover:bg-red-100 dark:hover:bg-red-900 transition-colors ml-auto"
+            >
+              Quit Game
             </button>
           </div>
 
+          {/* Mobile Player Overlay */}
+          {showPlayersMobile && (
+            <div className="lg:hidden w-full bg-white dark:bg-gray-800 border-4 border-gray-200 dark:border-gray-700 rounded-2xl p-4 shadow-lg shrink-0">
+              <h3 className="font-black border-b-2 border-gray-100 dark:border-gray-700 pb-2 mb-2">
+                Players
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {players.map((p) => (
+                  <span
+                    key={p.id}
+                    className={`px-3 py-1 rounded-full text-xs font-bold border-2 ${p.hasGuessedCorrectly ? 'bg-green-100 border-green-500 text-green-700' : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600'}`}
+                  >
+                    {p.username} {p.id === currentDrawerId && '✏️'}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* WORD SELECTION INTERFACE */}
           {gameState === GameState.ROUND_STARTING && (
-            <div className="w-full max-w-4xl bg-yellow-100 border-2 border-yellow-400 p-6 rounded-xl text-center mb-4">
+            <div className="w-full max-w-4xl bg-yellow-100 dark:bg-yellow-900/30 border-4 border-yellow-400 dark:border-yellow-700 p-6 rounded-2xl text-center mb-2 shrink-0">
               {isAssignedDrawer ? (
                 <div className="flex flex-col items-center gap-4">
-                  <h2 className="text-2xl font-bold text-black">Pick a Word!</h2>
-                  <div className="flex gap-4">
-                    {/* Safe mapping with optional chaining */}
+                  <h2 className="text-2xl font-black text-yellow-900 dark:text-yellow-100">
+                    Pick a Word!
+                  </h2>
+                  <div className="flex flex-wrap justify-center gap-4">
                     {wordChoices?.map((word) => (
                       <button
                         key={word}
                         onClick={() => handleWordSelect(word)}
-                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold text-xl hover:bg-blue-500"
+                        className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-6 py-3 rounded-xl font-black text-xl border-b-4 border-blue-700 active:border-b-0 active:translate-y-1 transition-all"
                       >
                         {word}
                       </button>
@@ -377,78 +383,45 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <h2 className="text-2xl font-bold text-black animate-pulse">
-                  Waiting for the Drawer to pick a word...
+                <h2 className="text-2xl font-black text-yellow-900 dark:text-yellow-100 animate-pulse">
+                  Waiting for Drawer to pick...
                 </h2>
               )}
             </div>
           )}
 
-          {/* GAME END OVERLAY */}
-          {gameState === GameState.GAME_END && (
-            <div className="w-full max-w-4xl bg-purple-100 border-2 border-purple-400 p-6 rounded-xl text-center mb-4 flex flex-col items-center gap-4">
-              <h2 className="text-3xl font-bold text-purple-800">Game Over!</h2>
-
-              {/* Leaderboard */}
-              <div className="flex flex-col gap-2 w-full max-w-md bg-white p-4 rounded shadow text-left">
-                <h3 className="text-xl font-bold text-center border-b pb-2 mb-2">
-                  Final Standings
-                </h3>
-                {standings?.map((player) => (
-                  <div
-                    key={player.id}
-                    className="flex justify-between items-center bg-gray-50 p-2 rounded"
-                  >
-                    <span className="font-bold">
-                      {player.rank === 1
-                        ? '🥇'
-                        : player.rank === 2
-                          ? '🥈'
-                          : player.rank === 3
-                            ? '🥉'
-                            : `#${player.rank}`}{' '}
-                      {player.username}
-                    </span>
-                    <span className="font-bold text-green-600">{player.score} pts</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* 🌟 FIX: The Missing Return to Lobby Button! */}
-              {isHost ? (
-                <button
-                  onClick={handleReturnToLobby}
-                  className="bg-green-500 text-white px-8 py-3 rounded-lg font-bold text-xl hover:bg-green-600 shadow-lg mt-4"
-                >
-                  Play Again (Return to Lobby)
-                </button>
-              ) : (
-                <h3 className="text-xl font-bold text-gray-600 animate-pulse mt-4">
-                  Waiting for Host to start a new game...
-                </h3>
-              )}
-            </div>
-          )}
-
-          {/* THE GAME GRID: Canvas on the left, Chat on the right */}
-          <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6 items-start">
+          {/* THE MOBILE-FIRST GAME GRID */}
+          <div className="w-full flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
             {/* Left Column: Canvas & Controls */}
-            <div className="flex flex-col w-full gap-2">
+            <div className="flex flex-col flex-2 gap-3 min-h-0 overflow-y-auto lg:overflow-visible pb-20 lg:pb-0">
               <GameHUD />
-              <div className="flex justify-between w-full px-4 py-2 font-bold bg-white border rounded">
-                <span>State: {gameState}</span>
-                <span>Role: {isAssignedDrawer ? '✏️ Drawer' : '👀 Watcher'}</span>
-              </div>
               <DrawingCanvas isDrawer={canDraw} roomCode={roomCode!} />
             </div>
 
             {/* Right Column: Chat Box */}
-            <div className="w-full flex justify-center">
+            <div className="w-full lg:w-87.5 shrink-0 flex justify-center h-[40vh] lg:h-full">
               <ChatBox />
             </div>
           </div>
         </div>
       )}
+
+      <GameOverModal
+        isOpen={gameState === GameState.GAME_END}
+        standings={standings || []}
+        isHost={isHost}
+        onPlayAgain={handleReturnToLobby}
+      />
+
+      <ConfirmModal
+        isOpen={isLeaveModalOpen}
+        title="Abandon Game?"
+        description="Are you sure you want to forfeit and leave the room? Your current score will be permanently lost and your player slot will be opened."
+        confirmText="Yes, Forfeit"
+        cancelText="Keep Playing"
+        onConfirm={handleLeaveRoom}
+        onCancel={() => setIsLeaveModalOpen(false)}
+      />
     </main>
   );
 }

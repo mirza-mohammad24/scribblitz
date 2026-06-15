@@ -1,72 +1,75 @@
 'use client';
 
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-
-  // Prevent Hydration Mismatch FOUC (Flash of Unstyled Content)
-  // We only render the UI once the component has mounted on the client
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // ============================================================================
-  // FIX: THE HYDRATION MISMATCH CATCH-22 (Why we break the React rules here)
-  // ============================================================================
-  // 1. The Next.js Server renders the initial HTML. It has NO access to the
-  //    browser's localStorage, so it blindly guesses the theme is "Light".
-  // 2. The Browser downloads the HTML. `next-themes` checks localStorage
-  //    and realizes the user actually saved "Dark" mode.
-  // 3. If React tries to hydrate the Dark icons while the server sent Light
-  //    HTML, React panics and throws a massive "Hydration Mismatch" error.
-  //
-  // SOLUTION: We force React to wait. By setting `mounted` to true inside
-  // a useEffect, we skip rendering the icons during the server-side pass
-  // and only render them once the browser is 100% in control.
+
   useEffect(() => {
-    // eslint-disable-next-line
-    setMounted(true);
+    // Avoid the synchronous state update warning during hydration
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
-  if (!mounted) return null;
+  const handleToggle = (e: React.MouseEvent) => {
+    // Determine what we are switching to based on the current state
+    const isCurrentlyDark = resolvedTheme === 'dark';
+    const newTheme = isCurrentlyDark ? 'light' : 'dark';
+
+    // Fallback for older browsers without View Transitions
+    if (!document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+    // We need to know if the DESTINATION is dark for the animation direction
+    const isDestinationDark = newTheme === 'dark';
+
+    const transition = document.startViewTransition(() => {
+      setTheme(newTheme);
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`];
+
+      document.documentElement.animate(
+        { clipPath: isDestinationDark ? clipPath.reverse() : clipPath },
+        {
+          duration: 800,
+          easing: 'ease-in-out',
+          pseudoElement: isDestinationDark
+            ? '::view-transition-old(root)'
+            : '::view-transition-new(root)',
+          fill: 'forwards',
+        },
+      );
+    });
+  };
+
+  if (!mounted) {
+    //Placeholder matches the button size to prevent layout shift during hydration, but is invisible and non-interactive
+    return (
+      <div className="w-12 h-12 bg-gray-200 dark:bg-discord-card rounded-full border-2 border-gray-300 dark:border-discord-main animate-pulse" />
+    );
+  }
+
+  const isDark = resolvedTheme === 'dark';
 
   return (
-    <div className="flex items-center gap-1 p-1 bg-gray-200 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-800 w-fit">
-      <button
-        onClick={() => setTheme('light')}
-        className={`p-2 rounded-md transition-all duration-200 ${
-          theme === 'light'
-            ? 'bg-white text-gray-900 shadow-sm'
-            : 'text-gray-500 hover:text-gray-900'
-        }`}
-        title="Light Mode"
-      >
-        <Sun className="w-4 h-4" />
-      </button>
-
-      <button
-        onClick={() => setTheme('system')}
-        className={`p-2 rounded-md transition-all duration-200 ${
-          theme === 'system'
-            ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm'
-            : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'
-        }`}
-        title="System Default"
-      >
-        <Monitor className="w-4 h-4" />
-      </button>
-
-      <button
-        onClick={() => setTheme('dark')}
-        className={`p-2 rounded-md transition-all duration-200 ${
-          theme === 'dark'
-            ? 'bg-gray-800 text-gray-100 shadow-sm'
-            : 'text-gray-500 hover:text-gray-100'
-        }`}
-        title="Dark Mode"
-      >
-        <Moon className="w-4 h-4" />
-      </button>
-    </div>
+    <button
+      onClick={handleToggle}
+      className="w-12 h-12 flex items-center justify-center rounded-full bg-white dark:bg-discord-card border-2 border-gray-200 dark:border-discord-main text-gray-500 dark:text-gray-300 shadow-sm hover:text-green-500 dark:hover:text-neon-blue hover:scale-105 active:scale-95 transition-all duration-200"
+      title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+    >
+      {/* Shows the current state's icon */}
+      {isDark ? <Moon size={22} strokeWidth={2.5} /> : <Sun size={22} strokeWidth={2.5} />}
+    </button>
   );
 }

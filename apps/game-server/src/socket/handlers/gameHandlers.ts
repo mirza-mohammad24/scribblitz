@@ -12,8 +12,9 @@ import { startGame, selectWord } from '../../fsm/roundManager';
 import { emitError } from '../../utils/emitError';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { wordSelectSchema } from '@scribblitz/validation';
-import { GameState, ServerEvents } from '@scribblitz/types';
+import { GameState, ServerEvents, ErrorCode } from '@scribblitz/types';
 import { serializeRoom } from '../utils/serializeRoom';
+import { GAME_CONSTANTS } from '@scribblitz/shared/dist/constants';
 
 /**
  * Handles the game start event
@@ -29,19 +30,29 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
 
   const room = roomManager.getRoom(roomCode);
   if (!room) {
-    emitError(socket, 'NOT_FOUND', 'Room not found');
+    emitError(socket, ErrorCode.NOT_FOUND, 'Room not found');
     return;
   }
 
   // SECURITY GUARD: Explicit FSM state guard.
   if (room.getState().gameState !== GameState.LOBBY) {
-    emitError(socket, 'INVALID_STATE', 'Game can only be started from the lobby');
+    emitError(socket, ErrorCode.INVALID_STATE, 'Game can only be started from the lobby');
     return;
   }
 
   //SECURITY GUARD: Only the host can start the game
   if (room.getState().hostId !== userId) {
-    emitError(socket, 'UNAUTHORIZED', 'Only the host can start the game');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'Only the host can start the game');
+    return;
+  }
+
+  //SECURITY GUARD: Enforce minimum player count before starting the game
+  if (room.getState().players.size < GAME_CONSTANTS.MIN_PLAYERS) {
+    emitError(
+      socket,
+      ErrorCode.NOT_ENOUGH_PLAYERS,
+      `Need at least ${GAME_CONSTANTS.MIN_PLAYERS} players to start the game.`,
+    );
     return;
   }
 
@@ -61,7 +72,7 @@ export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknow
   const result = wordSelectSchema.safeParse(payload);
 
   if (!result.success) {
-    emitError(socket, 'BAD_REQUEST', 'Invalid word selection data');
+    emitError(socket, ErrorCode.BAD_REQUEST, 'Invalid word selection data');
     return;
   }
 
@@ -74,7 +85,7 @@ export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknow
 
   //SECURITY GUARD: Only the current drawer can select the word
   if (room.getState().currentDrawerId !== userId) {
-    emitError(socket, 'UNAUTHORIZED', 'Only the current drawer can pick a word');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'Only the current drawer can pick a word');
     return;
   }
 
@@ -105,7 +116,7 @@ export const handleReturnToLobby = (io: Server, socket: Socket) => () => {
   if (room.getState().gameState !== GameState.GAME_END) return;
 
   if (room.getState().hostId !== userId) {
-    emitError(socket, 'UNAUTHORIZED', 'Only the host can return to the lobby');
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'Only the host can return to the lobby');
     return;
   }
 
