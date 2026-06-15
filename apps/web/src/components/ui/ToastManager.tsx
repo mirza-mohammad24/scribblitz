@@ -28,7 +28,7 @@ export const ToastManager = () => {
   const { toasts, removeToast } = useToastStore();
 
   return (
-    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-100 flex flex-col gap-3 w-full max-w-sm pointer-events-none px-4">
+    <div className="fixed top-4 md:top-6 pt-[env(safe-area-inset-top)] left-1/2 -translate-x-1/2 z-120 flex flex-col gap-3 w-full max-w-sm pointer-events-none px-4">
       <AnimatePresence>
         {toasts.map((toast) => {
           const config = toastConfig[toast.type];
