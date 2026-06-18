@@ -47,6 +47,7 @@ export const ServerEvents = {
   GUESS_CORRECT: 'guess:correct',
   GUESS_CLOSE: 'guess:close',
   PLAYER_GUESSED: 'player:guessed',
+  SCORE_UPDATE: 'score:update',
   EMOTE_BROADCAST: 'emote:broadcast',
   GLOW_UP_READY: 'glow_up:ready',
   ERROR: 'server:error',

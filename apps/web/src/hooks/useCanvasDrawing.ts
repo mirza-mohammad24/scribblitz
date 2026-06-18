@@ -11,6 +11,7 @@ import { StrokeEvent, ClientEvents, ServerEvents } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { applyFloodFill } from '@/utils/floodFill';
 import { useGameStore } from '@/store/gameStore';
+import { v4 as uuidv4 } from 'uuid';
 
 // Centralize logical dimensions to prevent magic-number drift and ensure multiplayer sync
 export const CANVAS_CONFIG = {
@@ -72,6 +73,7 @@ export const useCanvasDrawing = (
     }
   }, [canvasRef]);
 
+  //INITIAL LOAD SYNC
   useEffect(() => {
     if (!socket || !roomCode || !canvasRef.current) return;
 
@@ -173,7 +175,7 @@ export const useCanvasDrawing = (
     (e.target as HTMLElement).setPointerCapture(e.pointerId); //Own the pointer
 
     // GENERATE ID: Start a new Stroke ID every time the pen touches the paper
-    currentStrokeId.current = crypto.randomUUID();
+    currentStrokeId.current = uuidv4();
 
     const { x, y } = getCoordinates(e, canvasRef.current);
 
@@ -234,6 +236,7 @@ export const useCanvasDrawing = (
     (e.target as HTMLElement).releasePointerCapture(e.pointerId); //Release ownership
   };
 
+  // BATCH SYNC: Uploads local strokes to the server on an interval
   useEffect(() => {
     if (!isDrawer || !socket) return;
 
@@ -286,6 +289,12 @@ export const useCanvasDrawing = (
       redrawFromHistory();
     };
 
+    // If a user reconnects, they receive ROOM_JOINED but their canvas is blank.
+    // This explicitly demands the canvas history from the server upon reconnection.
+    const handleMidRoundReconnect = () => {
+      socket.emit(ClientEvents.CANVAS_SYNC_REQUEST, { roomCode });
+    };
+
     socket.on(ServerEvents.CANVAS_BATCH, handleIncomingBatch);
     socket.on(ServerEvents.CANVAS_CLEARED, handleServerClear);
     //Automatically wipe the canvas clean when a new round starts and ends
@@ -294,6 +303,9 @@ export const useCanvasDrawing = (
     socket.on(ServerEvents.CANVAS_UNDONE, handleServerUndo);
     socket.on(ServerEvents.CANVAS_HISTORY, handleHistorySync);
 
+    //Listen for reconnection
+    socket.on(ServerEvents.ROOM_JOINED, handleMidRoundReconnect);
+
     return () => {
       socket.off(ServerEvents.CANVAS_BATCH, handleIncomingBatch);
       socket.off(ServerEvents.CANVAS_CLEARED, handleServerClear);
@@ -301,8 +313,9 @@ export const useCanvasDrawing = (
       socket.off(ServerEvents.ROUND_END, handleServerClear);
       socket.off(ServerEvents.CANVAS_UNDONE, handleServerUndo);
       socket.off(ServerEvents.CANVAS_HISTORY, handleHistorySync);
+      socket.off(ServerEvents.ROOM_JOINED, handleMidRoundReconnect);
     };
-  }, [socket, isDrawer]);
+  }, [socket, isDrawer, roomCode]);
 
   const executeClear = () => {
     if (!isDrawer || !socket) return;

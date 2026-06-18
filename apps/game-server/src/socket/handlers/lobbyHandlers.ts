@@ -275,16 +275,18 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
   // the player's role in the current game state.
   const wasDrawerInActiveGame = state.currentDrawerId === userId && isGameActive;
 
-  //Now safely remove the player from the server memory.
-  const removeResult = roomManager.removePlayer(roomCode, userId);
-
-  // If the game is active and the player leaving is the drawer, end the round immediately (cumulative check above)
+  // We MUST END the round BEFORE removing the player from the roomManager.
+  // If we remove them first, their score completely vanishes from the end-of-round podium screen!
+  // If the game is active and the player leaving is the drawer, end the round immediately (cumulative check above).
   if (wasDrawerInActiveGame) {
     console.log(
       `[Game] Active drawer ${userId} left the room. Aborting turn. (from file lobbyHandlers.ts)`,
     );
     endRound(io, roomCode, 'drawer-left');
   }
+
+  //Now safely remove the player from the server memory.
+  const removeResult = roomManager.removePlayer(roomCode, userId);
 
   //Clean up
   socket.leave(roomCode);

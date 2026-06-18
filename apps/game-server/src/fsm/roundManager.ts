@@ -110,9 +110,18 @@ export const startNextRound = (io: Server, roomCode: string): void => {
   });
 
   //Select the next drawer (simple round-robin based on map insertion order)
-  const playerIds = [...state.players.keys()];
-  const drawerIndex = (state.currentRound - 1) % playerIds.length;
-  state.currentDrawerId = playerIds[drawerIndex] ?? null;
+  // We MUST filter out disconnected players.
+  // If we pick a disconnected player, the AFK timer will auto-select a word,
+  // and the game will stall for 60-180 seconds on an empty canvas.
+  const connectedPlayerIds = [...state.players.entries()]
+    .filter(([, p]) => p.isConnected)
+    .map(([id]) => id);
+
+  // Fallback to all players if somehow the connected array is empty (though the MIN_PLAYERS guard above prevents this)
+  const activePool = connectedPlayerIds.length > 0 ? connectedPlayerIds : [...state.players.keys()];
+
+  const drawerIndex = (state.currentRound - 1) % activePool.length;
+  state.currentDrawerId = activePool[drawerIndex] ?? null;
 
   const fullWordPool = state.config.customWordList || getWordPool();
   const availableWordPool = getAvailableWordPool(fullWordPool, state.usedWords);
@@ -190,6 +199,8 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     //Remove oldest word if we hit the cap
     state.usedWords.shift();
   }
+  //Save the current timestamp for the round start time to calculate the drawing timer accurately (will be used in the
+  // ArenaHUD(frontend) for the countdown)
   state.roundStartTime = Date.now();
 
   //Initialize hints for this round
@@ -202,6 +213,7 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     drawerId: state.currentDrawerId,
     wordLength: word.length,
     wordHint: state.currentHint, //Emit the generated hint string to the clients
+    roundStartTime: state.roundStartTime, // Emit the round start time to clients for accurate countdowns (server is the source of truth)
   });
 
   //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase

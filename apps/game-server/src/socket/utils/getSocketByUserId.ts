@@ -20,8 +20,20 @@ export function getSocketByUserId(
   userId: string,
   roomCode: string,
 ): Socket | undefined {
-  for (const [, socket] of io.sockets.sockets) {
-    if (socket.data.userId === userId && socket.data.roomCode === roomCode) return socket;
+  // High-Performance Targeted Lookup
+  // Instead of an O(N) iteration over every connected user on the server,
+  // we pull just the small Set of socket IDs active inside this specific room.
+  const roomSocketIds = io.sockets.adapter.rooms.get(roomCode);
+
+  if (!roomSocketIds) return undefined;
+
+  // Now we only iterate over the 2-8 players in the room, bypassing thousands of other sockets.
+  for (const socketId of roomSocketIds) {
+    const socket = io.sockets.sockets.get(socketId);
+    if (socket && socket.data.userId === userId) {
+      return socket;
+    }
   }
+
   return undefined;
 }

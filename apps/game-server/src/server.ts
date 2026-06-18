@@ -42,9 +42,24 @@ const httpServer = createServer(app);
 const disconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 //Socket.io initialized with Strict CORS for Next.js frontend
+// Original one commented out (DON'T TOUCH WILL UNCOMMENT LATER FUCK YOU IF TRY TO TOUCH THIS)
+/*
 const io = new Server<any, any, any, SocketData>(httpServer, {
   cors: {
     origin: process.env.WEB_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+*/
+//Using this for testing with help of mobile phone
+const io = new Server<any, any, any, SocketData>(httpServer, {
+  cors: {
+    // Allow the origin that the request is coming from.
+    // This allows you to access from localhost:3000 OR 192.168.1.X:3000
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -143,6 +158,9 @@ io.on('connection', (socket: Socket) => {
 
   const expectedRoom = socket.handshake.auth.expectedRoom; //This is set by the client when they attempt to reconnect with an active room in localStorage
 
+  //A flag to make the Ghost Sweeper and Reconnection logic mutually exclusive.
+  let isGhostConnection = false;
+
   if (expectedRoom) {
     const room = roomManager.getRoom(expectedRoom);
     // If the room doesn't exist (e.g., server restarted) OR the user isn't in it
@@ -162,48 +180,68 @@ io.on('connection', (socket: Socket) => {
       // Clear the expected room from the socket so we don't infinitely loop
       socket.handshake.auth.expectedRoom = undefined;
 
-      // Note: We deliberately DO NOT return here. The socket connection stays alive
-      // so the user can immediately click "Create New Room" without reconnecting again.
+      // Flag this as a ghost so the reconnect logic below is strictly bypassed.
+      isGhostConnection = true;
     }
   }
 
   //RECONNECT LOGIC: Check if user is returning within 60 seconds grace period
-  const existingRoom = roomManager.getRoomByUserId(userId);
+  //This is mutually exclusive with the Ghost Connection logic above, so we only run this if the ghost flag is false
+  if (!isGhostConnection) {
+    const existingRoom = roomManager.getRoomByUserId(userId);
 
-  if (existingRoom) {
-    const state = existingRoom.getState();
-    const player = state.players.get(userId); //We can safely get the player from the room's state since
-    // we have the room reference from the O(1) lookup
+    if (existingRoom) {
+      const state = existingRoom.getState();
+      const player = state.players.get(userId); //We can safely get the player from the room's state since
+      // we have the room reference from the O(1) lookup
 
-    if (player && !player.isConnected) {
-      player.isConnected = true; //Mark the player as reconnected in the server state
+      // We by choice don't check for `!player.isConnected`.
+      // This prevents the "fast reconnect race condition" where the new connection
+      // arrives before the old socket finishes disconnecting.
+      if (player) {
+        player.isConnected = true; //Mark the player as reconnected in the server state
 
-      //Clear the disconnect timeout since the player has reconnected
-      if (disconnectTimers.has(userId)) {
-        clearTimer(disconnectTimers.get(userId) || null);
-        disconnectTimers.delete(userId);
+        //Wipe any stale guess state from previous rounds upon reconnection
+        player.hasGuessedCorrectly = false;
+
+        //Clear the disconnect timeout since the player has reconnected
+        if (disconnectTimers.has(userId)) {
+          clearTimer(disconnectTimers.get(userId) || null);
+          disconnectTimers.delete(userId);
+        }
+
+        // Rejoin the socket room
+        socket.join(state.roomCode);
+        socket.data.roomCode = state.roomCode; //reattach room code to socket session for future reference
+
+        // Send the exact same payload as a fresh join
+        const serializedRoom = serializeRoom(state);
+        // Emit the ROOM_JOINED event to the rejoining player with the current room state so
+        // their client can sync up
+        socket.emit(ServerEvents.ROOM_JOINED, {
+          room: serializedRoom, //this strips off the word choices for security reasons.
+          // Therefore we add below explicit emit for the drawer reconnecting during the word selection phase
+        });
+
+        //  If the rejoining player is the active drawer during word selection,
+        // re-emit their private word choices array so their UI overlay populates correctly!
+        if (
+          state.gameState === GameState.ROUND_STARTING &&
+          state.currentDrawerId === userId &&
+          state.wordChoices
+        ) {
+          socket.emit(ServerEvents.WORD_CHOICES, { words: state.wordChoices });
+        }
+
+        // Log reconnection event with user ID and room code for better traceability in logs
+        console.log(
+          `[Socket] User Reconnected: ${userId} to Room: ${state.roomCode} (from file server.ts)`,
+        );
+
+        //tell the other players (all sockets except the rejoining player) in the room
+        // that this player has rejoined
+        socket.to(state.roomCode).emit(ServerEvents.PLAYER_JOINED, { player });
       }
-
-      // Rejoin the socket room
-      socket.join(state.roomCode);
-      socket.data.roomCode = state.roomCode; //reattach room code to socket session for future reference
-
-      // Send the exact same payload as a fresh join
-      const serializedRoom = serializeRoom(state);
-      // Emit the ROOM_JOINED event to the rejoining player with the current room state so
-      // their client can sync up
-      socket.emit(ServerEvents.ROOM_JOINED, {
-        room: serializedRoom,
-      });
-
-      // Log reconnection event with user ID and room code for better traceability in logs
-      console.log(
-        `[Socket] User Reconnected: ${userId} to Room: ${state.roomCode} (from file server.ts)`,
-      );
-
-      //tell the other players (all sockets except the rejoining player) in the room
-      // that this player has rejoined
-      socket.to(state.roomCode).emit(ServerEvents.PLAYER_JOINED, { player });
     }
   }
 
@@ -260,12 +298,12 @@ io.on('connection', (socket: Socket) => {
     });
 
     // --- DRAWER DISCONNECT & MIN PLAYER LOGIC ---
-
+    // We do not check for GameState.ROUND_END state so the server
+    // doesn't falsely transition states during the intermission screen.
     const isGameActive =
       state.gameState === GameState.DRAWING ||
       state.gameState === GameState.PARALLEL_DRAWING ||
-      state.gameState === GameState.ROUND_STARTING ||
-      state.gameState === GameState.ROUND_END;
+      state.gameState === GameState.ROUND_STARTING;
 
     // We DO NOT immediately endGame here to allow the 60-second grace period for watchers.
     // However, if the DRAWER disconnects, we immediately skip their turn so the game doesn't freeze.
@@ -362,3 +400,14 @@ redis
   .catch((err) => {
     console.error('[Redis] Fatal connection error (from file server.ts):', err);
   });
+
+// Graceful Shutdown to prevent Memory Leaks from orphan disconnect timers
+process.on('SIGTERM', () => {
+  console.log('[Server] SIGTERM received. Cleaning up disconnect timers...');
+  disconnectTimers.forEach((timer) => clearTimeout(timer));
+  disconnectTimers.clear();
+  httpServer.close(() => {
+    console.log('[Server] Closed gracefully.');
+    process.exit(0);
+  });
+});

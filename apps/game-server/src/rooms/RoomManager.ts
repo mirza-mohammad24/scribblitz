@@ -29,6 +29,11 @@ export class RoomManager {
 
     this.rooms.set(room.getRoomCode(), room);
 
+    // Atomically index the host's ID to the newly created room code.
+    // This prevents a rare race condition where the host disconnects before `addPlayer`
+    // is called, which would normally leave an untracked zombie room in memory.
+    this.playerRoomIndex.set(hostId, room.getRoomCode());
+
     return room.getState();
   }
 

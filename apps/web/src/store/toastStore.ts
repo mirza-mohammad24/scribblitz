@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -17,7 +18,7 @@ interface ToastStore {
 export const useToastStore = create<ToastStore>((set) => ({
   toasts: [],
   addToast: (message, type) => {
-    const id = crypto.randomUUID();
+    const id = uuidv4();
     set((state) => {
       // Prevent duplicate toasts with the same message from being added
       if (state.toasts.some((t) => t.message === message)) {

@@ -138,6 +138,14 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
       pointsEarned,
     });
 
+    //  Broadcast live scores to everyone for leaderboard updates.
+    io.to(roomCode).emit(ServerEvents.SCORE_UPDATE, {
+      scores: [...state.players.values()].map((p) => ({
+        id: p.id,
+        score: p.score,
+      })),
+    });
+
     //EARLY ROUND COMPLETION
     if (hasEveryoneGuessedCorrectly(state)) {
       endRound(io, roomCode, 'all_guessed');

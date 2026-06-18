@@ -14,6 +14,24 @@ export function ThemeToggle() {
     return () => clearTimeout(timer);
   }, []);
 
+  //Sync the Favicon with the theme state!
+  useEffect(() => {
+    if (!mounted) return;
+
+    const faviconHref = resolvedTheme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg';
+
+    // Find the existing favicon link tag, or create one if it doesn't exist
+    let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+
+    // Swap the image source dynamically!
+    link.href = faviconHref;
+  }, [resolvedTheme, mounted]);
+
   const handleToggle = (e: React.MouseEvent) => {
     // Determine what we are switching to based on the current state
     const isCurrentlyDark = resolvedTheme === 'dark';

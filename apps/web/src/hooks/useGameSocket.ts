@@ -9,7 +9,24 @@ import { v4 as uuidv4 } from 'uuid';
 
 const LOCAL_STORAGE_KEY = 'scribblitz_token';
 export const ACTIVE_ROOM_KEY = 'scribblitz_active_room';
-const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
+
+//DON'T DELETE THIS IS ORIGINAL (FUCK YOU IF YOU TOUCH THIS) THE DYNAMIC REPLACEMENT IS BELOW FOR TESTING PURPOSE
+//const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
+
+/**
+ * 🌟 FIX: Dynamic URL generation.
+ * This allows the frontend to automatically talk to your computer's local IP address
+ * instead of being hardcoded to localhost or a specific environment variable.
+ */
+const getBackendUrl = () => {
+  // If we are on the server (SSR), fallback to the default localhost
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
+  }
+
+  // Dynamically uses whatever IP/Hostname you typed into your phone/browser address bar
+  return `http://${window.location.hostname}:3001`;
+};
 
 //We declare the socket instance OUTSIDE the hook.
 //This ensures that React Strict Mode's double-mounting does not create duplicate socket connection
@@ -29,7 +46,7 @@ const getSocket = (): Socket => {
   }
 
   //Initialize the connection
-  socketInstance = io(SERVER_URL, {
+  socketInstance = io(getBackendUrl(), {
     auth: { token }, // Send the token for authentication during the handshake
     autoConnect: false,
   });

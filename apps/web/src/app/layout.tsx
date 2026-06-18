@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { Viewport } from 'next';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { GlobalFooter } from '@/components/GlobalFooter';
 import { Geist, Geist_Mono, Fredoka } from 'next/font/google';
 import './globals.css';
 
@@ -53,7 +52,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex-1 overflow-hidden flex flex-col">{children}</div>
-          <GlobalFooter />
         </ThemeProvider>
       </body>
     </html>

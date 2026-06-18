@@ -69,7 +69,6 @@ export const LobbyScreen = ({
     <>
       {isHost ? (
         <motion.button
-          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.95 }}
           onClick={onStartGame}
           className="w-full bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white py-4 md:py-5 rounded-2xl font-black text-xl md:text-2xl border-b-[6px] border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1.5 transition-all shadow-lg"
@@ -78,24 +77,24 @@ export const LobbyScreen = ({
         </motion.button>
       ) : (
         // The Active Waiting State
-        <div className="w-full bg-blue-50/50 dark:bg-neon-blue/10 py-4 md:py-5 rounded-2xl border-2 border-blue-200 dark:border-neon-blue/30 flex justify-center items-center gap-3 relative overflow-hidden shadow-[inset_0px_0px_20px_rgba(0,191,255,0.1)]">
+        <div className="w-full bg-green-50/50 dark:bg-neon-blue/10 py-4 md:py-5 rounded-2xl border-2 border-green-200 dark:border-neon-blue/30 flex justify-center items-center gap-3 relative overflow-hidden shadow-[inset_0px_0px_20px_rgba(0,191,255,0.1)]">
           {/* Soft pulsing background glow */}
           <motion.div
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute inset-0 bg-linear-to-r from-transparent via-blue-100/50 dark:via-neon-blue/10 to-transparent"
+            className="absolute inset-0 bg-linear-to-r from-transparent via-green-100/50 dark:via-neon-blue/10 to-transparent"
           />
 
           {/* Spinning loader & Text */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-            className="relative z-10 text-blue-500 dark:text-neon-blue"
+            className="relative z-10 text-green-500 dark:text-neon-blue"
           >
             <Settings2 size={24} strokeWidth={2.5} />
           </motion.div>
 
-          <span className="relative z-10 font-black text-lg text-blue-700 dark:text-neon-blue tracking-wide">
+          <span className="relative z-10 font-black text-lg text-green-700 dark:text-neon-blue tracking-wide">
             Waiting for Host...
           </span>
         </div>
@@ -104,13 +103,13 @@ export const LobbyScreen = ({
   );
 
   return (
-    // 🌟 FIX: Changed layout to flex-col (Mobile) and flex-row (Desktop).
-    // 🌟 FIX: overflow-hidden ensures the white card keeps its beautiful rounded corners, while the contents inside scroll!
+    // Changed layout to flex-col (Mobile) and flex-row (Desktop).
+    // overflow-hidden ensures the white card keeps its beautiful rounded corners, while the contents inside scroll
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full max-w-5xl flex flex-col md:flex-row gap-6 bg-white dark:bg-discord-card p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border-4 border-gray-200 dark:border-discord-main shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex-1 min-h-0 overflow-hidden"
+      className="w-full max-w-5xl flex flex-col md:flex-row gap-6 bg-white dark:bg-discord-card p-4 md:p-6 rounded-4xl md:rounded-[2.5rem] border-4 border-gray-200 dark:border-discord-main shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex-1 min-h-0 overflow-hidden"
     >
       {/* MOBILE TAB SWITCHER */}
       <div className="flex md:hidden bg-gray-100 dark:bg-discord-main p-1.5 rounded-2xl border-2 border-gray-200 dark:border-gray-800 shrink-0">
@@ -118,7 +117,7 @@ export const LobbyScreen = ({
           onClick={() => setActiveTab('settings')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 font-black text-sm rounded-xl transition-all ${
             activeTab === 'settings'
-              ? 'bg-white dark:bg-discord-card shadow-sm text-blue-600 dark:text-neon-blue border-2 border-gray-200 dark:border-gray-700'
+              ? 'bg-white dark:bg-discord-card shadow-sm text-red-600 dark:text-neon-pink border-2 border-gray-200 dark:border-gray-700'
               : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border-2 border-transparent'
           }`}
         >
@@ -128,7 +127,7 @@ export const LobbyScreen = ({
           onClick={() => setActiveTab('players')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 font-black text-sm rounded-xl transition-all ${
             activeTab === 'players'
-              ? 'bg-white dark:bg-discord-card shadow-sm text-purple-600 dark:text-neon-pink border-2 border-gray-200 dark:border-gray-700'
+              ? 'bg-white dark:bg-discord-card shadow-sm text-red-600 dark:text-neon-pink border-2 border-gray-200 dark:border-gray-700'
               : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border-2 border-transparent'
           }`}
         >
@@ -142,7 +141,7 @@ export const LobbyScreen = ({
       >
         <div className="flex justify-between items-center shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 md:p-3 bg-blue-100 dark:bg-neon-blue/20 rounded-2xl text-blue-600 dark:text-neon-blue">
+            <div className="p-2.5 md:p-3 bg-green-100 dark:bg-neon-blue/20 rounded-2xl text-green-600 dark:text-neon-blue">
               <Settings2 size={24} className="md:w-7 md:h-7" strokeWidth={2.5} />
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
@@ -174,7 +173,7 @@ export const LobbyScreen = ({
               value={config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT}
               onChange={(e) => onUpdateConfig({ roundCount: parseInt(e.target.value) })}
               disabled={!isHost}
-              className={`w-full h-3 rounded-lg appearance-none cursor-pointer ${isHost ? 'bg-blue-200 dark:bg-gray-700 accent-blue-500 dark:accent-neon-blue' : 'bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed'}`}
+              className={`w-full h-3 rounded-lg appearance-none cursor-pointer ${isHost ? 'bg-green-200 dark:bg-gray-700 accent-green-500 dark:accent-neon-blue' : 'bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed'}`}
             />
           </div>
 
@@ -194,23 +193,23 @@ export const LobbyScreen = ({
               value={config.drawTimeSeconds || GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS}
               onChange={(e) => onUpdateConfig({ drawTimeSeconds: parseInt(e.target.value) })}
               disabled={!isHost}
-              className={`w-full h-3 rounded-lg appearance-none cursor-pointer ${isHost ? 'bg-blue-200 dark:bg-gray-700 accent-blue-500 dark:accent-neon-blue' : 'bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed'}`}
+              className={`w-full h-3 rounded-lg appearance-none cursor-pointer ${isHost ? 'bg-green-200 dark:bg-gray-700 accent-green-500 dark:accent-neon-blue' : 'bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed'}`}
             />
           </div>
         </div>
 
         {/* START GAME / WAITING UI FOR NON-HOSTS (DESKTOP ONLY) */}
-        <div className="hidden md:block mt-auto pt-4 shrink-0">{renderActionUI()}</div>
+        <div className="hidden md:block mt-auto pt-4 pb-1 shrink-0">{renderActionUI()}</div>
       </div>
 
       {/* RIGHT COLUMN: PLAYERS */}
       <div
         className={`flex-1 flex-col bg-gray-50 dark:bg-discord-main p-4 md:p-6 rounded-3xl border-2 border-gray-100 dark:border-discord-main overflow-hidden ${activeTab === 'players' ? 'flex' : 'hidden md:flex'}`}
       >
-        {/* 🌟 FIX: Added flex-wrap so the ROOM CODE button drops down cleanly on small phones instead of smushing! */}
+        {/* Added flex-wrap so the ROOM CODE button drops down cleanly on small phones instead of smushing */}
         <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 pb-4 border-b-2 border-gray-200 dark:border-gray-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 md:p-2.5 bg-purple-100 dark:bg-purple-900/30 rounded-xl text-purple-600 dark:text-purple-400 shrink-0">
+            <div className="p-2 md:p-2.5 bg-red-100 dark:bg-neon-pink/20 rounded-xl text-purple-600 dark:text-purple-400 shrink-0">
               <Users size={20} className="md:w-6 md:h-6" strokeWidth={2.5} />
             </div>
             <h2 className="text-xl md:text-2xl font-black text-gray-900 dark:text-white">
@@ -219,23 +218,23 @@ export const LobbyScreen = ({
           </div>
           <button
             onClick={handleCopyCode}
-            className="bg-white dark:bg-discord-card text-gray-800 dark:text-gray-200 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-black tracking-widest border-2 border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-[#383A40] transition-colors active:scale-95 shrink-0"
+            className="bg-white dark:bg-discord-card text-gray-800 dark:text-gray-200 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-black tracking-widest border-2 border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center gap-2 hover:border-red-200 dark:hover:border-neon-pink/30 hover:bg-gray-50 dark:hover:bg-[#383A40] transition-colors active:scale-95 shrink-0 group"
             title="Copy Room Code"
           >
-            ROOM <span className="text-purple-600 dark:text-neon-pink">{roomCode}</span>
+            ROOM <span className="text-red-600 dark:text-neon-pink">{roomCode}</span>
             {copied ? (
               <Check size={14} className="text-green-500 md:w-4 md:h-4" strokeWidth={3} />
             ) : (
               <Copy
                 size={14}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors md:w-4 md:h-4"
+                className="text-gray-400 group-hover:text-red-500 dark:group-hover:text-neon-pink transition-colors md:w-4 md:h-4"
                 strokeWidth={2.5}
               />
             )}
           </button>
         </div>
 
-        {/* 🌟 FIX: Mobile Grid System! grid-cols-2 on small phones, 3 on larger phones, vertical list on desktop */}
+        {/* Mobile Grid System! grid-cols-2 on small phones, 3 on larger phones, vertical list on desktop */}
         <motion.div
           variants={listVariants}
           initial="hidden"
@@ -251,7 +250,7 @@ export const LobbyScreen = ({
                 animate="show"
                 exit="exit"
                 layout
-                // 🌟 FIX: Stacked columns for grid tiles on mobile, side-by-side flex for desktop list
+                //  Stacked columns for grid tiles on mobile, side-by-side flex for desktop list
                 className={`p-2.5 md:p-3 bg-white dark:bg-discord-card rounded-2xl border-2 ${!p.isConnected ? 'border-red-300 dark:border-red-900/50 opacity-60' : 'border-gray-100 dark:border-gray-800'} flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4 shadow-sm relative overflow-hidden`}
               >
                 {/* DICEBEAR AVATAR INJECTION */}
@@ -286,7 +285,7 @@ export const LobbyScreen = ({
                   <motion.div
                     animate={{ y: [-2, 2, -2] }}
                     transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    // 🌟 FIX: Absolute positioning for mobile grid, floating to the right for desktop list
+                    //Absolute positioning for mobile grid, floating to the right for desktop list
                     className="absolute top-2 right-2 md:relative md:top-auto md:right-auto shrink-0 bg-linear-to-br from-yellow-200 to-yellow-400 dark:from-yellow-500/20 dark:to-yellow-700/40 border-2 border-yellow-300 dark:border-yellow-600/50 p-1 md:p-2 rounded-lg md:rounded-xl shadow-[0_0_15px_rgba(250,204,21,0.4)]"
                     title="Room Host"
                   >
@@ -304,8 +303,8 @@ export const LobbyScreen = ({
         </motion.div>
       </div>
 
-      {/* 🌟 FIX: NATIVELY EMBEDDED MOBILE ACTION BAR */}
-      <div className="md:hidden shrink-0 pt-3 border-t-2 border-gray-100 dark:border-gray-800 mt-auto">
+      {/* NATIVELY EMBEDDED MOBILE ACTION BAR */}
+      <div className="md:hidden shrink-0 pt-3 pb-1 border-t-2 border-gray-100 dark:border-gray-800 mt-auto">
         {renderActionUI()}
       </div>
     </motion.div>

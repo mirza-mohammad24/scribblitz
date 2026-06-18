@@ -53,3 +53,13 @@
 .dark::view-transition-new(root) {
   z-index: 1;
 }
+
+
+/* Hides the scrollbar but allows scrolling (used for the mobile toolbox) */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
