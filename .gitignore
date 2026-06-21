@@ -38,3 +38,7 @@ yarn-error.log*
 *.pem
 
 /generated/prisma
+
+#Graphify
+graphify-out/cache/
+graphify-out/cost.json
