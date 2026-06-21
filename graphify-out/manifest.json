@@ -503,5 +503,45 @@
     "mtime": 1779997342.0,
     "ast_hash": "ba072c863bd8d32ee5e6e6f3e42feb3c",
     "semantic_hash": "ba072c863bd8d32ee5e6e6f3e42feb3c"
+  },
+  "README.md": {
+    "mtime": 1780054738.023044,
+    "ast_hash": "e70b52ac9621750e39d55ceff6d2c3da",
+    "semantic_hash": ""
+  },
+  "apps/web/AGENTS.md": {
+    "mtime": 1780201912.746559,
+    "ast_hash": "ead1271e378df551c32da9835dcee0ae",
+    "semantic_hash": ""
+  },
+  "apps/web/CLAUDE.md": {
+    "mtime": 1780201912.746559,
+    "ast_hash": "771faa62feb60b7de901a397aebb29b0",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1780201912.7525597,
+    "ast_hash": "ecc7df061371eff904e5746b17056160",
+    "semantic_hash": ""
+  },
+  "packages/eslint-config/README.md": {
+    "mtime": 1779997342.0,
+    "ast_hash": "3f4915336e7c54df90f5b12b527b8b87",
+    "semantic_hash": ""
+  },
+  "pnpm-workspace.yaml": {
+    "mtime": 1780976188.6023068,
+    "ast_hash": "28f03017c5ea5900aac2fe4fb4d890d0",
+    "semantic_hash": ""
+  },
+  "apps/web/public/icon-dark.svg": {
+    "mtime": 1781796501.82681,
+    "ast_hash": "2f033df000916378ad43181b794d4034",
+    "semantic_hash": ""
+  },
+  "apps/web/public/icon-light.svg": {
+    "mtime": 1781796484.47468,
+    "ast_hash": "54d67e82327fcf660d79ff71779ef1cd",
+    "semantic_hash": ""
   }
 }
