@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Player, RoomConfig } from '@scribblitz/types';
-import { Crown, Users, Settings2, LogOut, Copy, Check } from 'lucide-react';
+import { Crown, Users, Settings2, LogOut, Copy, Check, Info } from 'lucide-react';
 import Image from 'next/image';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 
@@ -159,13 +159,85 @@ export const LobbyScreen = ({
 
         <div className="flex flex-col gap-6 bg-gray-50 dark:bg-discord-main p-5 md:p-6 rounded-3xl border-2 border-gray-100 dark:border-discord-main shrink-0">
           {/* Rounds Slider */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 relative z-20">
             <div className="flex justify-between items-center font-black text-gray-700 dark:text-gray-200">
-              <label>Total Rounds</label>
+              {/* LABEL & INFO ICON WRAPPER */}
+              <div className="flex items-center gap-2">
+                <label>Total Rounds</label>
+
+                {/* TOOLTIP WRAPPER: group classes handle both desktop hover and mobile tap (focus) */}
+                <div className="relative flex items-center group">
+                  <button
+                    type="button"
+                    tabIndex={0}
+                    onClick={(e) => e.preventDefault()}
+                    className="text-gray-400 dark:text-gray-500 hover:text-green-500 dark:hover:text-neon-blue transition-colors outline-none focus:outline-none cursor-pointer"
+                    aria-label="Round Math Information"
+                  >
+                    <Info size={16} strokeWidth={3} />
+                  </button>
+
+                  {/* THE TOOLTIP OVERLAY */}
+                  <div className="absolute left-0 top-full mt-2 w-60 sm:w-64 max-w-[85vw] bg-gray-900 dark:bg-[#111214] text-gray-300 p-3.5 rounded-xl shadow-2xl z-50 text-xs font-bold opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all pointer-events-none">
+                    {/* Tooltip Triangle Pointer */}
+                    <div className="absolute -top-1 left-1.5 w-3 h-3 bg-gray-900 dark:bg-[#111214] rotate-45 rounded-sm" />
+
+                    <div className="text-green-400 dark:text-neon-blue font-black flex items-center gap-1.5 uppercase tracking-wider text-[10px] mb-1.5 border-b border-gray-700 pb-1.5">
+                      Rule: 1 Round = 1 Player&apos;s Turn to Draw!
+                    </div>
+
+                    {(() => {
+                      const connectedPlayers = players.filter((p) => p.isConnected);
+                      const playerCount = connectedPlayers.length;
+                      const rounds = config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT;
+
+                      if (playerCount === 0)
+                        return <span className="text-gray-500">Waiting for players...</span>;
+
+                      const baseDraws = Math.floor(rounds / playerCount);
+                      const extraDrawers = rounds % playerCount;
+
+                      let description = '';
+                      if (rounds <= playerCount) {
+                        description = `${rounds} ${rounds === 1 ? 'person draws' : 'people draw'} once`;
+                        const nonDrawersCount = playerCount - rounds;
+                        if (nonDrawersCount > 0) {
+                          description += `, ${nonDrawersCount} ${nonDrawersCount === 1 ? "doesn't" : "don't"}.`;
+                        } else {
+                          description += '.';
+                        }
+                      } else {
+                        description = `Everyone draws ${baseDraws} ${baseDraws === 1 ? 'time' : 'times'}`;
+                        if (extraDrawers > 0) {
+                          description += `, and ${extraDrawers} ${extraDrawers === 1 ? 'person draws' : 'people draw'} an extra time.`;
+                        } else {
+                          description += '.';
+                        }
+                      }
+
+                      return (
+                        <span className="leading-relaxed block">
+                          <span className="text-white">
+                            {rounds} {rounds === 1 ? 'Round' : 'Rounds'}
+                          </span>
+                          ,{' '}
+                          <span className="text-white">
+                            {playerCount} {playerCount === 1 ? 'Player' : 'Players'}
+                          </span>
+                          <br />
+                          <span className="text-gray-400 mt-1 block">→ {description}</span>
+                        </span>
+                      );
+                    })()}
+                  </div>
+                </div>
+              </div>
+
               <span className="bg-white dark:bg-discord-card px-3 py-1 rounded-lg border-2 border-gray-200 dark:border-gray-700 shadow-sm">
                 {config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT}
               </span>
             </div>
+
             <input
               type="range"
               min={GAME_CONSTANTS.MINIMUM_ROUND_COUNT}
@@ -178,13 +250,68 @@ export const LobbyScreen = ({
           </div>
 
           {/* Draw Time Slider */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 relative z-10">
             <div className="flex justify-between items-center font-black text-gray-700 dark:text-gray-200">
-              <label>Draw Time</label>
+              <div className="flex items-center gap-2">
+                <label>Draw Time</label>
+
+                <div className="relative flex items-center group">
+                  <button
+                    type="button"
+                    tabIndex={0}
+                    onClick={(e) => e.preventDefault()}
+                    className="text-gray-400 dark:text-gray-500 hover:text-green-500 dark:hover:text-neon-blue transition-colors outline-none focus:outline-none cursor-pointer"
+                    aria-label="Draw Time Information"
+                  >
+                    <Info size={16} strokeWidth={3} />
+                  </button>
+
+                  {/* Tooltip - Total Duration Math */}
+                  <div className="absolute left-0 top-full mt-2 w-60 sm:w-64 max-w-[85vw] bg-gray-900 dark:bg-[#111214] text-gray-300 p-3.5 rounded-xl shadow-2xl z-50 text-xs font-bold opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all pointer-events-none">
+                    <div className="absolute -top-1 left-1.5 w-3 h-3 bg-gray-900 dark:bg-[#111214] rotate-45 rounded-sm" />
+
+                    <div className="text-green-400 dark:text-neon-blue font-black flex items-center gap-1.5 uppercase tracking-wider text-[10px] mb-1.5 border-b border-gray-700 pb-1.5">
+                      Estimated Game Time
+                    </div>
+
+                    {(() => {
+                      const rounds = config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT;
+                      const drawTime =
+                        config.drawTimeSeconds || GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS;
+
+                      // Draw time + 15s Selection Time + 5s Round End Display
+                      const roundBuffer =
+                        GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS +
+                        GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS;
+                      const totalSeconds = rounds * (drawTime + roundBuffer);
+                      const totalMinutes = Math.ceil(totalSeconds / 60);
+
+                      let message = 'A quick sprint!';
+                      if (totalMinutes > 45) message = 'A marathon of pure chaos!';
+                      else if (totalMinutes > 20)
+                        message = 'Settle in, things are getting serious.';
+                      else if (totalMinutes > 10) message = 'A perfect session of scribbling.';
+
+                      return (
+                        <span className="leading-relaxed block">
+                          About <span className="text-white">~{totalMinutes} minutes</span> total.
+                          <br />
+                          <span className="text-gray-400 mt-1 block">→ {message}</span>
+                          <span className="text-[9px] text-gray-600 dark:text-gray-500 mt-2 block font-medium">
+                            (Includes drawing, selection & results)
+                          </span>
+                        </span>
+                      );
+                    })()}
+                  </div>
+                </div>
+              </div>
+
               <span className="bg-white dark:bg-discord-card px-3 py-1 rounded-lg border-2 border-gray-200 dark:border-gray-700 shadow-sm">
                 {config.drawTimeSeconds || GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS}s
               </span>
             </div>
+
             <input
               type="range"
               min={GAME_CONSTANTS.MINIMUM_DRAW_TIME_SECONDS}
