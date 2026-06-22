@@ -4,76 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "label": "LobbyScreen.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen",
-      "community": 1,
-      "norm_label": "lobbyscreen.tsx"
-    },
-    {
-      "label": "LobbyScreenProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_lobbyscreenprops",
-      "community": 1,
-      "norm_label": "lobbyscreenprops"
-    },
-    {
-      "label": "listVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_listvariants",
-      "community": 1,
-      "norm_label": "listvariants"
-    },
-    {
-      "label": "itemVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_itemvariants",
-      "community": 1,
-      "norm_label": "itemvariants"
-    },
-    {
-      "label": "LobbyScreen()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_lobbyscreen",
-      "community": 1,
-      "norm_label": "lobbyscreen()"
-    },
-    {
-      "label": "constants.ts",
-      "file_type": "code",
-      "source_file": "packages/shared/src/constants.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_constants",
-      "community": 33,
-      "norm_label": "constants.ts"
-    },
-    {
-      "label": "GAME_CONSTANTS",
-      "file_type": "code",
-      "source_file": "packages/shared/src/constants.ts",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "src_constants_game_constants",
-      "community": 33,
-      "norm_label": "game_constants"
-    },
-    {
       "label": "husky.sh",
       "file_type": "code",
       "source_file": ".husky/_/husky.sh",
@@ -2370,6 +2300,61 @@
       "id": "home_homescreen_homescreen"
     },
     {
+      "label": "LobbyScreen.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "lobbyscreen.tsx",
+      "community_name": "Community 1",
+      "id": "lobby_lobbyscreen"
+    },
+    {
+      "label": "LobbyScreenProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "lobbyscreenprops",
+      "community_name": "Community 1",
+      "id": "lobby_lobbyscreen_lobbyscreenprops"
+    },
+    {
+      "label": "listVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L22",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "listvariants",
+      "community_name": "Community 1",
+      "id": "lobby_lobbyscreen_listvariants"
+    },
+    {
+      "label": "itemVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "itemvariants",
+      "community_name": "Community 1",
+      "id": "lobby_lobbyscreen_itemvariants"
+    },
+    {
+      "label": "LobbyScreen()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L45",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "lobbyscreen()",
+      "community_name": "Community 1",
+      "id": "lobby_lobbyscreen_lobbyscreen"
+    },
+    {
       "label": "LogoLoop.tsx",
       "file_type": "code",
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
@@ -4196,6 +4181,28 @@
       "id": "shared_package_devdependencies_typescript"
     },
     {
+      "label": "constants.ts",
+      "file_type": "code",
+      "source_file": "packages/shared/src/constants.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 33,
+      "norm_label": "constants.ts",
+      "community_name": "Community 33",
+      "id": "src_constants"
+    },
+    {
+      "label": "GAME_CONSTANTS",
+      "file_type": "code",
+      "source_file": "packages/shared/src/constants.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 33,
+      "norm_label": "game_constants",
+      "community_name": "Community 33",
+      "id": "src_constants_game_constants"
+    },
+    {
       "label": "index.ts",
       "file_type": "code",
       "source_file": "packages/shared/src/index.ts",
@@ -5702,8 +5709,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "turborepo starter",
-      "community_name": "Community 23",
-      "id": "readme_turborepo_starter"
+      "id": "readme_turborepo_starter",
+      "community_name": "Community 23"
     },
     {
       "label": "docs (Next.js app)",
@@ -5716,8 +5723,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "docs (next.js app)",
-      "community_name": "Community 23",
-      "id": "readme_docs_app"
+      "id": "readme_docs_app",
+      "community_name": "Community 23"
     },
     {
       "label": "web (Next.js app)",
@@ -5730,8 +5737,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "web (next.js app)",
-      "community_name": "Community 23",
-      "id": "readme_web_app"
+      "id": "readme_web_app",
+      "community_name": "Community 23"
     },
     {
       "label": "@repo/ui",
@@ -5744,8 +5751,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "@repo/ui",
-      "community_name": "Community 23",
-      "id": "readme_ui_package"
+      "id": "readme_ui_package",
+      "community_name": "Community 23"
     },
     {
       "label": "@repo/eslint-config",
@@ -5758,8 +5765,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "@repo/eslint-config",
-      "community_name": "Community 23",
-      "id": "readme_eslint_config"
+      "id": "readme_eslint_config",
+      "community_name": "Community 23"
     },
     {
       "label": "@repo/typescript-config",
@@ -5772,8 +5779,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "@repo/typescript-config",
-      "community_name": "Community 23",
-      "id": "readme_typescript_config"
+      "id": "readme_typescript_config",
+      "community_name": "Community 23"
     },
     {
       "label": "Postgres Service",
@@ -5786,8 +5793,8 @@
       "contributor": null,
       "community": 35,
       "norm_label": "postgres service",
-      "community_name": "Community 35",
-      "id": "docker_compose_postgres"
+      "id": "docker_compose_postgres",
+      "community_name": "Community 35"
     },
     {
       "label": "Redis Service",
@@ -5800,8 +5807,8 @@
       "contributor": null,
       "community": 35,
       "norm_label": "redis service",
-      "community_name": "Community 35",
-      "id": "docker_compose_redis"
+      "id": "docker_compose_redis",
+      "community_name": "Community 35"
     },
     {
       "label": "PNPM Workspace Configuration",
@@ -5814,8 +5821,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "pnpm workspace configuration",
-      "community_name": "Community 23",
-      "id": "pnpm_workspace_config"
+      "id": "pnpm_workspace_config",
+      "community_name": "Community 23"
     },
     {
       "label": "Next.js Agent Rules",
@@ -5828,8 +5835,8 @@
       "contributor": null,
       "community": 36,
       "norm_label": "next.js agent rules",
-      "community_name": "Community 36",
-      "id": "web_agents_rules"
+      "id": "web_agents_rules",
+      "community_name": "Community 36"
     },
     {
       "label": "Claude Configuration",
@@ -5842,8 +5849,8 @@
       "contributor": null,
       "community": 36,
       "norm_label": "claude configuration",
-      "community_name": "Community 36",
-      "id": "web_claude_config"
+      "id": "web_claude_config",
+      "community_name": "Community 36"
     },
     {
       "label": "Dark Icon",
@@ -5856,8 +5863,8 @@
       "contributor": null,
       "community": 41,
       "norm_label": "dark icon",
-      "community_name": "Community 41",
-      "id": "web_icon_dark"
+      "id": "web_icon_dark",
+      "community_name": "Community 41"
     },
     {
       "label": "Light Icon",
@@ -5870,8 +5877,8 @@
       "contributor": null,
       "community": 42,
       "norm_label": "light icon",
-      "community_name": "Community 42",
-      "id": "web_icon_light"
+      "id": "web_icon_light",
+      "community_name": "Community 42"
     },
     {
       "label": "@turbo/eslint-config README",
@@ -5884,94 +5891,11 @@
       "contributor": null,
       "community": 23,
       "norm_label": "@turbo/eslint-config readme",
-      "community_name": "Community 23",
-      "id": "eslint_config_readme"
+      "id": "eslint_config_readme",
+      "community_name": "Community 23"
     }
   ],
   "links": [
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "lobby_lobbyscreen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "lobby_lobbyscreen_itemvariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "lobby_lobbyscreen_listvariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L45",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "lobby_lobbyscreen_lobbyscreen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "lobby_lobbyscreen_lobbyscreenprops"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "lobby_lobbyscreen_lobbyscreen"
-    },
-    {
-      "relation": "re_exports",
-      "context": "export",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/shared/src/index.ts",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "packages_shared_src_index_ts_src_index",
-      "target": "src_constants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/shared/src/constants.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_constants",
-      "target": "src_constants_game_constants"
-    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -9462,6 +9386,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "lobby_lobbyscreen"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "lobby_lobbyscreen_lobbyscreen"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -9695,6 +9641,46 @@
       "confidence_score": 1.0,
       "source": "home_homescreen",
       "target": "home_homescreen_homescreenprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "lobby_lobbyscreen_itemvariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "lobby_lobbyscreen_listvariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "lobby_lobbyscreen_lobbyscreen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "lobby_lobbyscreen_lobbyscreenprops"
     },
     {
       "relation": "contains",
@@ -11302,6 +11288,27 @@
       "target": "shared_package_devdependencies_typescript"
     },
     {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/shared/src/index.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "packages_shared_src_index_ts_src_index",
+      "target": "src_constants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/shared/src/constants.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_constants",
+      "target": "src_constants_game_constants"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/shared/tsconfig.json",
@@ -12616,5 +12623,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4aa4edfee81a57ca0ddef35c415cd16a18700b38"
+  "built_at_commit": "fd4c5798810f95849b1d7835212d09d480293fd7"
 }
