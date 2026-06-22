@@ -2,18 +2,18 @@
 
 ## Corpus Check
 
-- 105 files · ~34,524 words
+- 106 files · ~34,910 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 531 nodes · 652 edges · 44 communities (34 shown, 10 thin omitted)
+- 533 nodes · 655 edges · 45 communities (36 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `4aa4edfe`
+- Built from commit: `aa05d80d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -60,6 +60,7 @@
 - [[_COMMUNITY_Community 39|Community 39]]
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
+- [[_COMMUNITY_Community 44|Community 44]]
 
 ## God Nodes (most connected - your core abstractions)
 
@@ -82,26 +83,26 @@
   pnpm-workspace.yaml → README.md
 - `@turbo/eslint-config README` --references--> `@repo/eslint-config` [EXTRACTED]
   packages/eslint-config/README.md → README.md
+- `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
+  apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
 - `ServerRoomState` --references--> `GameFSM` [EXTRACTED]
   apps/game-server/src/rooms/Room.ts → apps/game-server/src/fsm/GameFSM.ts
-- `getSocket()` --calls--> `io` [INFERRED]
-  apps/web/src/hooks/useGameSocket.ts → apps/game-server/src/server.ts
 
 ## Import Cycles
 
 - None detected.
 
-## Communities (44 total, 10 thin omitted)
+## Communities (45 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.07
-Nodes (38): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+30 more)
+Cohesion: 0.08
+Nodes (37): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+29 more)
 
 ### Community 1 - "Community 1"
 
-Cohesion: 0.06
-Nodes (37): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+29 more)
+Cohesion: 0.07
+Nodes (35): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+27 more)
 
 ### Community 2 - "Community 2"
 
@@ -140,8 +141,8 @@ Nodes (18): dependencies, pg, @prisma/adapter-pg, @prisma/client, engines, node,
 
 ### Community 9 - "Community 9"
 
-Cohesion: 0.12
-Nodes (9): Footer(), HomeScreen(), HomeScreenProps, ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps, RulesModal() (+1 more)
+Cohesion: 0.20
+Nodes (4): ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps
 
 ### Community 10 - "Community 10"
 
@@ -162,6 +163,11 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
+
+### Community 14 - "Community 14"
+
+Cohesion: 0.13
+Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -248,26 +254,31 @@ Nodes (5): compilerOptions, outDir, rootDir, extends, include
 Cohesion: 0.40
 Nodes (4): compilerOptions, jsx, extends, $schema
 
+### Community 44 - "Community 44"
+
+Cohesion: 0.24
+Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConfig, ToastManager()
+
 ## Knowledge Gaps
 
-- **304 isolated node(s):** `LobbyScreenProps`, `listVariants`, `itemVariants`, `GAME_CONSTANTS`, `husky.sh script` (+299 more)
+- **304 isolated node(s):** `ArenaHUDProps`, `PlayerStanding`, `GameStore`, `initialState`, `LobbyScreenProps` (+299 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+  _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `LobbyScreenProps`, `listVariants`, `itemVariants` to the rest of the system?**
+- **What connects `ArenaHUDProps`, `PlayerStanding`, `GameStore` to the rest of the system?**
   _304 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.07055630936227951 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08182349503214495 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.06363636363636363 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06862745098039216 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**

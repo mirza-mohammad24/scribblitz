@@ -2,18 +2,18 @@
 
 ## Corpus Check
 
-- 106 files · ~34,910 words
+- 107 files · ~35,738 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 533 nodes · 655 edges · 45 communities (36 shown, 9 thin omitted)
+- 537 nodes · 663 edges · 45 communities (35 shown, 10 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `aa05d80d`
+- Built from commit: `80e54218`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -68,7 +68,7 @@
 2. `Room` - 15 edges
 3. `RoomManager` - 15 edges
 4. `compilerOptions` - 15 edges
-5. `useGameStore` - 12 edges
+5. `useGameStore` - 14 edges
 6. `GameFSM` - 10 edges
 7. `clearTimer()` - 9 edges
 8. `startNextRound()` - 8 edges
@@ -92,17 +92,17 @@
 
 - None detected.
 
-## Communities (45 total, 9 thin omitted)
+## Communities (45 total, 10 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.08
-Nodes (37): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+29 more)
+Cohesion: 0.07
+Nodes (39): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+31 more)
 
 ### Community 1 - "Community 1"
 
-Cohesion: 0.07
-Nodes (35): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+27 more)
+Cohesion: 0.06
+Nodes (38): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+30 more)
 
 ### Community 2 - "Community 2"
 
@@ -163,11 +163,6 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
-
-### Community 14 - "Community 14"
-
-Cohesion: 0.13
-Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -261,24 +256,24 @@ Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConf
 
 ## Knowledge Gaps
 
-- **304 isolated node(s):** `ArenaHUDProps`, `PlayerStanding`, `GameStore`, `initialState`, `LobbyScreenProps` (+299 more)
+- **306 isolated node(s):** `containerVariants`, `itemVariants`, `PlayerStanding`, `GameStore`, `initialState` (+301 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `ArenaHUDProps`, `PlayerStanding`, `GameStore` to the rest of the system?**
-  _304 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `containerVariants`, `itemVariants`, `PlayerStanding` to the rest of the system?**
+  _306 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08182349503214495 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06777493606138107 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.06862745098039216 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06428571428571428 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
