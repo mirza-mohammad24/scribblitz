@@ -109,6 +109,7 @@ export const ArenaChat = () => {
         <AnimatePresence initial={false}>
           {chatMessages.map((msg, idx) => {
             const isCorrectGuess = msg.isSystem && msg.message.toLowerCase().includes('guessed');
+            const isCloseGuess = msg.isSystem && msg.isCloseGuess === true;
 
             return (
               <motion.div
@@ -120,17 +121,20 @@ export const ArenaChat = () => {
                   ${msg.isSystem ? 'w-full my-1' : 'max-w-[85%] px-3 py-2 text-sm font-medium shadow-sm'}
                   ${
                     msg.isSystem
-                      ? // 🌟 PREMIUM SYSTEM MESSAGE STYLING
+                      ? // PREMIUM SYSTEM MESSAGE STYLING
                         isCorrectGuess
                         ? 'bg-green-100 dark:bg-blue-900/30 text-green-700 dark:text-neon-blue font-black self-center text-center border-2 border-green-400 dark:border-neon-blue rounded-xl px-4 py-2 flex items-center justify-center gap-2 drop-shadow-sm'
-                        : 'bg-yellow-100 dark:bg-discord-main text-yellow-800 dark:text-gray-300 font-bold self-center text-center border-2 border-yellow-300 dark:border-gray-700 rounded-xl px-4 py-2 text-xs'
+                        : isCloseGuess
+                          ? //AMBER STYLING FOR CLOSE GUESSES
+                            'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 font-black self-center text-center border-2 border-amber-400 dark:border-amber-600 rounded-xl px-4 py-2 flex items-center justify-center gap-2 drop-shadow-sm'
+                          : 'bg-yellow-100 dark:bg-discord-main text-yellow-800 dark:text-gray-300 font-bold self-center text-center border-2 border-yellow-300 dark:border-gray-700 rounded-xl px-4 py-2 text-xs'
                       : msg.senderId === userId
                         ? 'bg-green-500 dark:bg-neon-blue text-white self-end rounded-2xl rounded-br-sm'
                         : 'bg-white dark:bg-discord-main border-2 border-gray-100 dark:border-gray-800 dark:text-gray-200 self-start rounded-2xl rounded-bl-sm'
                   }
                 `}
               >
-                {/* 🌟 SPARKLES FOR CORRECT GUESSES */}
+                {/* SPARKLES FOR CORRECT GUESSES */}
                 {isCorrectGuess && (
                   <Sparkles
                     size={16}
@@ -151,7 +155,7 @@ export const ArenaChat = () => {
                 )}
                 <span className={`${msg.isSystem ? '' : 'break-words'}`}>{msg.message}</span>
 
-                {/* 🌟 SPARKLES FOR CORRECT GUESSES */}
+                {/* SPARKLES FOR CORRECT GUESSES */}
                 {isCorrectGuess && (
                   <Sparkles
                     size={16}

@@ -10,9 +10,11 @@
 import { Server, Socket } from 'socket.io';
 import { ServerEvents, GameState } from '@scribblitz/types';
 import { chatMessageSchema } from '@scribblitz/validation';
+import { GAME_CONSTANTS } from '@scribblitz/shared/dist/constants';
 import { ServerRoomState } from '../../rooms/Room';
 import { roomManager } from '../../rooms/RoomManager';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
+import { levenshteinDistance } from '../../utils/levenshtein';
 import { endRound } from '../../fsm/roundManager';
 
 /**
@@ -101,10 +103,15 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
   }
 
   //GUESS EVALUATION LOGIC
-  const correctWord = state.currentWord?.toLowerCase().trim();
-  const guess = text.toLowerCase();
+  const correctWordRaw = state.currentWord?.trim();
 
-  if (correctWord && guess === correctWord) {
+  if (!correctWordRaw) return;
+
+  //NORMALIZATION (Strip spaces, lowercase)
+  const correctWordNormalized = correctWordRaw.toLowerCase().replace(/\s+/g, '');
+  const guessNormalized = text.toLowerCase().replace(/\s+/g, '');
+
+  if (guessNormalized === correctWordNormalized) {
     //CORRECT GUESS
     state.correctGuessers.add(userId);
     player.hasGuessedCorrectly = true; // Keep Player object in sync with correctGuessers Set
@@ -151,13 +158,31 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
       endRound(io, roomCode, 'all_guessed');
     }
   } else {
-    //INCORRECT GUESS
-    //Broadcast the wrong guess normally so everyone can see it
+    // INCORRECT GUESS
+    // Broadcast the wrong guess normally so everyone can see it
     io.to(roomCode).emit(ServerEvents.CHAT_BROADCAST, {
       senderId: userId,
       senderName: player.username,
-      message: text,
+      message: text, // Send the original text to the chat
       isSystem: false,
     });
+
+    // CLOSE GUESS CHECK (Private to guesser)
+    // Running Levenshtein strictly on the normalized string
+    const distance = levenshteinDistance(guessNormalized, correctWordNormalized);
+
+    // Dynamic threshold: Distance 1 for short words (<=4) scaling up based on length.
+    const base = GAME_CONSTANTS.LEVENSHTEIN_CLOSE_THRESHOLD; // Defaults to 2
+    const threshold =
+      correctWordNormalized.length <= 4
+        ? 1
+        : base + Math.floor(Math.max(0, correctWordNormalized.length - 5) / 5);
+
+    // Trigger only if it's a valid edit distance
+    if (distance > 0 && distance <= threshold) {
+      socket.emit(ServerEvents.GUESS_CLOSE, {
+        message: `'${text}' is very close!`, // Quote their raw text back to them
+      });
+    }
   }
 };

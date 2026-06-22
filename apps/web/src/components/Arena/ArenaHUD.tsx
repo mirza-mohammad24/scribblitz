@@ -22,6 +22,7 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
     currentDrawerId,
     players,
     roundStartTime,
+    wordLength,
   } = useGameStore();
 
   // We default the timer to whatever the room config is set to
@@ -120,14 +121,22 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
         </span>
 
         <AnimatePresence mode="popLayout">
-          <motion.span
+          <motion.div
             key={currentHint}
             initial={{ y: -5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-2xl md:text-3xl lg:text-4xl font-mono font-black tracking-[0.2em] text-gray-900 dark:text-gray-100 mt-0.5 truncate"
+            className="mt-0.5 truncate"
           >
-            {currentHint || '? ? ?'}
-          </motion.span>
+            <span className="text-2xl md:text-3xl lg:text-4xl font-mono font-black tracking-[0.2em] text-gray-900 dark:text-gray-100">
+              {currentHint || '? ? ?'}
+            </span>
+            {/* Super script of word length if available */}
+            {wordLength ? (
+              <sup className="text-[10px] md:text-xs font-sans font-black text-gray-400 dark:text-gray-500 tracking-normal ml-1 relative -top-3 md:-top-4 shrink-0">
+                {wordLength}
+              </sup>
+            ) : null}
+          </motion.div>
         </AnimatePresence>
       </div>
 

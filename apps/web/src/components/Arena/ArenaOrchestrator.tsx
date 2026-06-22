@@ -184,6 +184,22 @@ export const ArenaOrchestrator = () => {
       setRoomState({ chatMessages: [...currentMessages, msg] });
     });
 
+    socket.on(ServerEvents.GUESS_CLOSE, ({ message }) => {
+      const currentMessages = useGameStore.getState().chatMessages || [];
+      setRoomState({
+        chatMessages: [
+          ...currentMessages,
+          {
+            senderId: 'system',
+            senderName: 'System',
+            message: message,
+            isSystem: true,
+            isCloseGuess: true,
+          },
+        ],
+      });
+    });
+
     socket.on(ServerEvents.PLAYER_GUESSED, ({ playerId, username }) => {
       //Fresh state snapshot from gameStore
       const currentState = useGameStore.getState();
@@ -279,6 +295,7 @@ export const ArenaOrchestrator = () => {
       socket.off(ServerEvents.GAME_END);
       socket.off(ServerEvents.WORD_HINT_UPDATED);
       socket.off(ServerEvents.CHAT_BROADCAST);
+      socket.off(ServerEvents.GUESS_CLOSE);
       socket.off(ServerEvents.PLAYER_GUESSED);
       socket.off(ServerEvents.SCORE_UPDATE);
       socket.off(ServerEvents.GUESS_CORRECT);

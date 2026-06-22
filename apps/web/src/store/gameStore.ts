@@ -30,7 +30,13 @@ interface GameStore {
   roundEndReason: string | null;
   scores: Array<{ id: string; username: string; score: number }>;
   standings: PlayerStanding[];
-  chatMessages: Array<{ senderId: string; senderName: string; message: string; isSystem: boolean }>;
+  chatMessages: Array<{
+    senderId: string;
+    senderName: string;
+    message: string;
+    isSystem: boolean;
+    isCloseGuess?: boolean;
+  }>;
   drawTimeSeconds: number;
   roundStartTime: number | null;
 
