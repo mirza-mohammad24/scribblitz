@@ -277,6 +277,8 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
 
   const currentRoundId = state.roundId; // SNAPSHOT
 
+  const isLastRound = state.currentRound >= state.config.roundCount;
+
   // FULL LIFECYCLE CLEANUP: Kill all active phase timers
   state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
   state.drawingTimer = clearTimer(state.drawingTimer);
@@ -302,6 +304,7 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
       username: p.username,
       score: p.score,
     })),
+    isFinalRound: isLastRound,
   });
 
   state.currentWord = null;

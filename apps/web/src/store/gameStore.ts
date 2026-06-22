@@ -28,8 +28,10 @@ interface GameStore {
   wordLength: number | null;
   correctWord: string | null;
   roundEndReason: string | null;
+  isFinalRound: boolean;
   scores: Array<{ id: string; username: string; score: number }>;
   standings: PlayerStanding[];
+  previousScores: Record<string, number>;
   chatMessages: Array<{
     senderId: string;
     senderName: string;
@@ -61,8 +63,10 @@ const initialState = {
   wordLength: null,
   correctWord: null,
   roundEndReason: null,
+  isFinalRound: false,
   scores: [],
   standings: [],
+  previousScores: {},
   chatMessages: [],
   drawTimeSeconds: 0,
   roundStartTime: null,

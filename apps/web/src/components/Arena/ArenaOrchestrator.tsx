@@ -14,6 +14,7 @@ import {
 } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { MessageCircle, X } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 
 // Screens
 import { HomeScreen } from '@/components/Home/HomeScreen';
@@ -22,6 +23,7 @@ import { LobbyScreen } from '@/components/Lobby/LobbyScreen';
 // Modals
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { GameOverModal } from '@/components/ui/GameOverModal';
+import { RoundEndOverlay } from '@/components/ui/RoundEndOverlay';
 
 // Arena Components
 import { ArenaHUD } from './ArenaHUD';
@@ -110,8 +112,17 @@ export const ArenaOrchestrator = () => {
     // ROUND MANAGER FLOW
     // ==========================================
     socket.on(ServerEvents.ROUND_STARTING, ({ drawerId, round, totalRounds, roundId }) => {
+      //Capture the current scores before the round starts so we can use
+      //them for the "score delta" in the post-round overlay
+      const currentStore = useGameStore.getState();
+      const previousScores: Record<string, number> = {};
+
+      currentStore.players.forEach((p) => {
+        previousScores[p.id] = p.score;
+      });
+
       // Reset the "hasGuessedCorrectly" status for all players at the start of each round
-      const resetPlayers = useGameStore.getState().players.map((p) => ({
+      const resetPlayers = currentStore.players.map((p) => ({
         ...p,
         hasGuessedCorrectly: false,
       }));
@@ -123,6 +134,7 @@ export const ArenaOrchestrator = () => {
         roundId,
         gameState: GameState.ROUND_STARTING,
         players: resetPlayers, // Reset guessing status at the start of each round
+        previousScores,
       });
     });
 
@@ -147,12 +159,16 @@ export const ArenaOrchestrator = () => {
         correctWord,
         reason,
         scores,
+        isFinalRound,
       }: {
         correctWord: string;
         reason: string;
         scores: Array<{ id: string; username: string; score: number }>;
+        isFinalRound?: boolean;
       }) => {
-        const updatedPlayers = useGameStore.getState().players.map((p) => {
+        const currentPlayers = useGameStore.getState().players;
+
+        const updatedPlayers = currentPlayers.map((p) => {
           const updated = scores.find((s) => s.id === p.id);
           return updated ? { ...p, score: updated.score } : p;
         });
@@ -162,6 +178,7 @@ export const ArenaOrchestrator = () => {
           roundEndReason: reason,
           scores,
           players: updatedPlayers,
+          isFinalRound: isFinalRound || false,
         });
       },
     );
@@ -465,6 +482,11 @@ export const ArenaOrchestrator = () => {
                   </div>
                 </div>
               )}
+
+              {/* ROUND END OVERLAY */}
+              <AnimatePresence>
+                {gameState === GameState.ROUND_END && <RoundEndOverlay />}
+              </AnimatePresence>
 
               {/* CANVAS COMPONENT */}
               <ArenaCanvas isDrawer={canDraw} roomCode={roomCode!} />
