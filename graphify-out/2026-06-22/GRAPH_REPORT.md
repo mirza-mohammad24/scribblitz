@@ -1,8 +1,9 @@
-# Graph Report - . (2026-06-21)
+# Graph Report - scribblitz (2026-06-22)
 
 ## Corpus Check
 
-- cluster-only mode — file stats not available
+- 105 files · ~34,524 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
@@ -12,7 +13,7 @@
 
 ## Graph Freshness
 
-- Built from commit: `fd4c5798`
+- Built from commit: `4aa4edfe`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -249,7 +250,7 @@ Nodes (4): compilerOptions, jsx, extends, $schema
 
 ## Knowledge Gaps
 
-- **304 isolated node(s):** `husky.sh script`, `name`, `version`, `description`, `main` (+299 more)
+- **304 isolated node(s):** `LobbyScreenProps`, `listVariants`, `itemVariants`, `GAME_CONSTANTS`, `husky.sh script` (+299 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -261,7 +262,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `husky.sh script`, `name`, `version` to the rest of the system?**
+- **What connects `LobbyScreenProps`, `listVariants`, `itemVariants` to the rest of the system?**
   _304 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07055630936227951 - nodes in this community are weakly interconnected._
