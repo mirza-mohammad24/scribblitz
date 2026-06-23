@@ -1,19 +1,19 @@
-# Graph Report - scribblitz (2026-06-23)
+# Graph Report - scribblitz (2026-06-22)
 
 ## Corpus Check
 
-- 108 files · ~35,800 words
+- 107 files · ~35,738 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 539 nodes · 667 edges · 45 communities (35 shown, 10 thin omitted)
+- 537 nodes · 663 edges · 45 communities (35 shown, 10 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `4d6c3a99`
+- Built from commit: `80e54218`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -85,8 +85,8 @@
   packages/eslint-config/README.md → README.md
 - `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
   apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
-- `Footer()` --calls--> `useGameStore` [EXTRACTED]
-  apps/web/src/components/Footer.tsx → apps/web/src/store/gameStore.ts
+- `ServerRoomState` --references--> `GameFSM` [EXTRACTED]
+  apps/game-server/src/rooms/Room.ts → apps/game-server/src/fsm/GameFSM.ts
 
 ## Import Cycles
 
@@ -101,8 +101,8 @@ Nodes (39): endGame(), endRound(), selectWord(), startGame(), startNextRound(), 
 
 ### Community 1 - "Community 1"
 
-Cohesion: 0.07
-Nodes (34): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+26 more)
+Cohesion: 0.06
+Nodes (38): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, ArenaLeaderboard() (+30 more)
 
 ### Community 2 - "Community 2"
 
@@ -141,8 +141,8 @@ Nodes (18): dependencies, pg, @prisma/adapter-pg, @prisma/client, engines, node,
 
 ### Community 9 - "Community 9"
 
-Cohesion: 0.12
-Nodes (9): Footer(), HomeScreen(), HomeScreenProps, ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps, RulesModal() (+1 more)
+Cohesion: 0.20
+Nodes (4): ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps
 
 ### Community 10 - "Community 10"
 
@@ -256,7 +256,7 @@ Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConf
 
 ## Knowledge Gaps
 
-- **306 isolated node(s):** `LobbyScreenProps`, `listVariants`, `itemVariants`, `PlayerStanding`, `GameOverModalProps` (+301 more)
+- **306 isolated node(s):** `containerVariants`, `itemVariants`, `PlayerStanding`, `GameStore`, `initialState` (+301 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -265,15 +265,15 @@ Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConf
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `LobbyScreenProps`, `listVariants`, `itemVariants` to the rest of the system?**
+- **What connects `containerVariants`, `itemVariants`, `PlayerStanding` to the rest of the system?**
   _306 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.06777493606138107 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.07265306122448979 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06428571428571428 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
