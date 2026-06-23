@@ -56,10 +56,7 @@ export function applyFloodFill(
 
   const pixelStack = [[x, y]];
 
-  const MAX_PIXELS = 2_000_000;
-  let pixelsColored = 0;
-
-  while (pixelStack.length > 0 && pixelsColored < MAX_PIXELS) {
+  while (pixelStack.length > 0) {
     const newPos = pixelStack.pop()!;
     const px = newPos[0];
     let py = newPos[1];
@@ -76,16 +73,15 @@ export function applyFloodFill(
 
     while (py < canvasHeight && matchStartColor(pixelPos)) {
       colorPixel(pixelPos);
-      pixelsColored++;
 
       if (px > 0) {
         if (matchStartColor(pixelPos - 4)) {
           if (!reachLeft) {
             pixelStack.push([px - 1, py]);
             reachLeft = true;
-          } else if (reachLeft) {
-            reachLeft = false;
           }
+        } else if (reachLeft) {
+          reachLeft = false;
         }
       }
       if (px < canvasWidth - 1) {
@@ -93,9 +89,9 @@ export function applyFloodFill(
           if (!reachRight) {
             pixelStack.push([px + 1, py]);
             reachRight = true;
-          } else if (reachRight) {
-            reachRight = false;
           }
+        } else if (reachRight) {
+          reachRight = false;
         }
       }
       py++;

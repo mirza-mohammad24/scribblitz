@@ -166,26 +166,6 @@ export const GameOverModal = ({
               )}
             </div>
 
-            {/* RUNNER UPS */}
-            {runnerUps.length > 0 && (
-              <div className="w-full max-w-md bg-gray-50 dark:bg-discord-main rounded-2xl p-2 md:p-3 border-2 border-gray-100 dark:border-gray-800 flex flex-col gap-2 max-h-24 md:max-h-32 overflow-y-auto custom-scrollbar shadow-inner shrink-0">
-                {runnerUps.map((player) => (
-                  <div
-                    key={player.id}
-                    className="flex justify-between items-center px-3 py-1.5 md:px-4 md:py-2 bg-white dark:bg-discord-card rounded-xl font-bold border border-gray-100 dark:border-transparent shadow-sm text-sm md:text-base"
-                  >
-                    <span className="text-gray-400 dark:text-gray-500 w-6 md:w-8">
-                      #{player.rank}
-                    </span>
-                    <span className="flex-1 text-left text-gray-700 dark:text-gray-200 truncate">
-                      {player.username}
-                    </span>
-                    <span className="text-green-500 dark:text-neon-blue">{player.score} pts</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
             {/* CONTROLS */}
             <div className="w-full flex flex-col gap-2 md:gap-3 shrink-0">
               {isHost ? (

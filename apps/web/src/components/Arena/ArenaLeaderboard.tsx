@@ -12,40 +12,36 @@ export const ArenaLeaderboard = () => {
   // Sort players dynamically by score (descending)
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
-  // Top 3 Styling Configuration
   const podiumStyles = {
     0: {
       // GOLD
-      border: 'border-yellow-400 dark:border-yellow-500',
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      text: 'text-yellow-600 dark:text-yellow-400',
+      border: 'border-yellow-500 dark:border-yellow-500',
+      bg: 'bg-gradient-to-br from-yellow-300 to-yellow-500 dark:from-yellow-900/30 dark:to-yellow-800/20',
+      text: 'text-yellow-900 dark:text-yellow-400',
       ring: 'ring-yellow-400 dark:ring-yellow-500',
-      icon: <Trophy size={18} className="text-yellow-500 drop-shadow-sm" />,
-      beamCore: '#FDE68A',
+      icon: <Trophy size={18} className="text-yellow-700 dark:text-yellow-500 drop-shadow-sm" />,
       beamGlow: 'rgba(250, 204, 21, 0.55)',
       glowShadow: 'rgba(234, 179, 8, 0.55)',
       celebrationColor: 'rgba(250, 204, 21, 0.9)',
     },
     1: {
       // SILVER
-      border: 'border-gray-400 dark:border-gray-400',
-      bg: 'bg-gray-50 dark:bg-gray-800/40',
-      text: 'text-gray-600 dark:text-gray-300',
-      ring: 'ring-gray-400 dark:ring-gray-400',
-      icon: <Medal size={18} className="text-gray-400 drop-shadow-sm" />,
-      beamCore: '#F8FAFC',
+      border: 'border-slate-400 dark:border-gray-400',
+      bg: 'bg-gradient-to-br from-slate-200 to-slate-400 dark:from-gray-800/40 dark:to-gray-700/40',
+      text: 'text-slate-900 dark:text-gray-300',
+      ring: 'ring-slate-400 dark:ring-gray-400',
+      icon: <Medal size={18} className="text-slate-700 dark:text-gray-500 drop-shadow-sm" />,
       beamGlow: 'rgba(226, 232, 240, 0.55)',
       glowShadow: 'rgba(156, 163, 175, 0.5)',
       celebrationColor: 'rgba(226, 232, 240, 0.9)',
     },
     2: {
       // BRONZE
-      border: 'border-amber-600 dark:border-amber-600',
-      bg: 'bg-amber-50 dark:bg-amber-900/20',
-      text: 'text-amber-700 dark:text-amber-500',
+      border: 'border-orange-500 dark:border-amber-600',
+      bg: 'bg-gradient-to-br from-orange-300 to-orange-500 dark:from-amber-900/30 dark:to-amber-800/20',
+      text: 'text-orange-950 dark:text-amber-500',
       ring: 'ring-amber-600 dark:ring-amber-600',
-      icon: <Award size={18} className="text-amber-600 drop-shadow-sm" />,
-      beamCore: '#FCD34D',
+      icon: <Award size={18} className="text-orange-800 dark:text-amber-600 drop-shadow-sm" />,
       beamGlow: 'rgba(217, 119, 6, 0.55)',
       glowShadow: 'rgba(180, 83, 9, 0.5)',
       celebrationColor: 'rgba(217, 119, 6, 0.9)',
@@ -206,37 +202,36 @@ export const ArenaLeaderboard = () => {
                       {/* PODIUM ENERGY SYSTEM */}
                       {isPodium && !isOffline && (
                         <>
-                          {/* Ambient glow ring (unchanged) */}
                           <div
                             className="absolute inset-0 rounded-2xl ring-2 pointer-events-none opacity-60 animate-pulse"
                             style={{ boxShadow: `inset 0 0 0 1px ${style.glowShadow}` }}
                           />
 
-                          {/* Diagonal energy strike, bottom-left -> top-right.
-                              135deg gradient: transparent -> colored glow -> WHITE core ->
-                              colored glow -> transparent. Stops at 45%-55% with
-                              backgroundSize 300% give a visible band of
-                              (55-45) * 300/100 = 30% of card height (within the 25-35%
-                              target). blur(3px) feathers the edges; mix-blend-screen makes
-                              the white core read as bright energy, not a flat rectangle.
-                              Position is driven entirely by the shared --beam-progress
-                              variable from useAnimationFrame above, so this is perfectly
-                              synced with the other two podium cards -- no @keyframes
-                              animation on this element at all. */}
+                          {/* 🌟 LIGHT MODE BEAM: Sharp, solid white glare. Hidden entirely in Dark Mode. */}
                           <div
-                            className="absolute inset-0 pointer-events-none podium-beam"
+                            className="absolute inset-0 pointer-events-none podium-beam opacity-100 mix-blend-normal dark:hidden"
+                            style={{
+                              backgroundImage: `linear-gradient(135deg, transparent 35%, rgba(255,255,255,0.8) 45%, #ffffff 50%, rgba(255,255,255,0.8) 55%, transparent 65%)`,
+                              backgroundSize: '300% 300%',
+                              backgroundPosition:
+                                'calc(var(--beam-progress, 0) * 100%) calc((1 - var(--beam-progress, 0)) * 100%)',
+                              filter: 'blur(1px)',
+                            }}
+                          />
+
+                          {/* 🌟 DARK MODE BEAM: Softer, translucent, colored core. Hidden entirely in Light Mode. */}
+                          <div
+                            className="absolute inset-0 pointer-events-none podium-beam hidden dark:block opacity-80 mix-blend-screen"
                             style={{
                               backgroundImage: `linear-gradient(135deg, transparent 45%, ${style.beamGlow} 47.5%, #ffffff 50%, ${style.beamGlow} 52.5%, transparent 55%)`,
                               backgroundSize: '300% 300%',
                               backgroundPosition:
                                 'calc(var(--beam-progress, 0) * 100%) calc((1 - var(--beam-progress, 0)) * 100%)',
                               filter: 'blur(3px)',
-                              mixBlendMode: 'screen',
                             }}
                           />
                         </>
                       )}
-
                       {/* Podium entry celebration */}
                       <AnimatePresence>
                         {isCelebrating && (

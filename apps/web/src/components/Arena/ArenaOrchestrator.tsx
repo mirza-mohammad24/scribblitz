@@ -72,7 +72,11 @@ export const ArenaOrchestrator = () => {
       // Save active room code to localStorage for smart reconnection
       localStorage.setItem(ACTIVE_ROOM_KEY, room.roomCode);
       // Reset chat messages on join to avoid showing stale messages from previous sessions
-      setRoomState({ ...room, chatMessages: [] });
+      setRoomState({
+        ...room,
+        chatMessages: [],
+        totalRounds: room.totalRounds || room.config?.roundCount || 0,
+      });
     });
 
     socket.on(ServerEvents.LOBBY_RESET, ({ room }) => {

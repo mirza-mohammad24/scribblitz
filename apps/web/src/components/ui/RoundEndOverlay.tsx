@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useGameStore } from '@/store/gameStore';
+import { useSyncedTimer } from '@/hooks/useSyncedTimer';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { Sparkles, Trophy, Timer } from 'lucide-react';
 
@@ -35,6 +36,9 @@ const itemVariants: Variants = {
 
 export const RoundEndOverlay = () => {
   const { correctWord, roundEndReason, players, previousScores, isFinalRound } = useGameStore();
+
+  //Call the hook with current duration
+  const { progress } = useSyncedTimer(GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS);
 
   // Sort players by who gained the most points this round
   const sortedPlayers = [...players]
@@ -157,20 +161,14 @@ export const RoundEndOverlay = () => {
 
           {/* The Track (Thick borders for cartoon style) */}
           <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 overflow-hidden relative shadow-inner">
-            {/* The Animated Fill (Red for Light Mode, Neon Pink for Dark Mode) */}
-            <motion.div
-              initial={{ width: '100%' }}
-              animate={{ width: '0%' }}
-              transition={{
-                duration: GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS,
-                ease: 'linear',
-              }}
-              // Using secondary colors for massive contrast against the primary modal borders
+            {/* The fill dynamically bound to the absolute system clock progress */}
+            <div
               className="absolute top-0 bottom-0 left-0 bg-red-500 dark:bg-neon-pink rounded-r-full shadow-[inset_0_-4px_rgba(0,0,0,0.2)]"
+              style={{ width: `${progress}%` }}
             >
               {/* Add a glossy highlight to the bar to make it look 3D/Candy-like */}
               <div className="absolute top-0 left-0 right-0 h-2 bg-white/20 rounded-t-full" />
-            </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>

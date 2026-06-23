@@ -331,7 +331,7 @@ export const LobbyScreen = ({
 
       {/* RIGHT COLUMN: PLAYERS */}
       <div
-        className={`flex-1 flex-col bg-gray-50 dark:bg-discord-main p-4 md:p-6 rounded-3xl border-2 border-gray-100 dark:border-discord-main overflow-hidden ${activeTab === 'players' ? 'flex' : 'hidden md:flex'}`}
+        className={`flex-1 flex-col bg-gray-50 dark:bg-discord-main p-4 md:p-6 rounded-3xl border-2 border-gray-100 dark:border-discord-main overflow-hidden min-h-0 ${activeTab === 'players' ? 'flex' : 'hidden md:flex'}`}
       >
         {/* Added flex-wrap so the ROOM CODE button drops down cleanly on small phones instead of smushing */}
         <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 pb-4 border-b-2 border-gray-200 dark:border-gray-800 shrink-0">
@@ -361,12 +361,12 @@ export const LobbyScreen = ({
           </button>
         </div>
 
-        {/* Mobile Grid System! grid-cols-2 on small phones, 3 on larger phones, vertical list on desktop */}
+        {/* Mobile Grid System; grid-cols-2 on small phones, 3 on larger phones, vertical list on desktop */}
         <motion.div
           variants={listVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-2 min-[400px]:grid-cols-3 md:flex md:flex-col gap-3 mt-4 overflow-y-auto custom-scrollbar pr-1 md:pr-2 pb-2"
+          className="grid grid-cols-2 min-[400px]:grid-cols-3 md:flex md:flex-col gap-3 mt-4 overflow-y-auto custom-scrollbar pr-1 md:pr-2 pb-2 flex-1 min-h-0 content-start"
         >
           <AnimatePresence mode="popLayout">
             {players.map((p) => (
@@ -378,7 +378,7 @@ export const LobbyScreen = ({
                 exit="exit"
                 layout
                 //  Stacked columns for grid tiles on mobile, side-by-side flex for desktop list
-                className={`p-2.5 md:p-3 bg-white dark:bg-discord-card rounded-2xl border-2 ${!p.isConnected ? 'border-red-300 dark:border-red-900/50 opacity-60' : 'border-gray-100 dark:border-gray-800'} flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4 shadow-sm relative overflow-hidden`}
+                className={`p-2.5 md:p-3 bg-white dark:bg-discord-card rounded-2xl border-2 ${!p.isConnected ? 'border-red-300 dark:border-red-900/50 opacity-60' : 'border-gray-100 dark:border-gray-800'} flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4 shadow-sm relative overflow-hidden shrink-0 min-h-[105px] md:min-h-0 md:h-auto`}
               >
                 {/* DICEBEAR AVATAR INJECTION */}
                 <div className="relative w-12 h-12 md:w-12 md:h-12 shrink-0 overflow-hidden rounded-full shadow-inner bg-gray-100 dark:bg-discord-main">
