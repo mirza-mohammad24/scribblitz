@@ -9,7 +9,7 @@ export const useSyncedTimer = (durationSeconds: number, onExpire?: () => void) =
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    // Set the absolute moment in the future this timer should end
+    // Use the provided server startTime, or fallback to Date.now()
     endTimeRef.current = Date.now() + durationSeconds * 1000;
 
     const updateTimer = () => {

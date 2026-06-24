@@ -24,6 +24,7 @@ import { LobbyScreen } from '@/components/Lobby/LobbyScreen';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { GameOverModal } from '@/components/ui/GameOverModal';
 import { RoundEndOverlay } from '@/components/ui/RoundEndOverlay';
+import { WordSelectionOverlay } from '@/components/ui/WordSelectionOverlay';
 
 // Arena Components
 import { ArenaHUD } from './ArenaHUD';
@@ -115,32 +116,35 @@ export const ArenaOrchestrator = () => {
     // ==========================================
     // ROUND MANAGER FLOW
     // ==========================================
-    socket.on(ServerEvents.ROUND_STARTING, ({ drawerId, round, totalRounds, roundId }) => {
-      //Capture the current scores before the round starts so we can use
-      //them for the "score delta" in the post-round overlay
-      const currentStore = useGameStore.getState();
-      const previousScores: Record<string, number> = {};
+    socket.on(
+      ServerEvents.ROUND_STARTING,
+      ({ drawerId, round, totalRounds, roundId, selectionStartTime }) => {
+        //Capture the current scores before the round starts so we can use
+        //them for the "score delta" in the post-round overlay
+        const currentStore = useGameStore.getState();
+        const previousScores: Record<string, number> = {};
 
-      currentStore.players.forEach((p) => {
-        previousScores[p.id] = p.score;
-      });
+        currentStore.players.forEach((p) => {
+          previousScores[p.id] = p.score;
+        });
 
-      // Reset the "hasGuessedCorrectly" status for all players at the start of each round
-      const resetPlayers = currentStore.players.map((p) => ({
-        ...p,
-        hasGuessedCorrectly: false,
-      }));
+        // Reset the "hasGuessedCorrectly" status for all players at the start of each round
+        const resetPlayers = currentStore.players.map((p) => ({
+          ...p,
+          hasGuessedCorrectly: false,
+        }));
 
-      setRoomState({
-        currentDrawerId: drawerId,
-        currentRound: round,
-        totalRounds,
-        roundId,
-        gameState: GameState.ROUND_STARTING,
-        players: resetPlayers, // Reset guessing status at the start of each round
-        previousScores,
-      });
-    });
+        setRoomState({
+          currentDrawerId: drawerId,
+          currentRound: round,
+          totalRounds,
+          roundId,
+          gameState: GameState.ROUND_STARTING,
+          players: resetPlayers, // Reset guessing status at the start of each round
+          previousScores,
+        });
+      },
+    );
 
     socket.on(ServerEvents.WORD_CHOICES, ({ words }) => {
       setRoomState({ wordChoices: words });
@@ -457,35 +461,15 @@ export const ArenaOrchestrator = () => {
               )}
 
               {/* WORD SELECTION OVERLAY */}
-              {gameState === GameState.ROUND_STARTING && (
-                <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm rounded-3xl">
-                  <div className="bg-white dark:bg-discord-card border-4 border-yellow-400 p-6 md:p-8 rounded-2xl text-center shadow-xl w-full max-w-md flex flex-col gap-6">
-                    {isAssignedDrawer ? (
-                      <>
-                        <h2 className="text-2xl font-black">Pick a Word!</h2>
-                        <div className="flex flex-col gap-3">
-                          {wordChoices?.map((word) => (
-                            <button
-                              key={word}
-                              onClick={() => handleWordSelect(word)}
-                              className="bg-green-500 dark:bg-neon-blue text-white px-4 py-3 rounded-xl font-black border-b-[4px] border-green-700 dark:border-blue-900 hover:bg-green-600 dark:hover:bg-blue-600 active:border-b-0 active:translate-y-1 transition-all"
-                            >
-                              {word}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
-                        <h2 className="text-xl font-black text-gray-800 dark:text-gray-200">
-                          Waiting for Drawer...
-                        </h2>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              <AnimatePresence>
+                {gameState === GameState.ROUND_STARTING && (
+                  <WordSelectionOverlay
+                    isDrawer={isAssignedDrawer}
+                    wordChoices={wordChoices}
+                    onSelect={handleWordSelect}
+                  />
+                )}
+              </AnimatePresence>
 
               {/* ROUND END OVERLAY */}
               <AnimatePresence>

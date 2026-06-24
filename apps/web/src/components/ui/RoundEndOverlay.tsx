@@ -56,12 +56,9 @@ export const RoundEndOverlay = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="w-full max-w-md bg-white dark:bg-discord-card bg-clip-padding transform-gpu border-[6px] border-green-500 dark:border-neon-blue rounded-[2.5rem] p-5 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col gap-6 relative overflow-hidden"
+        className="w-full max-w-md bg-white dark:bg-discord-card rounded-[2rem] md:rounded-[2.5rem] border-4 border-green-500 dark:border-neon-blue p-5 md:p-8 shadow-2xl flex flex-col gap-6 relative overflow-hidden"
+        style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
       >
-        {/* Background Elements */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-100 dark:bg-neon-blue/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-red-100 dark:bg-neon-pink/10 rounded-full blur-2xl pointer-events-none" />
-
         {/* Header Section */}
         <div className="text-center flex flex-col items-center gap-1 relative z-10">
           <motion.div
@@ -81,7 +78,6 @@ export const RoundEndOverlay = () => {
             The word was
           </h2>
 
-          {/* Bouncing word reveal */}
           <motion.span
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -104,7 +100,7 @@ export const RoundEndOverlay = () => {
                 <motion.div
                   key={p.id}
                   variants={itemVariants}
-                  layout // Allows smooth sorting if the list changes
+                  layout
                   className={`flex justify-between items-center p-3 md:p-4 rounded-2xl border-4 transition-colors ${
                     isTopGuesser
                       ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600/50 shadow-sm'
@@ -159,14 +155,11 @@ export const RoundEndOverlay = () => {
             </span>
           </div>
 
-          {/* The Track (Thick borders for cartoon style) */}
-          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 overflow-hidden relative shadow-inner">
-            {/* The fill dynamically bound to the absolute system clock progress */}
+          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 relative shadow-inner p-[2px] flex items-center">
             <div
-              className="absolute top-0 bottom-0 left-0 bg-red-500 dark:bg-neon-pink rounded-r-full shadow-[inset_0_-4px_rgba(0,0,0,0.2)]"
-              style={{ width: `${progress}%` }}
+              className="h-full bg-red-500 dark:bg-neon-pink rounded-full shadow-[inset_0_-4px_rgba(0,0,0,0.2)] relative overflow-hidden"
+              style={{ width: `${progress}%`, minWidth: '5%' }}
             >
-              {/* Add a glossy highlight to the bar to make it look 3D/Candy-like */}
               <div className="absolute top-0 left-0 right-0 h-2 bg-white/20 rounded-t-full" />
             </div>
           </div>

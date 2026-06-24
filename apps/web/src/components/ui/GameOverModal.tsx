@@ -30,7 +30,6 @@ export const GameOverModal = ({
   const firstPlace = standings?.find((p) => p.rank === 1);
   const secondPlace = standings?.find((p) => p.rank === 2);
   const thirdPlace = standings?.find((p) => p.rank === 3);
-  const runnerUps = standings?.filter((p) => p.rank > 3) || [];
 
   return (
     <AnimatePresence>
