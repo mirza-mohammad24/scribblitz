@@ -115,7 +115,7 @@
     "semantic_hash": "e08615998d309cf4564ddbbf2fc95cce"
   },
   "apps/game-server/src/fsm/roundManager.ts": {
-    "mtime": 1782285805.8757033,
+    "mtime": 1782151153.9032354,
     "ast_hash": "0e5eac5a1511d198814c35e9837247a9",
     "semantic_hash": ""
   },
@@ -215,9 +215,9 @@
     "semantic_hash": "d0f8375ae1199dc7acd3977fc33b78b8"
   },
   "apps/web/next.config.ts": {
-    "mtime": 1782284595.5582328,
-    "ast_hash": "9adc87d0c16d9cdbe06103d1613bddb7",
-    "semantic_hash": ""
+    "mtime": 1781758089.9344406,
+    "ast_hash": "5bacfd6cd4d728ea02bd0095313015d5",
+    "semantic_hash": "5bacfd6cd4d728ea02bd0095313015d5"
   },
   "apps/web/package.json": {
     "mtime": 1781410406.043162,
@@ -255,8 +255,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaHUD.tsx": {
-    "mtime": 1782331834.1301708,
-    "ast_hash": "98687683e7f274c783f2cf1a91f30b4c",
+    "mtime": 1782135303.145588,
+    "ast_hash": "142983affefe6b0cb90f02cbdc0a2a8a",
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaLeaderboard.tsx": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaOrchestrator.tsx": {
-    "mtime": 1782331834.1769416,
-    "ast_hash": "10cbbcc7a4e622b2ec136be95307cf01",
+    "mtime": 1782205893.5689664,
+    "ast_hash": "b8a45335d02da22a702e27fda489827c",
     "semantic_hash": ""
   },
   "apps/web/src/components/Footer.tsx": {
@@ -305,8 +305,8 @@
     "semantic_hash": "4ff02522ced07f4c4d1df45e059f8d91"
   },
   "apps/web/src/components/ui/GameOverModal.tsx": {
-    "mtime": 1782301252.1010504,
-    "ast_hash": "4c585cdd31937118e1f76e12aad86b84",
+    "mtime": 1782198485.5322793,
+    "ast_hash": "4d7564b540df928a4a8be7f3c54e5be0",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RulesModal.tsx": {
@@ -330,7 +330,7 @@
     "semantic_hash": "14c39ea85bdf796088ec877c2413c9de"
   },
   "apps/web/src/store/gameStore.ts": {
-    "mtime": 1782285742.4294007,
+    "mtime": 1782136731.1257968,
     "ast_hash": "58fd48c939c2fdc1530704fe4efaf2f3",
     "semantic_hash": ""
   },
@@ -550,18 +550,13 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RoundEndOverlay.tsx": {
-    "mtime": 1782331834.2095206,
-    "ast_hash": "9693bc2138575c106460da6e5729ef37",
+    "mtime": 1782205435.7560453,
+    "ast_hash": "c9b248ec3d1ffe2863c8ca05fd3b0454",
     "semantic_hash": ""
   },
   "apps/web/src/hooks/useSyncedTimer.ts": {
-    "mtime": 1782331834.2285216,
-    "ast_hash": "7d556ba5fbebf8bf9472d468421eed17",
-    "semantic_hash": ""
-  },
-  "apps/web/src/components/ui/WordSelectionOverlay.tsx": {
-    "mtime": 1782331834.2205215,
-    "ast_hash": "5de4701fb33533d7868ebd7105eae665",
+    "mtime": 1782205893.6385505,
+    "ast_hash": "c057d304881197396ad7307faa75322f",
     "semantic_hash": ""
   }
 }
