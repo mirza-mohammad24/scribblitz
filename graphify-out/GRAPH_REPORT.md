@@ -2,7 +2,7 @@
 
 ## Corpus Check
 
-- 109 files · ~35,927 words
+- 109 files · ~36,304 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -13,7 +13,7 @@
 
 ## Graph Freshness
 
-- Built from commit: `e0582b0f`
+- Built from commit: `5ef27054`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -72,8 +72,8 @@
 6. `GameFSM` - 10 edges
 7. `clearTimer()` - 9 edges
 8. `startNextRound()` - 8 edges
-9. `useSyncedTimer()` - 7 edges
-10. `scripts` - 7 edges
+9. `ServerRoomState` - 7 edges
+10. `useSyncedTimer()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 
@@ -83,10 +83,10 @@
   pnpm-workspace.yaml → README.md
 - `@turbo/eslint-config README` --references--> `@repo/eslint-config` [EXTRACTED]
   packages/eslint-config/README.md → README.md
+- `ServerRoomState` --references--> `GameFSM` [EXTRACTED]
+  apps/game-server/src/rooms/Room.ts → apps/game-server/src/fsm/GameFSM.ts
 - `HUDTimer()` --calls--> `useSyncedTimer()` [EXTRACTED]
   apps/web/src/components/Arena/ArenaHUD.tsx → apps/web/src/hooks/useSyncedTimer.ts
-- `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
-  apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
 
 ## Import Cycles
 
@@ -96,7 +96,7 @@
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (37): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+29 more)
 
 ### Community 1 - "Community 1"
@@ -261,7 +261,7 @@ Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConf
 
 ## Knowledge Gaps
 
-- **309 isolated node(s):** `nextConfig`, `ArenaHUDProps`, `PlayerStanding`, `GameOverModalProps`, `containerVariants` (+304 more)
+- **309 isolated node(s):** `AddPlayerResult`, `LobbyScreenProps`, `listVariants`, `itemVariants`, `GAME_CONSTANTS` (+304 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -273,10 +273,10 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `nextConfig`, `ArenaHUDProps`, `PlayerStanding` to the rest of the system?**
+- **What connects `AddPlayerResult`, `LobbyScreenProps`, `listVariants` to the rest of the system?**
   _309 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08583959899749373 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08408953418027829 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.06623376623376623 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
