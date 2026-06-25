@@ -23,4 +23,10 @@ export const GAME_CONSTANTS = {
   MAX_RECENT_WORDS: 10,
   WORD_CHOICES_COUNT: 3,
   SYNC_RATE_LIMIT_MS: 2000, // Minimum time between canvas syncs to prevent abuse
+  DEFAULT_DIFFICULTY: 'medium' as const,
+  DIFFICULTY_HINT_CAPS: {
+    easy: 0.5, // 50% of non-space characters revealed
+    medium: 0.3, // 30%
+    hard: 0.15, // 15%
+  } as const,
 } as const;

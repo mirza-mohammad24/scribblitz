@@ -75,6 +75,14 @@ export const roomConfigSchema = z.object({
       }),
     })
     .optional(),
+
+  difficulty: z
+    .enum(['easy', 'medium', 'hard'], {
+      errorMap: () => ({
+        message: 'Difficulty must be "easy", "medium", or "hard"',
+      }),
+    })
+    .optional(),
 });
 
 export const createRoomSchema = z.object({

@@ -199,9 +199,7 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     //Remove oldest word if we hit the cap
     state.usedWords.shift();
   }
-  //Save the current timestamp for the round start time to calculate the drawing timer accurately (will be used in the
-  // ArenaHUD(frontend) for the countdown)
-  state.roundStartTime = Date.now();
+  state.roundStartTime = Date.now(); // this is now not being used for the countdown we are using a synced hook
 
   //Initialize hints for this round
   state.revealedHintIndexes.clear();
@@ -213,7 +211,7 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     drawerId: state.currentDrawerId,
     wordLength: word.length,
     wordHint: state.currentHint, //Emit the generated hint string to the clients
-    roundStartTime: state.roundStartTime, // Emit the round start time to clients for accurate countdowns (server is the source of truth)
+    roundStartTime: state.roundStartTime, //this is now not being used for the countdown we are using a synced hook
   });
 
   //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase
@@ -226,12 +224,18 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
       return;
     }
 
+    // Get the dynamic cap based on the room's difficulty
+    const hintCap =
+      GAME_CONSTANTS.DIFFICULTY_HINT_CAPS[latestState.config.difficulty] ??
+      GAME_CONSTANTS.DIFFICULTY_HINT_CAPS.medium;
+
     const randomHiddenIndex = getRandomHiddenIndex(
       latestState.currentWord,
       latestState.revealedHintIndexes,
+      hintCap,
     );
 
-    //If null we hit our 60% reveal cap. Stop the timer and exit
+    //If null we hit our reveal cap. Stop the timer and exit
     if (randomHiddenIndex === null) {
       latestState.hintTimer = clearIntervalTimer(latestState.hintTimer);
       return;

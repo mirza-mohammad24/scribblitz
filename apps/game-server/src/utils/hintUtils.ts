@@ -25,12 +25,16 @@ export const generateHint = (word: string, revealedIndexes: Set<number>): string
  * Gets a random index of a hidden character in the word.
  * @param word
  * @param revealedIndexes
+ * @param maxRevealPercent
  * @returns a random index of a hidden character, or null if all characters are
  * revealed or max reveal limit is reached
  */
-export const getRandomHiddenIndex = (word: string, revealedIndexes: Set<number>): number | null => {
-  //Cap at 60% reveal of all the non-space characters to avoid guessing to easy
-  const maxReveals = Math.floor(word.replace(/ /g, '').length * 0.6);
+export const getRandomHiddenIndex = (
+  word: string,
+  revealedIndexes: Set<number>,
+  maxRevealPercent: number = 0.3,
+): number | null => {
+  const maxReveals = Math.floor(word.replace(/ /g, '').length * maxRevealPercent);
 
   if (revealedIndexes.size >= maxReveals) return null;
 

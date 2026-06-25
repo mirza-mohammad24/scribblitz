@@ -49,6 +49,7 @@ export class Room {
         roundCount: GAME_CONSTANTS.DEFAULT_ROUND_COUNT,
         drawTimeSeconds: GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS,
         mode: 'standard',
+        difficulty: GAME_CONSTANTS.DEFAULT_DIFFICULTY,
         ...config, // Override defaults with any provided config values
       },
       gameState: fsm.getState(),
@@ -61,7 +62,7 @@ export class Room {
       currentHint: '',
       wordChoices: null,
       correctGuessers: new Set(),
-      roundStartTime: null,
+      roundStartTime: null, //now not used for the countdown we are using a synced hook
       wordSelectionTimer: null,
       drawingTimer: null,
       intermissionTimer: null,
@@ -214,7 +215,7 @@ export class Room {
     this.state.currentHint = '';
     this.state.wordChoices = null;
     this.state.correctGuessers.clear();
-    this.state.roundStartTime = null;
+    this.state.roundStartTime = null; //now not used for the countdown we are using a synced hook
 
     // Reset all player scores and guess flags
     this.state.players.forEach((p) => {

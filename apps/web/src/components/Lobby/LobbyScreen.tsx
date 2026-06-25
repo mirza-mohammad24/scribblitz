@@ -323,6 +323,86 @@ export const LobbyScreen = ({
               className={`w-full h-3 rounded-lg appearance-none cursor-pointer ${isHost ? 'bg-green-200 dark:bg-gray-700 accent-green-500 dark:accent-neon-blue' : 'bg-gray-200 dark:bg-gray-800 opacity-50 cursor-not-allowed'}`}
             />
           </div>
+
+          {/* Difficulty Selector */}
+          <div className="flex flex-col gap-3 relative z-10">
+            {/* LABEL & INFO ICON WRAPPER */}
+            <div className="flex items-center gap-2 font-black text-gray-700 dark:text-gray-200">
+              <label>Difficulty</label>
+
+              <div className="relative flex items-center group">
+                <button
+                  type="button"
+                  tabIndex={0}
+                  onClick={(e) => e.preventDefault()}
+                  className="text-gray-400 dark:text-gray-500 hover:text-green-500 dark:hover:text-neon-blue transition-colors outline-none focus:outline-none cursor-pointer"
+                  aria-label="Difficulty Information"
+                >
+                  <Info size={16} strokeWidth={3} />
+                </button>
+
+                {/* THE TOOLTIP OVERLAY */}
+                <div className="absolute left-0 top-full mt-2 w-60 sm:w-64 max-w-[85vw] bg-gray-900 dark:bg-[#111214] text-gray-300 p-3.5 rounded-xl shadow-2xl z-50 text-xs font-bold opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all pointer-events-none">
+                  <div className="absolute -top-1 left-1.5 w-3 h-3 bg-gray-900 dark:bg-[#111214] rotate-45 rounded-sm" />
+
+                  <div className="text-green-400 dark:text-neon-blue font-black flex items-center gap-1.5 uppercase tracking-wider text-[10px] mb-1.5 border-b border-gray-700 pb-1.5">
+                    Hint Reveal Limits
+                  </div>
+
+                  <span className="leading-relaxed block">
+                    Controls how many letters the automatic hints will uncover:
+                    <br />
+                    <span className="text-gray-400 mt-1.5 block leading-loose">
+                      <span className="text-green-400 font-black px-1 bg-green-400/10 rounded-md">
+                        Easy
+                      </span>{' '}
+                      ~50% of the word
+                      <br />
+                      <span className="text-yellow-400 font-black px-1 bg-yellow-400/10 rounded-md">
+                        Medium
+                      </span>{' '}
+                      ~30% of the word
+                      <br />
+                      <span className="text-red-400 font-black px-1 bg-red-400/10 rounded-md">
+                        Hard
+                      </span>{' '}
+                      ~15% of the word
+                    </span>
+                    <span className="text-[9px] text-gray-600 dark:text-gray-500 mt-2 block font-medium">
+                      (Shorter words mathematically reveal fewer letters)
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              {(['easy', 'medium', 'hard'] as const).map((level) => {
+                const currentDifficulty = config.difficulty || GAME_CONSTANTS.DEFAULT_DIFFICULTY;
+                return (
+                  <button
+                    key={level}
+                    onClick={() => isHost && onUpdateConfig({ difficulty: level })}
+                    disabled={!isHost}
+                    className={`flex-1 py-2.5 rounded-xl font-black text-sm capitalize border-2 transition-all
+                      ${
+                        currentDifficulty === level
+                          ? level === 'easy'
+                            ? 'bg-green-100 dark:bg-green-900/30 border-green-500 dark:border-green-400 text-green-700 dark:text-green-400'
+                            : level === 'medium'
+                              ? 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-500 dark:border-yellow-400 text-yellow-700 dark:text-yellow-400'
+                              : 'bg-red-100 dark:bg-red-900/30 border-red-500 dark:border-red-400 text-red-700 dark:text-red-400'
+                          : 'bg-gray-100 dark:bg-discord-main border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400'
+                      }
+                      ${!isHost ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90 active:scale-95'}
+                    `}
+                  >
+                    {level}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* START GAME / WAITING UI FOR NON-HOSTS (DESKTOP ONLY) */}
