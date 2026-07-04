@@ -67,6 +67,7 @@ export interface RoomConfig {
   mode: 'standard' | 'team-battle'; //which game mode to play
   customWordList?: string[]; // Optional custom word list for the game (provided by the host)
   difficulty: 'easy' | 'medium' | 'hard'; // Difficulty for the game (affects the reveal % of the chosen word)
+  customWordsOnly: boolean;
 }
 
 /**

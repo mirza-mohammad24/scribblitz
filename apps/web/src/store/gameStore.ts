@@ -1,3 +1,9 @@
+/**
+ * Game Store File. This file contains the implementation of a Zustand store for managing the state of a game room.
+ * The store includes properties for the core room state, active game state, and actions to update the state or
+ * reset the game.
+ */
+
 import { create } from 'zustand';
 import { GameState, Player, RoomConfig } from '@scribblitz/types';
 

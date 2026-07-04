@@ -1,5 +1,26 @@
+/**
+ * useSyncedTimer Hook
+ * Provides a high-precision countdown timer driven by `requestAnimationFrame`.
+ * Computes an absolute end-time once and derives remaining seconds and a smooth
+ * progress percentage (100 → 0) on every animation frame, avoiding drift that
+ * `setInterval`-based timers are prone to.
+ */
+
 import { useState, useEffect, useRef } from 'react';
 
+/**
+ * Custom React hook that runs a frame-accurate countdown timer.
+ *
+ * On mount (or when `durationSeconds` changes) the hook calculates an absolute
+ * end-time and uses `requestAnimationFrame` to update both a whole-second
+ * `timeLeft` value (for display) and a smooth `progress` percentage (for
+ * progress-bar animations). When the timer reaches zero, the optional
+ * `onExpire` callback is invoked exactly once.
+ *
+ * @param {number} durationSeconds - Total countdown length in seconds.
+ * @param {() => void} [onExpire] - Optional callback fired when the timer reaches zero.
+ * @returns {{ timeLeft: number, progress: number }} An object with `timeLeft` (whole seconds remaining) and `progress` (percentage 100 → 0).
+ */
 export const useSyncedTimer = (durationSeconds: number, onExpire?: () => void) => {
   const [timeLeft, setTimeLeft] = useState(durationSeconds);
   const [progress, setProgress] = useState(100);

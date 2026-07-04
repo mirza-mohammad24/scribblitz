@@ -24,8 +24,8 @@ export const CANVAS_CONFIG = {
 /**
  * Utility function to convert pointer event coordinates to canvas coordinates, accounting for scaling and offsets.
  * This ensures that drawing remains accurate even if the canvas is resized or displayed on high-DPI screens.
- * @param e
- * @param canvas
+ * @param e generic pointer event (mouse, touch, or pen)
+ * @param canvas The canvas element
  * @returns An object containing the x and y coordinates relative to the canvas
  */
 const getCoordinates = (e: React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCanvasElement) => {
@@ -41,13 +41,13 @@ const getCoordinates = (e: React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCa
  * This hook encapsulates all the logic related to drawing on the canvas, including handling pointer events,
  * managing the drawing buffer, and communicating with the server via WebSockets. It abstracts away the complexities
  * of canvas manipulation and real-time synchronization, providing a clean interface for the DrawingCanvas component.
- * @param canvasRef
- * @param isDrawer
- * @param roomCode
- * @param currentColor
- * @param brushSize
- * @param activeTool
- * @param socket
+ * @param canvasRef The reference to the canvas element
+ * @param isDrawer Whether the user is the drawer
+ * @param roomCode The unique code for the current game room
+ * @param currentColor The current color selected for drawing
+ * @param brushSize The current brush size selected for drawing
+ * @param activeTool The currently active tool ('draw', 'erase', or 'fill')
+ * @param socket The WebSocket connection for real-time communication
  * @returns An object containing pointer event handlers to be attached to the canvas element
  */
 export const useCanvasDrawing = (
@@ -84,6 +84,18 @@ export const useCanvasDrawing = (
     socket.emit(ClientEvents.CANVAS_SYNC_REQUEST, { roomCode });
   }, [socket, roomCode]);
 
+  /**
+   * Records a stroke event into both the outgoing network buffer and the local
+   * undo-able history. Automatically resolves the effective stroke type
+   * (e.g. `'erase'` when the active tool is the eraser) and attaches the
+   * current round ID from the game store for server-side validation.
+   *
+   * @param {'draw' | 'fill'} type - The logical tool type that produced this event.
+   * @param {number} x - Current pointer X in canvas-logical coordinates.
+   * @param {number} y - Current pointer Y in canvas-logical coordinates.
+   * @param {number} lastX - Previous pointer X (same as `x` for initial dots and fills).
+   * @param {number} lastY - Previous pointer Y (same as `y` for initial dots and fills).
+   */
   const captureStroke = (
     type: 'draw' | 'fill',
     x: number,
@@ -114,9 +126,9 @@ export const useCanvasDrawing = (
    * Draws a stroke on the canvas at the specified coordinates. If isInitial is true, it means this is the
    * start of a new stroke (a dot), otherwise it's a continuation of an existing stroke (a line). The function
    * sets the appropriate brush settings and uses the Canvas API to render the stroke on the canvas.
-   * @param x
-   * @param y
-   * @param isInitial
+   * @param x The x-coordinate of the stroke
+   * @param y The y-coordinate of the stroke
+   * @param isInitial Whether this is the initial point of the stroke
    */
   const drawStroke = (x: number, y: number, isInitial: boolean) => {
     const ctx = ctxRef.current;
@@ -139,6 +151,12 @@ export const useCanvasDrawing = (
     ctx.stroke();
   };
 
+  /**
+   * Clears the canvas and replays every stroke stored in `localHistory`.
+   * Called after undo or clear operations to reconstruct the visible canvas
+   * state from the authoritative local history array. Handles both
+   * line-based strokes (`draw`/`erase`) and flood-fill events.
+   */
   const redrawFromHistory = () => {
     const ctx = ctxRef.current;
     if (!ctx) return;
@@ -167,7 +185,7 @@ export const useCanvasDrawing = (
    * captures the pointer to ensure it receives all subsequent pointer events, generates a new
    * stroke ID for the new stroke, sets the drawing state to true, calculates the initial coordinates,
    * draws the initial dot, and captures the stroke event for synchronization with other players.
-   * @param e
+   * @param e The pointer event
    */
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDrawer || !canvasRef.current) return;
@@ -200,7 +218,7 @@ export const useCanvasDrawing = (
    * the new coordinates, draws the stroke, and captures the stroke event for synchronization with other players.
    * The function also includes backpressure protection to prevent memory overflow if the user draws too quickly
    * or if the network connection is slow.
-   * @param e
+   * @param e The pointer event
    */
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (
@@ -227,7 +245,7 @@ export const useCanvasDrawing = (
    * this function checks if they are the drawer and if the canvas reference is valid.
    * It then sets the drawing state to false, resets the last position, and releases the pointer capture
    * to allow other elements to receive pointer events.
-   * @param e
+   * @param e The pointer event
    */
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDrawer) return;
@@ -317,6 +335,12 @@ export const useCanvasDrawing = (
     };
   }, [socket, isDrawer, roomCode]);
 
+  /**
+   * Clears the entire canvas for the local drawer.
+   * Empties both the local stroke history and the pending network buffer,
+   * redraws the now-blank canvas, and emits a `CANVAS_CLEAR` event so
+   * all other clients in the room also clear their canvases.
+   */
   const executeClear = () => {
     if (!isDrawer || !socket) return;
     localHistory.current = [];
@@ -325,6 +349,12 @@ export const useCanvasDrawing = (
     socket.emit(ClientEvents.CANVAS_CLEAR);
   };
 
+  /**
+   * Requests an undo of the most recent stroke.
+   * Emits a `CANVAS_UNDO` event to the server, which determines the last
+   * stroke ID and broadcasts a `CANVAS_UNDONE` event to all clients
+   * (including the drawer), triggering a history-based redraw.
+   */
   const executeUndo = () => {
     if (!isDrawer || !socket) return;
     socket.emit(ClientEvents.CANVAS_UNDO);

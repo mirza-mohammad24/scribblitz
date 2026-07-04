@@ -7,7 +7,7 @@ import { Socket } from 'socket.io';
 
 /**
  * Retrieves the user ID associated with a given Socket.IO socket.
- * @param socket
+ * @param socket The Socket.IO socket from which to retrieve the user ID.
  * @returns The user ID if found, otherwise null.
  */
 export function getUserIdBySocket(socket: Socket): string | null {

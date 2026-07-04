@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @module ConfirmModal
+ * @description A reusable animated confirmation dialog with a warning icon,
+ * customizable title and description, and confirm/cancel action buttons.
+ * Uses Framer Motion for enter/exit transitions and a backdrop overlay.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 
@@ -13,6 +20,21 @@ interface ConfirmModalProps {
   onCancel: () => void;
 }
 
+/**
+ * Renders an animated confirmation modal with an alert triangle icon, title,
+ * description, and two action buttons. The confirm action fires both
+ * {@link ConfirmModalProps.onConfirm} and {@link ConfirmModalProps.onCancel}
+ * (to close the modal). Clicking the backdrop also triggers cancel.
+ * @param {ConfirmModalProps} props - The component props.
+ * @param {boolean} props.isOpen - Whether the modal is visible.
+ * @param {string} props.title - The modal heading text.
+ * @param {string} props.description - The modal body/description text.
+ * @param {string} [props.confirmText='Confirm'] - Label for the confirm button.
+ * @param {string} [props.cancelText='Cancel'] - Label for the cancel button.
+ * @param {() => void} props.onConfirm - Callback fired when the user confirms.
+ * @param {() => void} props.onCancel - Callback fired on cancel or backdrop click.
+ * @returns {React.JSX.Element} The animated modal JSX, or nothing when closed.
+ */
 export const ConfirmModal = ({
   isOpen,
   title,

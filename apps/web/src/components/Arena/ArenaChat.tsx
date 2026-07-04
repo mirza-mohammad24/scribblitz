@@ -1,5 +1,33 @@
 'use client';
 
+/**
+ * @file ArenaChat.tsx — Real-time chat / guess panel for the game arena.
+ *
+ * This component renders a scrollable message list and an input form for
+ * submitting guesses during a drawing round. It supports three message
+ * visual styles:
+ * - User messages: Bubble-style, right-aligned for the sender, left for others.
+ * - System messages: Centered banners (e.g. "Player X guessed the word!").
+ * - Close guess alerts: Amber-styled system banners indicating a near-miss.
+ *
+ * Smart scroll behaviour:
+ * - Auto-scrolls to the newest message when the user is near the bottom or
+ *   sends their own message.
+ * - Shows a floating "New messages" badge when the user has scrolled up and
+ *   new messages arrive, to avoid jarring scroll jumps.
+ *
+ * Desktop UX enhancement:
+ * - A global `keydown` listener auto-focuses the chat input when the user
+ *   starts typing alphanumeric characters (unless they are the drawer or
+ *   already focused on another input).
+ *
+ * Security:
+ * - The active drawer's input is disabled and cannot submit guesses.
+ * - Messages include the current `roundId` to prevent cross-round leaks.
+ *
+ * @see {@link ArenaOrchestrator} — parent that renders this component
+ */
+
 import { useState, useRef, useEffect } from 'react';
 import { useGameSocket } from '@/hooks/useGameSocket';
 import { useGameStore } from '@/store/gameStore';
@@ -7,6 +35,15 @@ import { ClientEvents } from '@scribblitz/types';
 import { SendHorizontal, ChevronDown, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * Real-time chat and guess submission panel for the game arena.
+ *
+ * Renders a scrollable list of chat/system messages with spring-animated
+ * entry transitions, a floating unread-message badge, and a submission form
+ * that is disabled for the active drawer.
+ *
+ * @returns The chat panel with message list, unread badge, and input form.
+ */
 export const ArenaChat = () => {
   const { socket, userId } = useGameSocket();
   const { chatMessages, roundId, currentDrawerId } = useGameStore();
@@ -22,6 +59,11 @@ export const ArenaChat = () => {
   // Security check: The active drawer is not allowed to use the chat
   const isDrawer = userId === currentDrawerId;
 
+  /**
+   * Smoothly scrolls the chat container to the bottom after a short delay.
+   * The 50 ms timeout allows Framer Motion to finish rendering newly animated
+   * message elements before measuring scroll height.
+   */
   const scrollToBottom = () => {
     // A slight delay ensures Framer Motion has time to render the new element's height
     setTimeout(() => {
@@ -30,6 +72,11 @@ export const ArenaChat = () => {
     }, 50);
   };
 
+  /**
+   * Handles the scroll event on the chat container to detect when the user
+   * manually scrolls back to the bottom. Clears the unread-message badge
+   * when the user is within 50 px of the container's scroll end.
+   */
   // Track if the user manually scrolled to the bottom to clear the "Unread" badge
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -82,6 +129,14 @@ export const ArenaChat = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isDrawer]);
 
+  /**
+   * Handles the chat form submission.
+   * Prevents default form behaviour, trims the input, emits the
+   * {@link ClientEvents.CHAT_MESSAGE} event with the current `roundId`
+   * to the server, clears the input, and snaps the scroll to the bottom.
+   *
+   * @param e - The form submission event.
+   */
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim() || !socket || isDrawer) return;
@@ -153,7 +208,7 @@ export const ArenaChat = () => {
                     {msg.senderName}
                   </span>
                 )}
-                <span className={`${msg.isSystem ? '' : 'break-words'}`}>{msg.message}</span>
+                <span className={`${msg.isSystem ? '' : 'wrap-break-word'}`}>{msg.message}</span>
 
                 {/* SPARKLES FOR CORRECT GUESSES */}
                 {isCorrectGuess && (
@@ -176,7 +231,7 @@ export const ArenaChat = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             onClick={scrollToBottom}
-            className="absolute bottom-[72px] left-1/2 -translate-x-1/2 bg-red-500 dark:bg-neon-pink text-white px-4 py-1.5 rounded-full font-black text-xs shadow-xl flex items-center gap-1 border-2 border-white dark:border-discord-main z-10 hover:bg-red-600 transition-colors"
+            className="absolute bottom-18 left-1/2 -translate-x-1/2 bg-red-500 dark:bg-neon-pink text-white px-4 py-1.5 rounded-full font-black text-xs shadow-xl flex items-center gap-1 border-2 border-white dark:border-discord-main z-10 hover:bg-red-600 transition-colors"
           >
             New messages <ChevronDown size={14} strokeWidth={3} />
           </motion.button>
@@ -200,7 +255,7 @@ export const ArenaChat = () => {
           whileTap={{ scale: 0.95 }}
           type="submit"
           disabled={isDrawer || !message.trim()}
-          className="shrink-0 bg-green-500 dark:bg-neon-blue hover:bg-green-600 text-white px-4 rounded-xl font-black disabled:opacity-50 border-b-[4px] border-green-700 dark:border-blue-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center"
+          className="shrink-0 bg-green-500 dark:bg-neon-blue hover:bg-green-600 text-white px-4 rounded-xl font-black disabled:opacity-50 border-b-4 border-green-700 dark:border-blue-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center"
         >
           <SendHorizontal size={18} strokeWidth={2.5} />
         </motion.button>

@@ -6,11 +6,10 @@
 
 /**
  * Generates a hint for the given word based on the revealed indexes.
- * @param word
- * @param revealedIndexes
+ * @param word The word for which to generate the hint
+ * @param revealedIndexes A set of indexes that have been revealed
  * @returns the hint string with unrevealed characters replaced by underscores
  */
-
 export const generateHint = (word: string, revealedIndexes: Set<number>): string => {
   return word
     .split('')
@@ -23,9 +22,9 @@ export const generateHint = (word: string, revealedIndexes: Set<number>): string
 
 /**
  * Gets a random index of a hidden character in the word.
- * @param word
- * @param revealedIndexes
- * @param maxRevealPercent
+ * @param word The word for which to find a hidden index
+ * @param revealedIndexes A set of indexes that have been revealed
+ * @param maxRevealPercent The maximum percentage of characters that can be revealed
  * @returns a random index of a hidden character, or null if all characters are
  * revealed or max reveal limit is reached
  */

@@ -27,8 +27,8 @@ const syncRateLimitMap = new Map<string, number>();
  * Registers the canvas event handlers for the given Socket.IO server and socket.
  * This function listens for canvas batch updates from clients, validates the data,
  * broadcasts it to other players, and saves it to Redis for persistence.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  */
 export const registerCanvasHandlers = (io: Server, socket: Socket) => {
   // Cleanup rate limit on disconnect

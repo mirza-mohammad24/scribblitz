@@ -1,5 +1,42 @@
 'use client';
 
+/**
+ * @file ArenaOrchestrator.tsx — Top-level game state orchestrator for Scribblitz.
+ *
+ * This component serves as the **single source of orchestration** for the entire
+ * multiplayer game lifecycle. It does NOT own any game logic itself — instead, it:
+ *
+ * 1. Listens to every relevant Socket.IO server event and writes the payload
+ *    directly into the Zustand game store via `setRoomState`.
+ *
+ * 2. Dispatches client-side socket emissions (start, leave, word select, etc.)
+ *    through thin action handlers.
+ *
+ * 3. Renders the correct screen zone based on the current `gameState`:
+ *    - Zone 1: HomeScreen (create / join) when `gameState === null`
+ *    - Zone 2: LobbyScreen when `gameState === LOBBY`
+ *    - Zone 3: Game Arena (HUD, Canvas, Chat, Leaderboard) for all other states
+ *
+ * 4. Manages UI micro-state that is local to the Arena shell (mobile player
+ *    list toggle, leave-confirmation modal, mobile chat peek overlay).
+ *
+ * Socket listener groups (registered in a single `useEffect`):
+ * - Room lifecycle: ROOM_CREATED, ROOM_JOINED, LOBBY_RESET, PLAYER_JOINED/LEFT,
+ *   PLAYER_DISCONNECTED, HOST_CHANGED, ROOM_CONFIG_UPDATED, GAME_STATE_CHANGED
+ * - Round manager flow: ROUND_STARTING, WORD_CHOICES, ROUND_STARTED, ROUND_END,
+ *   GAME_END
+ * - Chat & gameplay: WORD_HINT_UPDATED, CHAT_BROADCAST, GUESS_CLOSE,
+ *   PLAYER_GUESSED, SCORE_UPDATE, GUESS_CORRECT
+ * - Error handling: ERROR (fatal vs. non-fatal with toast routing)
+ *
+ * All listeners are explicitly unregistered on unmount to avoid leaks.
+ *
+ * @see {@link ArenaHUD} — heads-up display with timer, hint, and round info
+ * @see {@link ArenaCanvas} — drawing surface with toolbox
+ * @see {@link ArenaChat} — real-time guess/chat panel
+ * @see {@link ArenaLeaderboard} — sorted player ranking sidebar
+ */
+
 import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useToastStore } from '@/store/toastStore';
@@ -32,8 +69,18 @@ import { ArenaCanvas } from './ArenaCanvas';
 import { ArenaChat } from './ArenaChat';
 import { ArenaLeaderboard } from './ArenaLeaderboard';
 
+/**
+ * Top-level orchestrator component that manages the full game lifecycle.
+ *
+ * Owns all Socket.IO event listeners, delegates rendering to zone-specific
+ * child components (HomeScreen, LobbyScreen, Arena), and exposes thin action
+ * handlers for game operations (start, leave, word select, config update).
+ *
+ * @returns The composed game UI — one of HomeScreen, LobbyScreen, or the full
+ *          Arena layout with HUD, Canvas, Chat, and Leaderboard.
+ */
 export const ArenaOrchestrator = () => {
-  const { socket, isConnected, userId } = useGameSocket();
+  const { socket, userId } = useGameSocket();
   const {
     gameState,
     roomCode,
@@ -116,35 +163,32 @@ export const ArenaOrchestrator = () => {
     // ==========================================
     // ROUND MANAGER FLOW
     // ==========================================
-    socket.on(
-      ServerEvents.ROUND_STARTING,
-      ({ drawerId, round, totalRounds, roundId, selectionStartTime }) => {
-        //Capture the current scores before the round starts so we can use
-        //them for the "score delta" in the post-round overlay
-        const currentStore = useGameStore.getState();
-        const previousScores: Record<string, number> = {};
+    socket.on(ServerEvents.ROUND_STARTING, ({ drawerId, round, totalRounds, roundId }) => {
+      //Capture the current scores before the round starts so we can use
+      //them for the "score delta" in the post-round overlay
+      const currentStore = useGameStore.getState();
+      const previousScores: Record<string, number> = {};
 
-        currentStore.players.forEach((p) => {
-          previousScores[p.id] = p.score;
-        });
+      currentStore.players.forEach((p) => {
+        previousScores[p.id] = p.score;
+      });
 
-        // Reset the "hasGuessedCorrectly" status for all players at the start of each round
-        const resetPlayers = currentStore.players.map((p) => ({
-          ...p,
-          hasGuessedCorrectly: false,
-        }));
+      // Reset the "hasGuessedCorrectly" status for all players at the start of each round
+      const resetPlayers = currentStore.players.map((p) => ({
+        ...p,
+        hasGuessedCorrectly: false,
+      }));
 
-        setRoomState({
-          currentDrawerId: drawerId,
-          currentRound: round,
-          totalRounds,
-          roundId,
-          gameState: GameState.ROUND_STARTING,
-          players: resetPlayers, // Reset guessing status at the start of each round
-          previousScores,
-        });
-      },
-    );
+      setRoomState({
+        currentDrawerId: drawerId,
+        currentRound: round,
+        totalRounds,
+        roundId,
+        gameState: GameState.ROUND_STARTING,
+        players: resetPlayers, // Reset guessing status at the start of each round
+        previousScores,
+      });
+    });
 
     socket.on(ServerEvents.WORD_CHOICES, ({ words }) => {
       setRoomState({ wordChoices: words });
@@ -193,7 +237,7 @@ export const ArenaOrchestrator = () => {
 
     socket.on(ServerEvents.GAME_END, ({ standings }) => {
       //We don't delete the active room key from localstorage here because the user may want to return to the
-      // post-game lobby to play again
+      //post-game lobby to play again
       setRoomState({ gameState: GameState.GAME_END, standings });
     });
 
@@ -331,25 +375,55 @@ export const ArenaOrchestrator = () => {
   // ==========================================
   // ACTIONS
   // ==========================================
+
+  /**
+   * Emits the GAME_START event to the server.
+   * Only the host should invoke this; the server enforces authorization.
+   */
   const handleStartGame = () => socket?.emit(ClientEvents.GAME_START, {});
 
+  /**
+   * Sends a partial room configuration update to the server.
+   * The server merges the partial config with the existing room config.
+   *
+   * @param newConfig - A partial {@link RoomConfig} containing only the fields to update.
+   */
   const updateConfig = (newConfig: Partial<RoomConfig>) =>
     socket?.emit(ClientEvents.ROOM_UPDATE_CONFIG, newConfig);
 
+  /**
+   * Emits the drawer's word selection to the server during the ROUND_STARTING phase.
+   *
+   * @param word - The word chosen by the drawer from the presented word choices.
+   */
   const handleWordSelect = (word: string) => socket?.emit(ClientEvents.WORD_SELECT, { word });
 
+  /**
+   * Performs a hard leave from the current room.
+   * Emits ROOM_LEAVE to the server, clears the active room from localStorage
+   * (preventing stale reconnection attempts), and resets the local game store.
+   */
   const handleLeaveRoom = () => {
     socket?.emit(ClientEvents.ROOM_LEAVE);
     localStorage.removeItem(ACTIVE_ROOM_KEY); // Clear active room from localStorage on leave
     resetGame();
   };
 
+  /**
+   * Requests to leave the room by opening the confirmation modal.
+   * Acts as a guard so that mid-game exits require explicit user confirmation
+   * before calling {@link handleLeaveRoom}.
+   */
   const requestLeaveRoom = () => {
     if (gameState !== null) {
       setIsLeaveModalOpen(true);
     }
   };
 
+  /**
+   * Emits RETURN_TO_LOBBY to the server after a game ends.
+   * Only the host triggers this; the server resets all players back to the lobby.
+   */
   const handleReturnToLobby = () => {
     socket?.emit(ClientEvents.RETURN_TO_LOBBY);
   };
@@ -442,12 +516,12 @@ export const ArenaOrchestrator = () => {
           {/* THE DESKTOP 3-COLUMN / MOBILE STACK GRID */}
           <div className="w-full h-full flex flex-col lg:flex-row gap-3 md:gap-4 min-h-0 overflow-hidden justify-center">
             {/* LEFT COLUMN: LEADERBOARD */}
-            <div className="hidden lg:flex w-[240px] xl:w-[280px] shrink-0 min-h-0 flex-col">
+            <div className="hidden lg:flex w-60 xl:w-70 shrink-0 min-h-0 flex-col">
               <ArenaLeaderboard />
             </div>
 
             {/* CENTER COLUMN: CANVAS & TOOLBOX */}
-            <div className="flex-1 flex flex-col gap-3 min-h-0 relative w-full lg:max-w-[1100px] mx-auto">
+            <div className="flex-1 flex flex-col gap-3 min-h-0 relative w-full lg:max-w-275 mx-auto">
               {/*  Mobile Peek Chat Button strictly for the Drawer */}
               {canDraw && (
                 <div className="lg:hidden flex justify-end w-full shrink-0 -mb-2 z-10 relative px-2">

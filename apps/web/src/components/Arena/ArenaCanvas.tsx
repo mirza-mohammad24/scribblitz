@@ -1,5 +1,26 @@
 'use client';
 
+/**
+ * @file ArenaCanvas.tsx — Real-time collaborative drawing canvas with integrated toolbox.
+ *
+ * This component owns the `<canvas>` element and the full drawing toolbox UI
+ * (pen, eraser, fill-bucket, brush sizes, color palette, undo, clear).
+ *
+ * Key responsibilities:
+ * - **Retina / HiDPI support**: On mount, the canvas backing store is scaled
+ *   by `window.devicePixelRatio` while CSS dimensions remain at logical size,
+ *   ensuring crisp lines on high-density displays.
+ * - **Tool state isolation**: Color, size, and active tool are local `useState`
+ *   values — changes here never re-render the parent orchestrator.
+ * - **Drawing delegation**: All pointer event handling and real-time socket
+ *   synchronization are delegated to the {@link useCanvasDrawing} hook.
+ * - **Security**: When `isDrawer` is false, an invisible overlay div covers
+ *   the canvas to block all pointer interactions for guessers.
+ *
+ * @see {@link useCanvasDrawing} — hook providing pointer handlers and socket sync
+ * @see {@link CANVAS_CONFIG} — shared canvas dimension constants
+ */
+
 import { useRef, useEffect, useState } from 'react';
 import { useCanvasDrawing, CANVAS_CONFIG } from '@/hooks/useCanvasDrawing';
 import { useGameSocket } from '@/hooks/useGameSocket';
@@ -7,7 +28,9 @@ import { Pencil, Eraser, PaintBucket, Undo2, Trash2, Palette } from 'lucide-reac
 import { motion } from 'framer-motion';
 
 interface ArenaCanvasProps {
+  /** Whether the current user is the active drawer with permission to draw. */
   isDrawer: boolean;
+  /** The room code used for socket event namespacing. */
   roomCode: string;
 }
 
@@ -36,6 +59,21 @@ const BRUSH_SIZES = [
   { value: 28, label: 'lg' },
   { value: 40, label: 'xl' },
 ];
+
+/**
+ * Collaborative drawing canvas with an integrated drawing toolbox.
+ *
+ * Renders a Retina-aware `<canvas>` element paired with a multi-row toolbox
+ * containing drawing tools, brush sizes, color presets, and action buttons.
+ * Pointer events are forwarded to the {@link useCanvasDrawing} hook which
+ * handles local rendering and real-time socket broadcast.
+ *
+ * @param props - {@link ArenaCanvasProps}
+ * @param props.isDrawer - `true` if the current user is the assigned drawer
+ *   with an active drawing phase (DRAWING state + assigned drawer ID match).
+ * @param props.roomCode - The current room code for socket event scoping.
+ * @returns The canvas element and, when `isDrawer` is true, the toolbox UI.
+ */
 export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { socket } = useGameSocket();
@@ -75,11 +113,11 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
 
   return (
     <div className="w-full h-full flex flex-col gap-3 min-h-0">
-      {/* 🎨 CANVAS WRAPPER */}
+      {/* CANVAS WRAPPER */}
       <div className="flex-1 w-full min-h-0 flex justify-center items-center bg-gray-100/50 dark:bg-discord-main/30 rounded-3xl relative overflow-hidden shrink-0">
         <canvas
           ref={canvasRef}
-          className={`max-w-full max-h-full aspect-[4/3] object-contain bg-[#FAFAF8] rounded-2xl shadow-md border-4 border-gray-200 dark:border-discord-main touch-none ${
+          className={`max-w-full max-h-full aspect-4/3 object-contain bg-[#FAFAF8] rounded-2xl shadow-md border-4 border-gray-200 dark:border-discord-main touch-none ${
             isDrawer ? (tool === 'fill' ? 'cursor-alias' : 'cursor-crosshair') : 'cursor-default'
           }`}
           onPointerDown={handlePointerDown}
@@ -92,12 +130,11 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
         {!isDrawer && <div className="absolute inset-0 z-10" />}
       </div>
 
-      {/* 🛠️ REDESIGNED MULTI-LINE TOOLBOX */}
+      {/* MULTI-LINE TOOLBOX */}
       {isDrawer && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          // 🌟 FIX: Reduced padding slightly to save vertical height and let canvas grow
           className="w-full bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-discord-main p-2.5 md:p-3 rounded-3xl shadow-sm flex flex-col gap-3 shrink-0"
         >
           {/* TOP ROW: Tools | Size Buttons | Undo/Clear */}
@@ -124,7 +161,6 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
               </button>
             </div>
 
-            {/* 🌟 FIX: 5 Size Thickness Buttons */}
             <div className="flex-1 flex justify-center items-center gap-1 md:gap-2 px-2 bg-gray-100 dark:bg-discord-main p-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-800">
               {BRUSH_SIZES.map((s) => (
                 <button
@@ -175,7 +211,7 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
                   setColor(hex);
                   if (tool === 'erase') setTool('draw');
                 }}
-                className={`w-full max-w-[36px] md:max-w-[40px] aspect-square rounded-xl border-4 shadow-sm transition-transform active:scale-90 ${
+                className={`w-full max-w-9 md:max-w-10 aspect-square rounded-xl border-4 shadow-sm transition-transform active:scale-90 ${
                   color === hex && tool !== 'erase'
                     ? 'border-green-500 dark:border-neon-blue scale-110'
                     : 'border-gray-200 dark:border-gray-600 hover:scale-105'
@@ -185,7 +221,7 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
             ))}
 
             {/* Custom Color Mixer Slot */}
-            <div className="relative w-full max-w-[36px] md:max-w-[40px] aspect-square rounded-xl overflow-hidden border-4 border-gray-200 dark:border-gray-600 hover:scale-105 transition-transform group">
+            <div className="relative w-full max-w-9 md:max-w-10 aspect-square rounded-xl overflow-hidden border-4 border-gray-200 dark:border-gray-600 hover:scale-105 transition-transform group">
               <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-discord-main pointer-events-none z-10 group-hover:opacity-0 transition-opacity">
                 <Palette size={20} className="text-gray-500 dark:text-gray-400" />
               </div>

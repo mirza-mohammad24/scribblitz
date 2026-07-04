@@ -9,7 +9,7 @@ import { ServerRoomState } from '../../rooms/Room';
 
 /**
  * Serializes a ServerRoomState object into a simpler format for network transmission.
- * @param room
+ * @param room The ServerRoomState object representing the current state of the room.
  * @returns A serialized version of the room state, with Maps and Sets converted to arrays and
  * certain properties omitted.
  */

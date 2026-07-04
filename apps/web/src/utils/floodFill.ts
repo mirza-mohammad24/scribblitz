@@ -1,3 +1,14 @@
+/**
+ * Flood Fill Algorithm File. This file contains the implementation of the flood fill algorithm
+ * and a utility function to convert hex color codes to RGBA format. The flood fill algorithm is
+ * used to fill a contiguous area of pixels with a specified color, starting from a given point.
+ */
+
+/**
+ * Converts a hex color code to an RGBA array.
+ * @param hex The hex color code (e.g., "#FF0000" or "#F00")
+ * @returns An array containing the RGBA values [r, g, b, a]
+ */
 function hexToRgba(hex: string) {
   let r = 0,
     g = 0,
@@ -15,6 +26,13 @@ function hexToRgba(hex: string) {
   return [r, g, b, a];
 }
 
+/**
+ * Applies a flood fill algorithm to a canvas context.
+ * @param ctx The canvas rendering context.
+ * @param startX The x-coordinate of the starting point.
+ * @param startY The y-coordinate of the starting point.
+ * @param fillColorHex The hex color code for the fill color.
+ */
 export function applyFloodFill(
   ctx: CanvasRenderingContext2D,
   startX: number,

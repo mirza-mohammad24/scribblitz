@@ -22,8 +22,8 @@ import { endRound } from '../../fsm/roundManager';
 /**
  * Handles the creation of a new game room. Validates input,
  * updates server state, and communicates results back to the client.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns A function that takes the raw payload from the client and processes the room creation logic.
  * The function performs strict validation on the payload, checks user
  * authentication, interacts with the RoomManager to create a new room, and emits appropriate success
@@ -113,8 +113,8 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
 /**
  * Handles the joining of a player to an existing game room. Validates input,
  * updates server state, and communicates results back to the client.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns A function that takes the raw payload from the client and processes the room joining logic.
  * The function performs strict validation on the payload, checks user
  * authentication, interacts with the RoomManager to add the player to the room, and emits appropriate success
@@ -190,8 +190,8 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
  * Handles the host updating the room configuration while in the lobby.
  * Validates the payload, ensures the sender is the host, and broadcasts
  * the updated config to all players in the room.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  */
 export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: unknown) => {
   //validate
@@ -246,8 +246,8 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
 /**
  * Handles a player voluntarily leaving the room.
  * Safely removes them, reassigns the host if necessary, ends the round if drawer left, and notifies the room.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns A function that processes a player's request to leave the room. It validates the user's session,
  * updates the server state by removing the player from the room, handles host reassignment if the leaving player
  * is the host, and emits appropriate events to notify other players in the room about the departure and any host changes.

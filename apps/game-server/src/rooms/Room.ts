@@ -50,6 +50,7 @@ export class Room {
         drawTimeSeconds: GAME_CONSTANTS.DEFAULT_DRAW_TIME_SECONDS,
         mode: 'standard',
         difficulty: GAME_CONSTANTS.DEFAULT_DIFFICULTY,
+        customWordsOnly: false, // Default to false
         ...config, // Override defaults with any provided config values
       },
       gameState: fsm.getState(),

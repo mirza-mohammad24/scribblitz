@@ -6,8 +6,8 @@ import { ArenaOrchestrator } from '@/components/Arena/ArenaOrchestrator';
 
 export default function Home() {
   return (
-    // The master wrapper. h-dvh ensures it fits mobile screens perfectly, ignoring browser chrome.
-    <main className="flex h-dvh flex-col items-center p-2 lg:p-4 transition-colors duration-300 w-full max-w-[1600px] mx-auto min-h-0 bg-transparent dark:bg-discord-main">
+    // The master wrapper. h-dvh ensures it fits mobile screens perfectly.
+    <main className="flex h-dvh flex-col items-center p-2 lg:p-4 transition-colors duration-300 w-full max-w-400 mx-auto min-h-0 bg-transparent dark:bg-discord-main">
       <ToastManager />
 
       {/* GLOBAL HEADER: Appears on Splash, Lobby, and Game Arena */}

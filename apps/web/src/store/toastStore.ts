@@ -1,3 +1,7 @@
+/**
+ * Toast Store File. This file contains the implementation of a Zustand store for managing toast notifications
+ * in the application. The store includes properties for the list of toasts and actions to add or remove toasts.
+ */
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 

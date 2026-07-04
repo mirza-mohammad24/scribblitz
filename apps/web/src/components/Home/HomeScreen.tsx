@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * @module HomeScreen
+ * @description The landing page of Scribblitz where users can set their username,
+ * customize their DiceBear avatar, create a new game room, or join an existing
+ * room by entering a 6-character code. Persists avatar seed and username to
+ * localStorage across sessions.
+ */
+
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dices, Play, ArrowRightCircle } from 'lucide-react';
@@ -56,6 +64,11 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
     return `${baseUrl}?seed=${avatarSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf,f2c2e0,b4e2b9,ffeab6&radius=50&glassesProbability=30&facialHairProbability=20&earringsProbability=30`;
   }, [avatarSeed]);
 
+  /**
+   * Generates a new random UUID avatar seed, resets the image error state,
+   * and persists the new seed to localStorage.
+   * @returns {void}
+   */
   const handleRandomize = () => {
     const newSeed = uuidv4();
     setAvatarSeed(newSeed);
@@ -63,12 +76,23 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
     localStorage.setItem(AVATAR_STORAGE_KEY, newSeed);
   };
 
-  const handleNameChange = (val: string) => {
+  /**
+   * Updates the username state and clears any existing name validation error.
+   * @param {string} val - The new username input value.
+   * @returns {void}
+   */
+  const handleNameChange = (val: string): void => {
     setUsername(val);
     if (nameError) setNameError(null);
   };
 
-  const handleCodeChange = (val: string) => {
+  /**
+   * Updates the join code state (auto-uppercase) and clears any existing
+   * code validation error.
+   * @param {string} val - The new room code input value.
+   * @returns {void}
+   */
+  const handleCodeChange = (val: string): void => {
     setJoinCode(val.toUpperCase());
     if (codeError) setCodeError(null);
   };
@@ -83,7 +107,13 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
     setTimeout(() => setCodeShake(false), 400);
   };
 
-  const handleCreate = () => {
+  /**
+   * Validates the username via {@link createRoomSchema}, triggers a shake
+   * animation on validation failure, persists the trimmed username to
+   * localStorage, and invokes the {@link HomeScreenProps.onActionCreate} callback.
+   * @returns {void}
+   */
+  const handleCreate = (): void => {
     const result = createRoomSchema.safeParse({
       username: username.trim(),
       avatarSeed,
@@ -103,7 +133,14 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
     onActionCreate(username.trim(), avatarSeed);
   };
 
-  const handleJoin = () => {
+  /**
+   * Validates the username and room code via {@link joinRoomSchema}, triggers
+   * shake animations on respective validation failures, persists the trimmed
+   * username to localStorage, and invokes the {@link HomeScreenProps.onActionJoin}
+   * callback with the trimmed username, room code, and avatar seed.
+   * @returns {void}
+   */
+  const handleJoin = (): void => {
     const result = joinRoomSchema.safeParse({
       username: username.trim(),
       roomCode: joinCode.trim(),

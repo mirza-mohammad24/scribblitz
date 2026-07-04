@@ -7,7 +7,7 @@
 
 /**
  * Clears a timeout timer if it exists and returns null. This is useful for resetting timer state in the game.
- * @param timer
+ * @param timer The timeout timer to clear
  * @returns null
  */
 export const clearTimer = (timer: ReturnType<typeof setTimeout> | null): null => {
@@ -17,7 +17,7 @@ export const clearTimer = (timer: ReturnType<typeof setTimeout> | null): null =>
 
 /**
  * Clears an interval timer if it exists and returns null. This is useful for resetting timer state in the game.
- * @param timer
+ * @param timer The interval timer to clear
  * @returns null
  */
 export const clearIntervalTimer = (timer: ReturnType<typeof setInterval> | null): null => {

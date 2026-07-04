@@ -83,6 +83,33 @@ export const roomConfigSchema = z.object({
       }),
     })
     .optional(),
+
+  customWordsOnly: z.boolean().optional(),
+
+  //Strict custom word list validation
+  customWordList: z
+    .array(
+      z
+        .string()
+        .trim()
+        .min(1, 'Word cannot be empty')
+        .max(
+          GAME_CONSTANTS.MAX_WORD_LENGTH,
+          `Each word must be under ${GAME_CONSTANTS.MAX_WORD_LENGTH} characters`,
+        )
+        // Ensure phrases only have 1 or 2 words
+        .refine(
+          (val) => val.split(/\s+/).filter(Boolean).length <= GAME_CONSTANTS.MAX_WORDS_PER_PHRASE,
+          {
+            message: `Phrases can contain at most ${GAME_CONSTANTS.MAX_WORDS_PER_PHRASE} words`,
+          },
+        ),
+    )
+    .max(
+      GAME_CONSTANTS.MAX_CUSTOM_WORDS,
+      `Custom word list cannot exceed ${GAME_CONSTANTS.MAX_CUSTOM_WORDS} words`,
+    )
+    .optional(),
 });
 
 export const createRoomSchema = z.object({

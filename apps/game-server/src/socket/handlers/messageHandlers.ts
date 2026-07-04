@@ -19,7 +19,7 @@ import { endRound } from '../../fsm/roundManager';
 
 /**
  * Checks if all non-drawer and connected players have guessed the word correctly.
- * @param roomState
+ * @param roomState The current state of the game room, including player information and round details.
  * @returns a boolean indicating whether all guessers have guessed correctly, which is
  * used to determine if the round should end early.
  */
@@ -38,8 +38,8 @@ const hasEveryoneGuessedCorrectly = (roomState: ServerRoomState): boolean => {
  * and determines if it's a normal chat or a guess attempt.
  * If it's a guess attempt, it evaluates the guess, updates scores, and emits appropriate events to
  * clients. It also includes guards to prevent processing of messages from old rounds.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket  The Socket.IO socket instance for the connected client
  * @returns a function that processes incoming chat messages, including guess evaluation and game state updates.
  */
 export const handleChatMessage = (io: Server, socket: Socket) => (payload: unknown) => {

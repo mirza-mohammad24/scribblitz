@@ -2,6 +2,13 @@
  * Computes the Levenshtein edit distance between two strings.
  * Uses a single-row DP optimization for O(min(m,n)) space complexity.
  */
+
+/**
+ * Calculates the Levenshtein edit distance between two strings.
+ * @param a The first string
+ * @param b The second string
+ * @returns The Levenshtein edit distance
+ */
 export const levenshteinDistance = (a: string, b: string): number => {
   if (a.length === 0) return b.length; // we need to insert all characters of b
   if (b.length === 0) return a.length; // we need to delete all characters of a

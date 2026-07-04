@@ -14,9 +14,16 @@ export const ACTIVE_ROOM_KEY = 'scribblitz_active_room';
 //const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
 
 /**
- * 🌟 FIX: Dynamic URL generation.
- * This allows the frontend to automatically talk to your computer's local IP address
- * instead of being hardcoded to localhost or a specific environment variable.
+ * Resolves the backend game-server URL at runtime.
+ * During SSR it falls back to the `NEXT_PUBLIC_GAME_SERVER_URL` env var (or localhost).
+ * In the browser it dynamically derives the URL from the current `window.location.hostname`,
+ * so the frontend works automatically when accessed from any device on the local network.
+ *
+ * Dynamic URL generation — allows the frontend to automatically talk to your
+ * computer's local IP address instead of being hardcoded to localhost or a specific
+ * environment variable.
+ *
+ * @returns {string} The fully-qualified HTTP URL of the game server (e.g. `http://192.168.1.5:3001`).
  */
 const getBackendUrl = () => {
   // If we are on the server (SSR), fallback to the default localhost
@@ -33,7 +40,13 @@ const getBackendUrl = () => {
 let socketInstance: Socket | null = null;
 
 /**
- * Creates or returns the existing socket instance outside the React lifecycle.
+ * Creates or returns the singleton Socket.IO client instance.
+ * On first invocation it generates (or retrieves) a persistent session token from
+ * `localStorage` and initialises a new `Socket` configured with token-based auth.
+ * Subsequent calls return the same instance, preventing duplicate connections
+ * even under React Strict Mode's double-mount behaviour.
+ *
+ * @returns {Socket} The shared Socket.IO client instance.
  */
 const getSocket = (): Socket => {
   if (socketInstance) return socketInstance; // Return existing instance if already created
@@ -55,7 +68,11 @@ const getSocket = (): Socket => {
 };
 
 /**
- * Exposing a manual disconnect function for "Leave Game" buttons.
+ * Tears down the singleton socket connection.
+ * Removes all registered event listeners, disconnects from the server,
+ * and nullifies the cached instance so a fresh connection will be created
+ * on the next call to {@link getSocket}.
+ * Intended for "Leave Game" flows where the user deliberately exits a room.
  */
 export const disconnectSocket = () => {
   if (!socketInstance) return;

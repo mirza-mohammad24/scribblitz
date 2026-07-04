@@ -65,7 +65,7 @@ export class GameFSM {
 
   /**
    * This method checks if the current state of the fsm matches a given state.
-   * @param state
+   * @param state The state to compare against the current state of the FSM
    * @returns boolean indicating if the current state matches the provided state
    */
   isState(state: GameState): boolean {
@@ -73,7 +73,7 @@ export class GameFSM {
   }
   /**
    * This method checks if a requested state change is in our allowed transactions.
-   * @param nextState
+   * @param nextState The state we want to transition to
    * @returns boolean indicating if the transition is allowed
    */
   canTransition(nextState: GameState): boolean {
@@ -82,7 +82,7 @@ export class GameFSM {
 
   /**
    * This method performs the state transition if it's legal, and calls the onTransition hook for any side effects.
-   * @param nextState
+   * @param nextState The state we want to transition to
    * @returns void
    * @throws Error if the transition is not allowed according to LEGAL_TRANSITIONS
    *

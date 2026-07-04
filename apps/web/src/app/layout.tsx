@@ -44,7 +44,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh flex flex-col bg-gray-50 text-gray-900 dark:bg-[#1E1F22] dark:text-gray-100 transition-colors duration-300">
+      <body className="min-h-dvh flex flex-col bg-gray-50 text-gray-900 dark:bg-discord-main dark:text-gray-100 transition-colors duration-300">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

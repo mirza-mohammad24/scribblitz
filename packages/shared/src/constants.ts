@@ -29,4 +29,10 @@ export const GAME_CONSTANTS = {
     medium: 0.3, // 30%
     hard: 0.15, // 15%
   } as const,
+  // Extra words needed beyond roundCount for custom word mode to ensure enough words are available
+  CUSTOM_WORD_BUFFER: 2,
+  // Strict Formatting Limits for Words
+  MAX_CUSTOM_WORDS: 250,
+  MAX_WORD_LENGTH: 20,
+  MAX_WORDS_PER_PHRASE: 2,
 } as const;

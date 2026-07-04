@@ -1,9 +1,17 @@
+/**
+ * This component is a theme toggle button that allows users to switch between light and dark modes.
+ * It uses the `next-themes` library to manage theme state and applies a smooth circular transition effect
+ * when toggling themes. The button also updates the favicon based on the current theme.
+ */
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
+/**
+ * ThemeToggle component for switching between light and dark modes.
+ */
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

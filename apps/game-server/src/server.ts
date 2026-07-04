@@ -1,5 +1,7 @@
 /**
- * Main entry point for the Scribblitz game server.
+ * Main entry point for the Scribblitz game server
+ * This file sets up the Express server, initializes Socket.IO for real-time communication,
+ * and handles connection routing, reconnection logic, and graceful shutdown.
  */
 
 import express from 'express';

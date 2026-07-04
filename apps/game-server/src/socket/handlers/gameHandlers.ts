@@ -18,8 +18,8 @@ import { GAME_CONSTANTS } from '@scribblitz/shared/dist/constants';
 
 /**
  * Handles the game start event
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns a function that processes the game start logic, including validating the user's permissions
  * and initiating the game loop through the FSM controller.
  */
@@ -62,8 +62,8 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
 
 /**
  * Handles the word selection event
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns a function that processes the word selection logic, including validating the user's permissions
  * and passing the selected word to the FSM controller.
  */
@@ -98,8 +98,8 @@ export const handleWordSelect = (io: Server, socket: Socket) => (payload: unknow
  * to reset the game state and return everyone to the lobby view.
  * This includes a security guard to ensure only the host can trigger this
  * action and that it can only be done from the GAME_END state.
- * @param io
- * @param socket
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
  * @returns A function that processes the return to lobby logic,
  * including validating the user's permissions, resetting the room state
  * for a new game, and emitting the updated lobby state to all clients in the room.

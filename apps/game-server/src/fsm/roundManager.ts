@@ -14,7 +14,7 @@
 import { ServerEvents, GameState } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { roomManager } from '../rooms/RoomManager';
-import { getWordPool, pickRandomWords, getAvailableWordPool } from '../words/wordPool';
+import { pickRandomWords, getWordPoolWithCustomPriority } from '../words/wordPool';
 import { Server } from 'socket.io';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 import { generateHint, getRandomHiddenIndex } from '../utils/hintUtils';
@@ -38,8 +38,8 @@ const pickRandomItem = <T>(array: T[]): T | undefined => {
  * round variables, and emitting the appropriate events to clients.
  * It also sets up a timer to auto-select a word if the drawer fails to choose one within the allotted
  * time, ensuring the game flow continues smoothly even if a player is AFK.
- * @param io
- * @param roomCode
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
  */
 export const startGame = (io: Server, roomCode: string): void => {
   const room = roomManager.getRoom(roomCode);
@@ -73,8 +73,8 @@ export const startGame = (io: Server, roomCode: string): void => {
  * round and drawer.
  * The function also includes guards to prevent timer callbacks from executing if the round has
  * already ended or moved on, ensuring robust timer management.
- * @param io
- * @param roomCode
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
  */
 export const startNextRound = (io: Server, roomCode: string): void => {
   const room = roomManager.getRoom(roomCode);
@@ -123,9 +123,12 @@ export const startNextRound = (io: Server, roomCode: string): void => {
   const drawerIndex = (state.currentRound - 1) % activePool.length;
   state.currentDrawerId = activePool[drawerIndex] ?? null;
 
-  const fullWordPool = state.config.customWordList || getWordPool();
-  const availableWordPool = getAvailableWordPool(fullWordPool, state.usedWords);
-  state.wordChoices = pickRandomWords(availableWordPool, GAME_CONSTANTS.WORD_CHOICES_COUNT);
+  const wordPool = getWordPoolWithCustomPriority(
+    state.config.customWordList,
+    state.usedWords,
+    state.config.customWordsOnly ?? false,
+  );
+  state.wordChoices = pickRandomWords(wordPool, GAME_CONSTANTS.WORD_CHOICES_COUNT);
 
   io.to(roomCode).emit(ServerEvents.ROUND_STARTING, {
     round: state.currentRound,
@@ -172,9 +175,9 @@ export const startNextRound = (io: Server, roomCode: string): void => {
  * the game state, and emits the necessary events to clients to transition into the drawing phase.
  * It also sets up timers for hint generation and the drawing phase, ensuring that the game
  * flow continues smoothly and that clients receive timely updates.
- * @param io
- * @param roomCode
- * @param word
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
+ * @param word The word selected by the drawer for the current round
  */
 export const selectWord = (io: Server, roomCode: string, word: string): void => {
   const room = roomManager.getRoom(roomCode);
@@ -199,7 +202,7 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     //Remove oldest word if we hit the cap
     state.usedWords.shift();
   }
-  state.roundStartTime = Date.now(); // this is now not being used for the countdown we are using a synced hook
+  state.roundStartTime = Date.now(); // this is now not being used for the countdown we are using a synced hook (can be deleted but I kept it for now in case we want to use it for something else later)
 
   //Initialize hints for this round
   state.revealedHintIndexes.clear();
@@ -268,9 +271,9 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
 /**
  * Ends the current round and transitions the game state accordingly. It emits the round end
  * event to clients with the correct word, reason for round end, and updated scores.
- * @param io
- * @param roomCode
- * @param reason
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
+ * @param reason The reason for ending the round
  */
 export const endRound = (io: Server, roomCode: string, reason: string): void => {
   const room = roomManager.getRoom(roomCode);
@@ -332,8 +335,8 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
 /**
  * Ends the game and transitions the game state accordingly. It
  * emits the game end event to clients with the final standings.
- * @param io
- * @param roomCode
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
  */
 export const endGame = (io: Server, roomCode: string): void => {
   const room = roomManager.getRoom(roomCode);

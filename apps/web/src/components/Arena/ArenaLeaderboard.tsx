@@ -1,11 +1,57 @@
 'use client';
 
+/**
+ * @file ArenaLeaderboard.tsx — Animated, auto-sorting player leaderboard sidebar.
+ *
+ * Displays all players ranked by score (descending) with rich visual feedback
+ * for rank changes, podium status, and player state (drawing, guessed, offline).
+ *
+ * ## Rank-Change Tracking
+ * A `useEffect` keyed on the serialised player order (`orderKey`) compares the
+ * current rank of each player against their previous rank (stored in a ref).
+ * Two types of transitions are detected:
+ * - Overtake (promotion): A player moved to a lower (better) index. Triggers
+ *   an 800 ms scale-pulse "boost" animation on their card.
+ * - Podium entry: A player entered the top 3 for the first time (or returned
+ *   from outside). Triggers a 1100 ms expanding ring + glow "celebration" burst.
+ * Both effect sets are managed via `Set<string>` state and auto-cleared by timers
+ * that are cleaned up on unmount.
+ *
+ * ## Podium Beam Animation
+ * Top-3 player cards display a sweeping light beam effect. Rather than running
+ * independent CSS animations (which can drift or desync across cards), a single
+ * Framer Motion `useAnimationFrame` loop writes a `--beam-progress` CSS custom
+ * property (0 → 1, looping over {@link BEAM_DURATION_MS}) to the leaderboard's
+ * root element via direct DOM mutation (zero React re-renders). Each podium card
+ * reads this inherited variable in its `backgroundPosition`, guaranteeing
+ * mathematical lockstep across Gold, Silver, and Bronze beams.
+ *
+ * ## Visual Tiers
+ * - Gold (rank 1): Yellow gradient, trophy icon, warm beam glow.
+ * - Silver (rank 2): Slate gradient, medal icon, neutral beam.
+ * - Bronze (rank 3): Orange/amber gradient, award icon, warm beam.
+ * - Rank 3+: Plain card with `#index` label.
+ * - Offline players: Dashed border, grey scale avatar, dimmed opacity.
+ *
+ * @see {@link ArenaOrchestrator} — parent that renders this component
+ */
+
 import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { motion, AnimatePresence, useAnimationFrame } from 'framer-motion';
 import { Trophy, Medal, Award, Pencil, WifiOff, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 
+/**
+ * Animated player leaderboard with live rank sorting, podium beam effects,
+ * and rank-change celebration animations.
+ *
+ * Reads players and the current drawer ID from the Zustand game store, sorts
+ * by score descending, and renders each player as a spring-animated list item.
+ * Rank changes trigger short-lived visual effects (overtake pulse, podium burst).
+ *
+ * @returns The leaderboard sidebar element with header and scrollable player list.
+ */
 export const ArenaLeaderboard = () => {
   const { players, currentDrawerId } = useGameStore();
 
@@ -65,7 +111,7 @@ export const ArenaLeaderboard = () => {
     sortedPlayers.forEach((player, index) => {
       const prevIndex = prevRank.get(player.id);
 
-      // Moved to a numerically lower (better) index than before = overtook someone.
+      // Moved to a numerically lower (better) index than before => overtook someone
       if (prevIndex !== undefined && index < prevIndex) {
         promoted.add(player.id);
       }
@@ -108,8 +154,9 @@ export const ArenaLeaderboard = () => {
 
   // Clean up any pending timers if the component unmounts mid-animation.
   useEffect(() => {
+    const currentTimers = timersRef.current;
     return () => {
-      timersRef.current.forEach((t) => window.clearTimeout(t));
+      currentTimers.forEach((t) => window.clearTimeout(t));
     };
   }, []);
 
@@ -145,7 +192,7 @@ export const ArenaLeaderboard = () => {
         </span>
       </div>
 
-      {/* The Smooth Scrolling, Auto-Sorting List */}
+      {/* The Smooth Scrolling and Auto-Sorting List */}
       <div className="flex-1 overflow-y-auto hide-scrollbar -mx-2 px-2 pb-2 pt-4 md:pt-5">
         <ul className="flex flex-col gap-2 relative">
           <AnimatePresence>
@@ -154,7 +201,6 @@ export const ArenaLeaderboard = () => {
               const isPodium = index <= 2;
               const style = podiumStyles[index as keyof typeof podiumStyles];
 
-              // 🌟 RESTORED: Kept the HasGuessed logic
               const isOffline = !player.isConnected;
               const hasGuessed = player.hasGuessedCorrectly;
 
@@ -207,7 +253,7 @@ export const ArenaLeaderboard = () => {
                             style={{ boxShadow: `inset 0 0 0 1px ${style.glowShadow}` }}
                           />
 
-                          {/* 🌟 LIGHT MODE BEAM: Sharp, solid white glare. Hidden entirely in Dark Mode. */}
+                          {/*LIGHT MODE BEAM*/}
                           <div
                             className="absolute inset-0 pointer-events-none podium-beam opacity-100 mix-blend-normal dark:hidden"
                             style={{
@@ -219,7 +265,7 @@ export const ArenaLeaderboard = () => {
                             }}
                           />
 
-                          {/* 🌟 DARK MODE BEAM: Softer, translucent, colored core. Hidden entirely in Light Mode. */}
+                          {/*DARK MODE BEAM*/}
                           <div
                             className="absolute inset-0 pointer-events-none podium-beam hidden dark:block opacity-80 mix-blend-screen"
                             style={{
@@ -306,8 +352,7 @@ export const ArenaLeaderboard = () => {
                           {player.username}
                         </span>
 
-                        {/* 🌟 RESTORED: Status Indicator with the Guessed Pill! */}
-                        <span className="text-xs font-bold uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 mt-0.5 shrink-0">
                           {isOffline ? (
                             <span className="text-gray-400 dark:text-gray-500">Disconnected</span>
                           ) : hasGuessed ? (
@@ -323,7 +368,7 @@ export const ArenaLeaderboard = () => {
                       </div>
 
                       {/* Score */}
-                      <div className="shrink-0 flex items-center justify-end min-w-[40px] z-10">
+                      <div className="shrink-0 flex items-center justify-end min-w-13.75 z-10">
                         <motion.span
                           key={player.score}
                           initial={{ scale: 1.5, y: -5 }}

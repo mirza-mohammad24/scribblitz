@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * @module Footer
+ * @description A desktop-only site footer displayed on the HomeScreen. Contains
+ * brand information, a "How to Play" rules modal trigger, and an animated tech
+ * stack marquee powered by {@link LogoLoop}. Automatically hides when the user
+ * is in the Lobby or Arena game states.
+ */
+
 import { useState } from 'react';
 import { Brush, ScrollText } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
@@ -7,6 +15,12 @@ import LogoLoop from '@/components/ReactBits/LogoLoop';
 import { RulesModal } from '@/components/ui/RulesModal';
 import { useGameStore } from '@/store/gameStore';
 
+/**
+ * Renders the site footer with brand info, explore links, a tech stack marquee,
+ * copyright notice, and social links. Returns `null` when the game is active
+ * (i.e., `gameState` is not `null`) to keep the UI focused on gameplay.
+ * @returns {React.JSX.Element | null} The footer JSX or null if the game is active.
+ */
 export const Footer = () => {
   const gameState = useGameStore((state) => state.gameState);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -40,7 +54,7 @@ export const Footer = () => {
   return (
     <>
       <footer className="hidden md:flex flex-col w-full border-t border-gray-200 dark:border-discord-card bg-white dark:bg-discord-main shrink-0 z-10 mt-auto transition-colors duration-300">
-        <div className="max-w-[1400px] w-full mx-auto px-8 py-10 grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+        <div className="max-w-350 w-full mx-auto px-8 py-10 grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
           {/* COLUMN 1: Brand & Description */}
           <div className="flex flex-col gap-3">
             <h2 className="text-2xl font-black text-gray-800 dark:text-gray-100 tracking-tight flex items-center gap-2">
@@ -75,7 +89,6 @@ export const Footer = () => {
               Powered By
             </h3>
 
-            {/* 🌟 FIX 1: Increased height from h-8 to h-10 to give the text descenders breathing room */}
             <div className="w-full flex items-center h-10 relative mask-edges overflow-hidden">
               <LogoLoop
                 logos={techStack}
@@ -83,18 +96,18 @@ export const Footer = () => {
                 gap={48}
                 logoHeight={24}
                 pauseOnHover={true}
-                // 🌟 FIX 2: Injected !overflow-hidden to brutally enforce no scrolling on the loop itself
-                className="opacity-70 hover:opacity-100 transition-opacity duration-300 !overflow-hidden"
+                //Injected overflow-hidden! to brutally enforce no scrolling on the loop itself
+                className="opacity-70 hover:opacity-100 transition-opacity duration-300 overflow-hidden!"
               />
-              <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white dark:from-discord-main to-transparent z-10 pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white dark:from-discord-main to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 left-0 w-12 bg-linear-to-r from-white dark:from-discord-main to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-12 bg-linear-to-l from-white dark:from-discord-main to-transparent z-10 pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* BOTTOM ROW: Copyright & Links */}
         <div className="w-full border-t border-gray-200 dark:border-discord-card py-4">
-          <div className="max-w-[1400px] w-full mx-auto px-8 flex justify-between items-center text-xs font-bold text-gray-400 dark:text-gray-500">
+          <div className="max-w-350 w-full mx-auto px-8 flex justify-between items-center text-xs font-bold text-gray-400 dark:text-gray-500">
             <div className="flex gap-3">
               <span>
                 <span className="hover:text-green-500 dark:hover:text-neon-blue transition-colors cursor-default">

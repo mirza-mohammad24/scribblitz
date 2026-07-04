@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * @module GameOverModal
+ * @description An animated end-of-game results screen displaying a podium with
+ * gold, silver, and bronze standings, player avatars and scores, and action
+ * buttons. The host sees a "Return to Lobby & Play Again" button while non-hosts
+ * see a "Waiting for Host to restart..." indicator.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Crown, LogOut, Loader2 } from 'lucide-react';
 import Image from 'next/image';
@@ -20,6 +28,19 @@ interface GameOverModalProps {
   onLeaveRoom: () => void;
 }
 
+/**
+ * Renders the game-over results modal with an animated podium showing the top 3
+ * players, their DiceBear avatars, and point totals. Provides a "Return to Lobby
+ * & Play Again" button for the host and a waiting state for non-hosts. All
+ * players have access to a "Leave Room" escape hatch.
+ * @param {GameOverModalProps} props - The component props.
+ * @param {boolean} props.isOpen - Whether the modal is visible.
+ * @param {PlayerStanding[]} props.standings - Array of player standings with rank, score, and avatar data.
+ * @param {boolean} props.isHost - Whether the current user is the room host.
+ * @param {() => void} props.onPlayAgain - Callback for the host to return to the lobby.
+ * @param {() => void} props.onLeaveRoom - Callback to leave the room entirely.
+ * @returns {React.JSX.Element} The animated game-over modal JSX, or nothing when closed.
+ */
 export const GameOverModal = ({
   isOpen,
   standings,

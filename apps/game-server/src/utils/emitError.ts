@@ -15,7 +15,7 @@ const FATAL_ERRORS: ErrorCode[] = [
 ];
 /**
  * Emits an error event to the client with a consistent format.
- * @param socket
+ * @param socket - The Socket.IO socket instance to emit the error to.
  * @param code - A well-known ErrorCode enum member shared with the frontend.
  * @param message - A human-readable description of what went wrong.
  */
