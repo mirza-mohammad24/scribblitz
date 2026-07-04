@@ -1,19 +1,19 @@
-# Graph Report - scribblitz (2026-07-04)
+# Graph Report - scribblitz (2026-06-25)
 
 ## Corpus Check
 
-- 111 files · ~42,383 words
+- 109 files · ~36,304 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 552 nodes · 695 edges · 46 communities (36 shown, 10 thin omitted)
+- 545 nodes · 680 edges · 45 communities (36 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `a40b69b3`
+- Built from commit: `5ef27054`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -61,7 +61,6 @@
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
 
 ## God Nodes (most connected - your core abstractions)
 
@@ -71,10 +70,10 @@
 4. `compilerOptions` - 15 edges
 5. `useGameStore` - 14 edges
 6. `GameFSM` - 10 edges
-7. `startNextRound()` - 9 edges
-8. `clearTimer()` - 9 edges
+7. `clearTimer()` - 9 edges
+8. `startNextRound()` - 8 edges
 9. `ServerRoomState` - 7 edges
-10. `clearIntervalTimer()` - 7 edges
+10. `useSyncedTimer()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 
@@ -86,24 +85,24 @@
   packages/eslint-config/README.md → README.md
 - `ServerRoomState` --references--> `GameFSM` [EXTRACTED]
   apps/game-server/src/rooms/Room.ts → apps/game-server/src/fsm/GameFSM.ts
-- `getSocket()` --calls--> `io` [INFERRED]
-  apps/web/src/hooks/useGameSocket.ts → apps/game-server/src/server.ts
+- `HUDTimer()` --calls--> `useSyncedTimer()` [EXTRACTED]
+  apps/web/src/components/Arena/ArenaHUD.tsx → apps/web/src/hooks/useSyncedTimer.ts
 
 ## Import Cycles
 
 - None detected.
 
-## Communities (46 total, 10 thin omitted)
+## Communities (45 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.07
-Nodes (40): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+32 more)
+Cohesion: 0.08
+Nodes (37): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+29 more)
 
 ### Community 1 - "Community 1"
 
-Cohesion: 0.06
-Nodes (40): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, HUDTimer() (+32 more)
+Cohesion: 0.07
+Nodes (39): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, HUDTimer() (+31 more)
 
 ### Community 2 - "Community 2"
 
@@ -142,8 +141,8 @@ Nodes (18): dependencies, pg, @prisma/adapter-pg, @prisma/client, engines, node,
 
 ### Community 9 - "Community 9"
 
-Cohesion: 0.20
-Nodes (4): ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps
+Cohesion: 0.12
+Nodes (9): Footer(), HomeScreen(), HomeScreenProps, ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps, RulesModal() (+1 more)
 
 ### Community 10 - "Community 10"
 
@@ -164,6 +163,11 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
+
+### Community 14 - "Community 14"
+
+Cohesion: 0.12
+Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -255,31 +259,26 @@ Nodes (4): compilerOptions, jsx, extends, $schema
 Cohesion: 0.24
 Nodes (7): ThemeToggle(), Toast, ToastStore, ToastType, useToastStore, toastConfig, ToastManager()
 
-### Community 45 - "Community 45"
-
-Cohesion: 0.22
-Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVariants, LobbyScreen(), LobbyScreenProps, StrictModeWarningOverlay(), StrictModeWarningOverlayProps
-
 ## Knowledge Gaps
 
-- **311 isolated node(s):** `TransitionMap`, `LEGAL_TRANSITIONS`, `AddPlayerResult`, `SocketData`, `app` (+306 more)
+- **309 isolated node(s):** `AddPlayerResult`, `LobbyScreenProps`, `listVariants`, `itemVariants`, `GAME_CONSTANTS` (+304 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `TransitionMap`, `LEGAL_TRANSITIONS`, `AddPlayerResult` to the rest of the system?**
-  _311 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `AddPlayerResult`, `LobbyScreenProps`, `listVariants` to the rest of the system?**
+  _309 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06832298136645963 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08408953418027829 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.06428988895382817 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06623376623376623 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
