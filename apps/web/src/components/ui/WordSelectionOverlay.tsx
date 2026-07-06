@@ -48,13 +48,13 @@ export const WordSelectionOverlay = ({
   const { progress, timeLeft } = useSyncedTimer(GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="w-full max-w-md bg-white dark:bg-discord-card rounded-[2rem] md:rounded-[2.5rem] border-4 border-yellow-400 dark:border-yellow-500 p-6 md:p-8 shadow-2xl flex flex-col gap-5 relative overflow-hidden"
+        className="w-full max-w-md bg-white dark:bg-discord-card rounded-4xl md:rounded-[2.5rem] border-4 border-yellow-400 dark:border-yellow-500 p-6 md:p-8 shadow-2xl flex flex-col gap-5 relative overflow-hidden"
         style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
       >
         {/* Dynamic Header based on Role */}
@@ -118,7 +118,7 @@ export const WordSelectionOverlay = ({
             {/*<span className="text-xs font-black text-red-500 dark:text-neon-pink">{timeLeft}s</span>*/}
           </div>
 
-          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 relative shadow-inner p-[2px] flex items-center">
+          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 relative shadow-inner p-0.5 flex items-center">
             <div
               className="h-full bg-red-500 dark:bg-neon-pink rounded-full shadow-[inset_0_-4px_rgba(0,0,0,0.2)] relative overflow-hidden"
               style={{ width: `${progress}%`, minWidth: '5%' }}

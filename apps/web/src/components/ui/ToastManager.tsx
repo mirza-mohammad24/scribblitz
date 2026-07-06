@@ -44,7 +44,7 @@ export const ToastManager = () => {
             >
               <div className="flex items-center gap-3 font-bold">
                 {config.icon}
-                <p className="dark:text-gray-100">{toast.message}</p>
+                <div className="dark:text-gray-100">{toast.message}</div>
               </div>
               <button
                 onClick={() => removeToast(toast.id)}

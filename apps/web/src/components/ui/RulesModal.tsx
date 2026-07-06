@@ -27,7 +27,7 @@ export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-xl bg-white dark:bg-discord-card rounded-[2rem] border-4 border-gray-200 dark:border-discord-main p-6 md:p-8 shadow-2xl flex flex-col gap-6 relative pointer-events-auto"
+              className="w-full max-w-xl bg-white dark:bg-discord-card rounded-4xl border-4 border-gray-200 dark:border-discord-main p-6 md:p-8 shadow-2xl flex flex-col gap-6 relative pointer-events-auto"
             >
               <button
                 onClick={onClose}
@@ -101,7 +101,7 @@ export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
 
               <button
                 onClick={onClose}
-                className="w-full mt-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white py-3.5 rounded-xl font-black text-lg border-b-[4px] border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all shadow-sm"
+                className="w-full mt-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white py-3.5 rounded-xl font-black text-lg border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all shadow-sm"
               >
                 Got it! Let&apos;s Draw
               </button>

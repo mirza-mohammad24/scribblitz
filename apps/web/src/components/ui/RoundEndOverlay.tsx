@@ -50,13 +50,13 @@ export const RoundEndOverlay = () => {
     });
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="w-full max-w-md bg-white dark:bg-discord-card rounded-[2rem] md:rounded-[2.5rem] border-4 border-green-500 dark:border-neon-blue p-5 md:p-8 shadow-2xl flex flex-col gap-6 relative overflow-hidden"
+        className="w-full max-w-md bg-white dark:bg-discord-card rounded-4xl md:rounded-[2.5rem] border-4 border-green-500 dark:border-neon-blue p-5 md:p-8 shadow-2xl flex flex-col gap-6 relative overflow-hidden"
         style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
       >
         {/* Header Section */}
@@ -82,7 +82,7 @@ export const RoundEndOverlay = () => {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 400, damping: 15, delay: 0.3 }}
-            className="text-4xl md:text-5xl font-black text-green-600 dark:text-neon-blue mt-1 drop-shadow-sm uppercase tracking-wide break-words"
+            className="text-4xl md:text-5xl font-black text-green-600 dark:text-neon-blue mt-1 drop-shadow-sm uppercase tracking-wide wrap-break-word"
           >
             {correctWord}
           </motion.span>
@@ -119,14 +119,14 @@ export const RoundEndOverlay = () => {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="flex items-center justify-center min-w-[3.5rem] px-3 py-1.5 text-sm font-black text-gray-600 dark:text-gray-300 bg-gray-200/50 dark:bg-gray-800/80 rounded-xl border-2 border-gray-300 dark:border-gray-700 shadow-inner transition-colors">
+                    <span className="flex items-center justify-center min-w-14 px-3 py-1.5 text-sm font-black text-gray-600 dark:text-gray-300 bg-gray-200/50 dark:bg-gray-800/80 rounded-xl border-2 border-gray-300 dark:border-gray-700 shadow-inner transition-colors">
                       {previousScore}
                     </span>
                     <motion.span
                       initial={delta > 0 ? { scale: 0 } : { opacity: 0 }}
                       animate={delta > 0 ? { scale: 1 } : { opacity: 1 }}
                       transition={{ type: 'spring', delay: index * 0.1 + 0.5 }}
-                      className={`font-black text-sm px-3 py-1.5 rounded-xl border-b-[3px] active:border-b-0 active:translate-y-[3px] ${
+                      className={`font-black text-sm px-3 py-1.5 rounded-xl border-b-[3px] active:border-b-0 active:translate-y-0.75 ${
                         delta > 0
                           ? 'bg-green-500 dark:bg-neon-blue text-white border-green-700 dark:border-blue-900 shadow-md'
                           : 'bg-gray-200 dark:bg-gray-700 text-gray-500 border-gray-300 dark:border-gray-800'
@@ -155,7 +155,7 @@ export const RoundEndOverlay = () => {
             </span>
           </div>
 
-          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 relative shadow-inner p-[2px] flex items-center">
+          <div className="w-full h-6 bg-gray-100 dark:bg-discord-main rounded-full border-4 border-gray-200 dark:border-gray-800 relative shadow-inner p-0.5 flex items-center">
             <div
               className="h-full bg-red-500 dark:bg-neon-pink rounded-full shadow-[inset_0_-4px_rgba(0,0,0,0.2)] relative overflow-hidden"
               style={{ width: `${progress}%`, minWidth: '5%' }}

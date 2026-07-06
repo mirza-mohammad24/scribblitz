@@ -27,14 +27,14 @@ export const StrictModeWarningOverlay = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+          className="fixed inset-0 z-110 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="w-full max-w-md bg-white dark:bg-discord-card rounded-[2rem] border-4 border-amber-400 dark:border-amber-500 p-6 shadow-2xl flex flex-col items-center gap-5 text-center"
+            className="w-full max-w-md bg-white dark:bg-discord-card rounded-4xl border-4 border-amber-400 dark:border-amber-500 p-6 shadow-2xl flex flex-col items-center gap-5 text-center"
           >
             <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400 rounded-full flex items-center justify-center mb-1 shrink-0">
               <AlertTriangle size={32} strokeWidth={2.5} />
