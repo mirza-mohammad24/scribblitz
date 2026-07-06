@@ -371,3 +371,44 @@ export const endGame = (io: Server, roomCode: string): void => {
   // Emit game end event with final standings
   io.to(roomCode).emit(ServerEvents.GAME_END, { standings });
 };
+
+/**
+ * Emergency abort — halts the game loop immediately when the room drops
+ * below MIN_PLAYERS during live gameplay. Unlike endGame(), this does NOT
+ * emit GAME_END (no podium). It emits GAME_ABORTED so the frontend can
+ * show the "last player standing" lock-screen.
+ * @param io The Socket.IO server instance
+ * @param roomCode The unique code identifying the game room
+ */
+export const abortGame = (io: Server, roomCode: string): void => {
+  const room = roomManager.getRoom(roomCode);
+  if (!room) return;
+
+  const state = room.getState();
+
+  // Guard: only abort from active gameplay states
+  if (state.gameState === GameState.LOBBY || state.gameState === GameState.GAME_END) return;
+
+  // Kill ALL timers
+  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+  state.drawingTimer = clearTimer(state.drawingTimer);
+  state.hintTimer = clearIntervalTimer(state.hintTimer);
+  state.intermissionTimer = clearTimer(state.intermissionTimer);
+
+  // Redis cleanup
+  redis
+    .del(`room:${roomCode}:canvas`)
+    .catch((err) =>
+      console.error(`[Redis] Failed to clear canvas for aborted room ${roomCode}:`, err),
+    );
+
+  // Transition to GAME_END internally
+  room.transitionState(GameState.GAME_END);
+
+  // Emit the ABORT signal
+  io.to(roomCode).emit(ServerEvents.GAME_ABORTED, {
+    reason: 'insufficient_players',
+  });
+
+  console.log(`[FSM] Game ABORTED in room ${roomCode} — insufficient players`);
+};

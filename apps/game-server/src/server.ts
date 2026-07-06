@@ -22,7 +22,7 @@ import {
 } from './socket/handlers/gameHandlers';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
 import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
-import { endRound, endGame } from './fsm/roundManager';
+import { endRound, endGame, abortGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
@@ -361,11 +361,11 @@ io.on('connection', (socket: Socket) => {
           roomCheck.getState().gameState === GameState.ROUND_END;
 
         if (remainingPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && stillActive) {
-          //Too few players to continue playing - end the game immediately (server emit is handled in endGame function)
+          //Too few players to continue playing - abort the game immediately (server emit is handled in abortGame function)
           console.log(
-            `[Socket] Ending game in Room: ${roomCode} due to insufficient players after timeout (from file server.ts)`,
+            `[Socket] Aborting game in Room: ${roomCode} due to insufficient players after timeout (from file server.ts)`,
           );
-          endGame(io, roomCode);
+          abortGame(io, roomCode);
         }
       }
 

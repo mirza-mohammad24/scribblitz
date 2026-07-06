@@ -12,12 +12,13 @@
 import { Server, Socket } from 'socket.io';
 import { ServerEvents, GameState, Player, ErrorCode } from '@scribblitz/types';
 import { createRoomSchema, joinRoomSchema, roomConfigSchema } from '@scribblitz/validation';
+import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { roomManager } from '../../rooms/RoomManager';
 import { ServerRoomState } from '../../rooms/Room';
 import { emitError } from '../../utils/emitError';
 import { serializeRoom } from '../utils/serializeRoom';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
-import { endRound } from '../../fsm/roundManager';
+import { endRound, abortGame } from '../../fsm/roundManager';
 
 /**
  * Handles the creation of a new game room. Validates input,
@@ -252,7 +253,6 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
  * updates the server state by removing the player from the room, handles host reassignment if the leaving player
  * is the host, and emits appropriate events to notify other players in the room about the departure and any host changes.
  */
-
 export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
   const roomCode = socket.data.roomCode;
   const userId = getUserIdBySocket(socket);
@@ -261,6 +261,11 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
 
   const room = roomManager.getRoom(roomCode);
   if (!room) return;
+
+  // IMMEDIATELY leave the Socket.IO room so this client never receives
+  // round:end / game:aborted / player:left events that are meant for remaining players
+  socket.leave(roomCode);
+  socket.data.roomCode = undefined; //Free the socket
 
   const state = room.getState();
   const isGameActive =
@@ -276,8 +281,9 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
   const wasDrawerInActiveGame = state.currentDrawerId === userId && isGameActive;
 
   // We MUST END the round BEFORE removing the player from the roomManager.
-  // If we remove them first, their score completely vanishes from the end-of-round podium screen!
+  // If we remove them first, their score completely vanishes from the end-of-round podium screen
   // If the game is active and the player leaving is the drawer, end the round immediately (cumulative check above).
+  // The leaving player's socket has already left the room, so they won't receive this.
   if (wasDrawerInActiveGame) {
     console.log(
       `[Game] Active drawer ${userId} left the room. Aborting turn. (from file lobbyHandlers.ts)`,
@@ -287,10 +293,6 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
 
   //Now safely remove the player from the server memory.
   const removeResult = roomManager.removePlayer(roomCode, userId);
-
-  //Clean up
-  socket.leave(roomCode);
-  socket.data.roomCode = undefined; //Free the socket
 
   console.log(
     `[Lobby] User ${userId} voluntarily left room: ${roomCode} (from file lobbyHandlers.ts)`,
@@ -311,6 +313,13 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
         `[Lobby] Host left. New host assigned for room ${roomCode} is ${removeResult.newHostId} (from file lobbyHandlers.ts)`,
       );
       io.to(roomCode).emit(ServerEvents.HOST_CHANGED, { newHostId: removeResult.newHostId });
+    }
+
+    // LAST PLAYER STANDING CHECK (Voluntary Quit)
+    // After removal, if the game was active and we're below MIN_PLAYERS, abort immediately.
+    const connectedPlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
+    if (connectedPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && isGameActive) {
+      abortGame(io, roomCode);
     }
   }
 };

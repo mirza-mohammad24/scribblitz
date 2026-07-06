@@ -62,6 +62,7 @@ import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { GameOverModal } from '@/components/ui/GameOverModal';
 import { RoundEndOverlay } from '@/components/ui/RoundEndOverlay';
 import { WordSelectionOverlay } from '@/components/ui/WordSelectionOverlay';
+import { GameAbortedModal } from '@/components/ui/GameAbortModal';
 
 // Arena Components
 import { ArenaHUD } from './ArenaHUD';
@@ -90,6 +91,7 @@ export const ArenaOrchestrator = () => {
     currentDrawerId,
     wordChoices,
     standings,
+    isGameAborted,
     setRoomState,
     resetGame, //Needed for leaving the room
   } = useGameStore();
@@ -241,6 +243,20 @@ export const ArenaOrchestrator = () => {
       setRoomState({ gameState: GameState.GAME_END, standings });
     });
 
+    socket.on(ServerEvents.GAME_ABORTED, ({ reason }) => {
+      //We will delete the active room key from local storage here because now this room will never be
+      //reused. I have already added to remove the active room key in the leave room handler, but if the
+      //person did not click leave room and refreshes the page so deleting as soon as the server sends the
+      //game abort event it is good to remove it here as well to prevent any stale reconnection attempts.
+      localStorage.removeItem(ACTIVE_ROOM_KEY);
+
+      setRoomState({
+        gameState: GameState.GAME_END, // Use GAME_END to transition to the modal zone safely
+        isGameAborted: true,
+        abortReason: reason,
+      });
+    });
+
     // ==========================================
     // CHAT & GAMEPLAY LISTENERS
     // ==========================================
@@ -362,6 +378,7 @@ export const ArenaOrchestrator = () => {
       socket.off(ServerEvents.ROUND_STARTED);
       socket.off(ServerEvents.ROUND_END);
       socket.off(ServerEvents.GAME_END);
+      socket.off(ServerEvents.GAME_ABORTED);
       socket.off(ServerEvents.WORD_HINT_UPDATED);
       socket.off(ServerEvents.CHAT_BROADCAST);
       socket.off(ServerEvents.GUESS_CLOSE);
@@ -404,9 +421,10 @@ export const ArenaOrchestrator = () => {
    * (preventing stale reconnection attempts), and resets the local game store.
    */
   const handleLeaveRoom = () => {
-    socket?.emit(ClientEvents.ROOM_LEAVE);
-    localStorage.removeItem(ACTIVE_ROOM_KEY); // Clear active room from localStorage on leave
     resetGame();
+    localStorage.removeItem(ACTIVE_ROOM_KEY);
+    setIsLeaveModalOpen(false);
+    socket?.emit(ClientEvents.ROOM_LEAVE);
   };
 
   /**
@@ -547,7 +565,7 @@ export const ArenaOrchestrator = () => {
 
               {/* ROUND END OVERLAY */}
               <AnimatePresence>
-                {gameState === GameState.ROUND_END && <RoundEndOverlay />}
+                {gameState === GameState.ROUND_END && !isGameAborted && <RoundEndOverlay />}
               </AnimatePresence>
 
               {/* CANVAS COMPONENT */}
@@ -595,12 +613,15 @@ export const ArenaOrchestrator = () => {
 
       {/* Global Modals */}
       <GameOverModal
-        isOpen={gameState === GameState.GAME_END}
+        isOpen={gameState === GameState.GAME_END && !isGameAborted}
         standings={standings || []}
         isHost={isHost}
         onPlayAgain={handleReturnToLobby}
         onLeaveRoom={handleLeaveRoom}
       />
+
+      <GameAbortedModal isOpen={isGameAborted} onGoHome={handleLeaveRoom} />
+
       <ConfirmModal
         isOpen={isLeaveModalOpen}
         title="Abandon Game?"

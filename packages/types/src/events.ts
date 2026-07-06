@@ -55,4 +55,5 @@ export const ServerEvents = {
   ROOM_CONFIG_UPDATED: 'room:config_updated',
   HOST_CHANGED: 'room:host_changed',
   LOBBY_RESET: 'room:lobby_reset',
+  GAME_ABORTED: 'game:aborted',
 } as const;

@@ -47,6 +47,8 @@ interface GameStore {
   }>;
   drawTimeSeconds: number;
   roundStartTime: number | null;
+  isGameAborted: boolean;
+  abortReason: string | null;
 
   //Actions
   setRoomState: (payload: Partial<GameStore>) => void;
@@ -76,6 +78,8 @@ const initialState = {
   chatMessages: [],
   drawTimeSeconds: 0,
   roundStartTime: null,
+  isGameAborted: false,
+  abortReason: null,
 };
 
 export const useGameStore = create<GameStore>((set) => ({
