@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * @module RoundEndOverlay
+ * @description An animated end-of-round overlay that shows the revealed word,
+ * player score changes, and a round transition timer. Designed to keep the
+ * final round state easy to scan while preserving the same modal style used by
+ * the other UI overlays.
+ */
+
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useGameStore } from '@/store/gameStore';
 import { useSyncedTimer } from '@/hooks/useSyncedTimer';
@@ -34,6 +42,11 @@ const itemVariants: Variants = {
   },
 };
 
+/**
+ * Renders the end-of-round results overlay with the revealed word, sorted
+ * player score deltas, and a synced countdown bar until the next round.
+ * @returns {React.JSX.Element} The animated round-end overlay JSX.
+ */
 export const RoundEndOverlay = () => {
   const { correctWord, roundEndReason, players, previousScores, isFinalRound } = useGameStore();
 
@@ -48,6 +61,15 @@ export const RoundEndOverlay = () => {
       const deltaB = b.score - (previousScores[b.id] || 0);
       return deltaB - deltaA;
     });
+
+  // DYNAMIC FONT SCALING LOGIC FOR THE REVEALED WORD
+  const wordLen = correctWord?.length || 0;
+  let wordSizeClass = 'text-4xl md:text-5xl tracking-wide'; // Standard
+  if (wordLen > 15) {
+    wordSizeClass = 'text-2xl md:text-3xl tracking-normal'; // 16-20 chars
+  } else if (wordLen > 10) {
+    wordSizeClass = 'text-3xl md:text-4xl tracking-wide'; // 11-15 chars
+  }
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
@@ -82,7 +104,7 @@ export const RoundEndOverlay = () => {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 400, damping: 15, delay: 0.3 }}
-            className="text-4xl md:text-5xl font-black text-green-600 dark:text-neon-blue mt-1 drop-shadow-sm uppercase tracking-wide wrap-break-word"
+            className={`${wordSizeClass} font-black text-green-600 dark:text-neon-blue mt-1 drop-shadow-sm uppercase wrap-break-word leading-tight text-center w-full px-2`}
           >
             {correctWord}
           </motion.span>

@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * @module WordSelectionOverlay
+ * @description An animated overlay that prompts the drawer to choose a word
+ * while giving other players a waiting state and synced timer feedback.
+ */
+
 import { useSyncedTimer } from '@/hooks/useSyncedTimer';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { motion, Variants } from 'framer-motion';
@@ -39,6 +45,15 @@ const itemVariants: Variants = {
   },
 };
 
+/**
+ * Renders the word selection overlay for either the active drawer or the
+ * waiting audience, including animated word choices and a synced countdown.
+ * @param {WordSelectionOverlayProps} props - The component props.
+ * @param {boolean} props.isDrawer - Whether the current user is drawing.
+ * @param {string[]} props.wordChoices - The candidate words to display.
+ * @param {(word: string) => void} props.onSelect - Callback fired when a word is chosen.
+ * @returns {React.JSX.Element} The animated word selection overlay JSX.
+ */
 export const WordSelectionOverlay = ({
   isDrawer,
   wordChoices,
@@ -96,16 +111,27 @@ export const WordSelectionOverlay = ({
         {/* The Body */}
         <div className="flex flex-col gap-3 relative z-10 w-full mb-2">
           {isDrawer &&
-            wordChoices?.map((word) => (
-              <motion.button
-                key={word}
-                variants={itemVariants}
-                onClick={() => onSelect(word)}
-                className="w-full bg-green-500 dark:bg-neon-blue text-white px-4 py-3.5 md:py-4 rounded-2xl font-black text-lg border-b-[5px] border-green-700 dark:border-blue-900 hover:bg-green-600 dark:hover:bg-blue-600 hover:-translate-y-1 hover:border-b-[6px] active:border-b-0 active:translate-y-1 transition-all shadow-sm"
-              >
-                {word}
-              </motion.button>
-            ))}
+            wordChoices?.map((word) => {
+              //DYNAMIC FONT SIZING PER BUTTON
+              const isVeryLong = word.length > 15;
+              const isMedium = word.length > 10;
+              const textSizeClass = isVeryLong
+                ? 'text-sm md:text-base'
+                : isMedium
+                  ? 'text-base md:text-lg'
+                  : 'text-lg md:text-xl';
+
+              return (
+                <motion.button
+                  key={word}
+                  variants={itemVariants}
+                  onClick={() => onSelect(word)}
+                  className={`w-full bg-green-500 dark:bg-neon-blue text-white px-4 py-3.5 md:py-4 rounded-2xl font-black border-b-[5px] border-green-700 dark:border-blue-900 hover:bg-green-600 dark:hover:bg-blue-600 hover:-translate-y-1 hover:border-b-[6px] active:border-b-0 active:translate-y-1 transition-all shadow-sm whitespace-normal wrap-break-word leading-tight ${textSizeClass}`}
+                >
+                  {word}
+                </motion.button>
+              );
+            })}
         </div>
 
         {/* Playful Cartoonish Progress Bar */}

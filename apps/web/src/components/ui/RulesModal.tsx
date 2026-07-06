@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @module RulesModal
+ * @description An animated rules and instructions modal that explains how to
+ * join a room, draw a word, guess quickly, and win the game. The layout uses
+ * the same overlay and rounded-card style as the other UI dialogs.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Gamepad2, Users, Brush, MessageSquare, Trophy } from 'lucide-react';
 
@@ -8,6 +15,15 @@ interface RulesModalProps {
   onClose: () => void;
 }
 
+/**
+ * Renders the game rules modal with animated enter/exit transitions, a dimmed
+ * backdrop, and a set of gameplay tips for joining, drawing, guessing, and
+ * scoring.
+ * @param {RulesModalProps} props - The component props.
+ * @param {boolean} props.isOpen - Whether the modal is visible.
+ * @param {() => void} props.onClose - Callback fired when the user dismisses the modal.
+ * @returns {React.JSX.Element} The animated rules modal JSX.
+ */
 export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
   return (
     <AnimatePresence>

@@ -34,6 +34,7 @@ import { useGameStore } from '@/store/gameStore';
 import { ClientEvents } from '@scribblitz/types';
 import { SendHorizontal, ChevronDown, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 
 /**
  * Real-time chat and guess submission panel for the game arena.
@@ -46,7 +47,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  */
 export const ArenaChat = () => {
   const { socket, userId } = useGameSocket();
-  const { chatMessages, roundId, currentDrawerId } = useGameStore();
+  const { chatMessages, roundId, currentDrawerId, players } = useGameStore();
 
   const [message, setMessage] = useState('');
 
@@ -58,6 +59,42 @@ export const ArenaChat = () => {
 
   // Security check: The active drawer is not allowed to use the chat
   const isDrawer = userId === currentDrawerId;
+
+  // Track local player state for the confetti pop
+  const localPlayer = players.find((p) => p.id === userId);
+  const prevGuessedRef = useRef(false);
+
+  //  ARCADE SHOWER CONFETTI LOGIC
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const hasGuessed = localPlayer?.hasGuessedCorrectly || false;
+
+    // Only fire if they just flipped to 'guessed' this exact render
+    if (hasGuessed && !prevGuessedRef.current) {
+      const duration = 2000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: isMobile ? 3 : 5, // Lighter on mobile
+          angle: 270, // Straight down
+          spread: 60,
+          origin: { x: Math.random(), y: -0.1 }, // Slightly above the top edge
+          colors: ['#FBBF24', '#F59E0B', '#22C55E', '#34D399'], // Gold and Green
+          zIndex: 90, // Keep it slightly behind modals
+          disableForReducedMotion: true,
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+
+      frame();
+    }
+
+    prevGuessedRef.current = hasGuessed;
+  }, [localPlayer?.hasGuessedCorrectly]);
 
   /**
    * Smoothly scrolls the chat container to the bottom after a short delay.

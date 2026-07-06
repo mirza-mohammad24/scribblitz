@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @module ToastManager
+ * @description A floating toast stack manager that renders success, error,
+ * and info notifications with animated enter/exit transitions. Toasts are
+ * anchored to the top of the viewport and dismissed individually.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, CheckCircle2, Info, X } from 'lucide-react';
 import { useToastStore, ToastType } from '@/store/toastStore';
@@ -24,6 +31,11 @@ const toastConfig: Record<ToastType, { icon: React.ReactNode; styles: string }> 
   },
 };
 
+/**
+ * Renders the active toast notifications from the toast store as an animated,
+ * dismissible stack.
+ * @returns {React.JSX.Element} The animated toast manager JSX.
+ */
 export const ToastManager = () => {
   const { toasts, removeToast } = useToastStore();
 
@@ -42,9 +54,11 @@ export const ToastManager = () => {
               layout
               className={`pointer-events-auto flex items-center justify-between gap-3 p-4 rounded-2xl border-2 shadow-xl backdrop-blur-md transition-colors ${config.styles}`}
             >
-              <div className="flex items-center gap-3 font-bold">
-                {config.icon}
-                <div className="dark:text-gray-100">{toast.message}</div>
+              <div className="flex items-center gap-3 font-bold flex-1 min-w-0">
+                <div className="shrink-0">{config.icon}</div>
+                <div className="dark:text-gray-100 flex-1 min-w-0 wrap-break-word leading-tight">
+                  {toast.message}
+                </div>
               </div>
               <button
                 onClick={() => removeToast(toast.id)}

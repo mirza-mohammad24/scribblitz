@@ -90,10 +90,24 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
   // Find the username of the person currently drawing
   const drawer = players.find((p) => p.id === currentDrawerId);
 
+  // DYNAMIC FONT SCALING LOGIC
+  const hintText = currentHint || '? ? ?';
+  const charCount = hintText.length;
+
+  // Scale down the font size and the letter-spacing (tracking) as the word gets longer
+  let hintSizingClass = 'text-2xl md:text-3xl lg:text-4xl tracking-[0.2em]'; // Default: Short words (1-10 chars)
+
+  if (charCount > 15) {
+    // Very long words/phrases (16-20 chars)
+    hintSizingClass = 'text-sm md:text-xl lg:text-3xl tracking-wider';
+  } else if (charCount > 10) {
+    hintSizingClass = 'text-lg md:text-2xl lg:text-4xl tracking-widest';
+  }
+
   return (
     <div className="w-full bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-discord-main rounded-2xl md:rounded-3xl shadow-sm p-3 md:p-4 flex justify-between items-center shrink-0 transition-colors">
       {/* LEFT: Round Info & Mobile Players Toggle */}
-      <div className="flex items-center gap-2 md:gap-4 min-w-20 md:min-w-30">
+      <div className="flex items-center gap-2 md:gap-4 min-w-16 md:min-w-30 shrink-0">
         {/* Mobile-only toggle button */}
         <button
           onClick={onToggleMobilePlayers}
@@ -116,16 +130,19 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
       </div>
 
       {/* CENTER: Drawer Status & Animated Hint */}
-      <div className="flex flex-col text-center flex-1 px-2 border-x-2 border-gray-100 dark:border-gray-800 mx-2 md:mx-4 truncate">
+      <div className="flex flex-col text-center flex-1 px-1 md:px-2 border-x-2 border-gray-100 dark:border-gray-800 mx-1 md:mx-4 min-w-0">
         <span className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest flex items-center justify-center gap-1">
           {drawer ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex items-center gap-1"
+              className="flex items-center justify-center gap-1 w-full min-w-0"
             >
-              <Edit2 size={12} className="text-purple-500 dark:text-neon-pink" />
-              <span className="truncate">{drawer.username} is drawing</span>
+              <Edit2 size={12} className="text-red-500 dark:text-neon-pink shrink-0" />
+
+              <span className="truncate max-w-20 md:max-w-none">{drawer.username}</span>
+
+              <span className="shrink-0">is drawing</span>
             </motion.div>
           ) : (
             'Waiting...'
@@ -137,14 +154,16 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
             key={currentHint}
             initial={{ y: -5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="mt-0.5 truncate"
+            className="mt-0.5 w-full wrap-break-word leading-tight"
           >
-            <span className="text-2xl md:text-3xl lg:text-4xl font-mono font-black tracking-[0.2em] text-gray-900 dark:text-gray-100">
-              {currentHint || '? ? ?'}
+            <span
+              className={`font-mono font-black text-gray-900 dark:text-gray-100 transition-all ${hintSizingClass}`}
+            >
+              {hintText}
             </span>
             {/* Super script of word length if available */}
             {wordLength ? (
-              <sup className="text-[10px] md:text-xs font-sans font-black text-gray-400 dark:text-gray-500 tracking-normal ml-1 relative -top-3 md:-top-4 shrink-0">
+              <sup className="text-[10px] md:text-xs font-sans font-black text-gray-400 dark:text-gray-500 tracking-normal ml-1 relative -top-1.5 md:-top-3 shrink-0">
                 {wordLength}
               </sup>
             ) : null}
@@ -153,7 +172,7 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
       </div>
 
       {/* RIGHT: Timer & Quit Button */}
-      <div className="flex items-center gap-3 md:gap-5 min-w-20 md:min-w-30 justify-end">
+      <div className="flex items-center gap-3 md:gap-5 min-w-16 md:min-w-30 justify-end shrink-0">
         <div className="flex flex-col items-center text-center">
           <span className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest flex items-center gap-1">
             <Clock size={12} /> Time

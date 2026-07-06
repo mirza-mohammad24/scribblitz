@@ -11,6 +11,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Crown, LogOut, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import confetti from 'canvas-confetti';
+import { useGameSocket } from '@/hooks/useGameSocket';
+import { useEffect } from 'react';
 
 export interface PlayerStanding {
   id: string;
@@ -48,9 +51,49 @@ export const GameOverModal = ({
   onPlayAgain,
   onLeaveRoom,
 }: GameOverModalProps) => {
+  const { userId } = useGameSocket();
+
   const firstPlace = standings?.find((p) => p.rank === 1);
   const secondPlace = standings?.find((p) => p.rank === 2);
   const thirdPlace = standings?.find((p) => p.rank === 3);
+
+  //CINEMATIC DUAL CANNONS (Only for the winner)
+  useEffect(() => {
+    if (isOpen && firstPlace && firstPlace.id === userId) {
+      const isMobile = window.innerWidth < 768;
+      const multiplier = isMobile ? 0.6 : 1; // 40% fewer particles on mobile
+      const colors = ['#22c55e', '#00e5ff', '#FBBF24', '#FFFFFF'];
+
+      const shoot = (particleRatio: number, opts: confetti.Options) => {
+        confetti({
+          origin: { x: 0, y: 0.9 },
+          angle: 60,
+          colors: colors,
+          zIndex: 9999, // Blast ON TOP of the blur overlay
+          particleCount: Math.floor(150 * particleRatio * multiplier),
+          ...opts,
+        });
+        confetti({
+          origin: { x: 1, y: 0.9 },
+          angle: 120,
+          colors: colors,
+          zIndex: 9999, // Blast ON TOP of the blur overlay
+          particleCount: Math.floor(150 * particleRatio * multiplier),
+          ...opts,
+        });
+      };
+
+      // Wrap in a slight timeout so it fires just after the modal pops in
+      const timer = setTimeout(() => {
+        shoot(0.25, { spread: 26, startVelocity: 65, shapes: ['square'] });
+        shoot(0.35, { spread: 60, startVelocity: 45 });
+        shoot(0.2, { spread: 100, decay: 0.9, scalar: 0.8, shapes: ['circle'] });
+        shoot(0.2, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.5 });
+      }, 300);
+
+      return () => clearTimeout(timer); // Cleanup if they close instantly
+    }
+  }, [isOpen, firstPlace, userId]);
 
   return (
     <AnimatePresence>

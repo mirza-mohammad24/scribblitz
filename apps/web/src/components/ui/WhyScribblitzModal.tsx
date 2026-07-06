@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @module WhyScribblitzModal
+ * @description An animated marketing modal that highlights the core reasons
+ * Scribblitz feels responsive and polished, including the backend FSM, synced
+ * timers, custom word support, and mobile-first layout.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Zap, Server, Gamepad2, Smartphone, ShieldCheck } from 'lucide-react';
 
@@ -8,6 +15,14 @@ interface WhyScribblitzModalProps {
   onClose: () => void;
 }
 
+/**
+ * Renders the informational modal that explains the product's key technical
+ * and UX advantages through an animated feature grid and dismissible backdrop.
+ * @param {WhyScribblitzModalProps} props - The component props.
+ * @param {boolean} props.isOpen - Whether the modal is visible.
+ * @param {() => void} props.onClose - Callback fired when the user dismisses the modal.
+ * @returns {React.JSX.Element} The animated "Why Scribblitz" modal JSX.
+ */
 export const WhyScribblitzModal = ({ isOpen, onClose }: WhyScribblitzModalProps) => {
   const features = [
     {

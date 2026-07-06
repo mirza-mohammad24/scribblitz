@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @module StrictModeWarningOverlay
+ * @description An animated warning overlay shown when strict mode does not
+ * have enough custom words to start safely. It guides the host toward adding
+ * more words, disabling strict mode, or starting anyway.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Plus, Play, Shuffle } from 'lucide-react';
 
@@ -12,6 +19,19 @@ interface StrictModeWarningOverlayProps {
   onStartAnyway: () => void;
 }
 
+/**
+ * Renders the strict mode warning overlay with three action paths for the
+ * host: add more words, disable strict mode and start, or continue anyway with
+ * repeats allowed.
+ * @param {StrictModeWarningOverlayProps} props - The component props.
+ * @param {boolean} props.isOpen - Whether the overlay is visible.
+ * @param {number} props.customWordCount - The number of custom words currently available.
+ * @param {number} props.minRequired - The minimum number of words required.
+ * @param {() => void} props.onAddMoreWords - Callback to open the word editor.
+ * @param {() => void} props.onTurnOffStrictModeAndStart - Callback to disable strict mode and start the game.
+ * @param {() => void} props.onStartAnyway - Callback to keep strict mode on and continue anyway.
+ * @returns {React.JSX.Element} The animated strict mode warning overlay JSX.
+ */
 export const StrictModeWarningOverlay = ({
   isOpen,
   customWordCount,

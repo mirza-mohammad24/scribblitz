@@ -8,23 +8,38 @@
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 
 //Will be extended later
+// const DEFAULT_WORDS = [
+//   'apple',
+//   'banana',
+//   'watermelon',
+//   'computer',
+//   'guitar',
+//   'mountain',
+//   'ocean',
+//   'pizza',
+//   'spaceship',
+//   'television',
+//   'umbrella',
+//   'vampire',
+//   'wizard',
+//   'zombie',
+//   'helicopter',
+//   'elephant',
+// ];
+
+//Long words for ui testing
 const DEFAULT_WORDS = [
-  'apple',
-  'banana',
-  'watermelon',
-  'computer',
-  'guitar',
-  'mountain',
-  'ocean',
-  'pizza',
-  'spaceship',
-  'television',
-  'umbrella',
-  'vampire',
-  'wizard',
-  'zombie',
-  'helicopter',
-  'elephant',
+  'SUPERPROPORTIONALITY',
+  'AMAZING MILKSHAKE',
+  'WWWWWWWWWWWWWWWWWWWW',
+  'FLABBERGASTED PENGUIN',
+  'EXTRAORDINARY BANANA',
+  'INCREDIBLE SPACESHIP',
+  'UNBELIEVABLE GIRAFFE',
+  'ASTONISHING PINEAPPLE',
+  'MARVELOUS JELLYFISH',
+  'PHENOMENAL CHOCOLATE',
+  'STUPENDOUS ELEPHANT',
 ];
 
 export const getWordPool = (): string[] => {
