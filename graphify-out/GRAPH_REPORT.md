@@ -2,18 +2,18 @@
 
 ## Corpus Check
 
-- 112 files · ~44,769 words
+- 113 files · ~45,414 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 557 nodes · 705 edges · 45 communities (36 shown, 9 thin omitted)
+- 561 nodes · 712 edges · 44 communities (35 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `72d5f374`
+- Built from commit: `09d8c232`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,7 +29,6 @@
 - [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 8|Community 8]]
 - [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
 - [[_COMMUNITY_Community 12|Community 12]]
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 14|Community 14]]
@@ -83,26 +82,26 @@
   pnpm-workspace.yaml → README.md
 - `@turbo/eslint-config README` --references--> `@repo/eslint-config` [EXTRACTED]
   packages/eslint-config/README.md → README.md
-- `HUDTimer()` --calls--> `useSyncedTimer()` [EXTRACTED]
-  apps/web/src/components/Arena/ArenaHUD.tsx → apps/web/src/hooks/useSyncedTimer.ts
-- `Footer()` --calls--> `useGameStore` [EXTRACTED]
-  apps/web/src/components/Footer.tsx → apps/web/src/store/gameStore.ts
+- `getSocket()` --calls--> `io` [INFERRED]
+  apps/web/src/hooks/useGameSocket.ts → apps/game-server/src/server.ts
+- `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
+  apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
 
 ## Import Cycles
 
 - None detected.
 
-## Communities (45 total, 9 thin omitted)
+## Communities (44 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.08
-Nodes (38): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+30 more)
+Cohesion: 0.09
+Nodes (39): abortGame(), endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap (+31 more)
 
 ### Community 1 - "Community 1"
 
-Cohesion: 0.08
-Nodes (35): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, HUDTimer() (+27 more)
+Cohesion: 0.07
+Nodes (37): ArenaCanvas(), ArenaCanvasProps, BRUSH_SIZES, PRESET_COLORS, ArenaChat(), ArenaHUD(), ArenaHUDProps, HUDTimer() (+29 more)
 
 ### Community 2 - "Community 2"
 
@@ -116,8 +115,8 @@ Nodes (24): husky.sh script, devDependencies, dotenv, husky, lint-staged, pretti
 
 ### Community 4 - "Community 4"
 
-Cohesion: 0.08
-Nodes (23): dependencies, canvas-confetti, framer-motion, lucide-react, next, next-themes, react, react-dom (+15 more)
+Cohesion: 0.05
+Nodes (37): config, nextJsConfig, config, dependencies, canvas-confetti, framer-motion, lucide-react, next (+29 more)
 
 ### Community 5 - "Community 5"
 
@@ -144,11 +143,6 @@ Nodes (18): dependencies, pg, @prisma/adapter-pg, @prisma/client, engines, node,
 Cohesion: 0.12
 Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, incremental, isolatedModules, lib, module (+8 more)
 
-### Community 11 - "Community 11"
-
-Cohesion: 0.13
-Nodes (14): config, nextJsConfig, config, devDependencies, babel-plugin-react-compiler, eslint, eslint-config-next, tailwindcss (+6 more)
-
 ### Community 12 - "Community 12"
 
 Cohesion: 0.15
@@ -161,7 +155,7 @@ Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
 
 ### Community 14 - "Community 14"
 
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
@@ -261,7 +255,7 @@ Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVarian
 
 ## Knowledge Gaps
 
-- **314 isolated node(s):** `DEFAULT_WORDS`, `ArenaHUDProps`, `PlayerStanding`, `GameOverModalProps`, `containerVariants` (+309 more)
+- **315 isolated node(s):** `SocketData`, `app`, `httpServer`, `disconnectTimers`, `GameAbortedModalProps` (+310 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -270,15 +264,15 @@ Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVarian
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `DEFAULT_WORDS`, `ArenaHUDProps`, `PlayerStanding` to the rest of the system?**
-  _314 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `SocketData`, `app`, `httpServer` to the rest of the system?**
+  _315 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08305084745762711 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08591466978375219 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.07607843137254902 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07058001397624039 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**

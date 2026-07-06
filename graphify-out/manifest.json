@@ -115,8 +115,8 @@
     "semantic_hash": "e08615998d309cf4564ddbbf2fc95cce"
   },
   "apps/game-server/src/fsm/roundManager.ts": {
-    "mtime": 1783166992.2361293,
-    "ast_hash": "5922441521276e2f2bdafb7be97adcfc",
+    "mtime": 1783354562.975346,
+    "ast_hash": "e2aebdbd5510b5eec077624d3e35cd98",
     "semantic_hash": ""
   },
   "apps/game-server/src/lib/redis.ts": {
@@ -140,8 +140,8 @@
     "semantic_hash": "000a54f74d51365cdbf71dcf71c238da"
   },
   "apps/game-server/src/server.ts": {
-    "mtime": 1783166238.1288602,
-    "ast_hash": "69c5da574bccb5b6b721b5ae1407a88d",
+    "mtime": 1783351591.7991197,
+    "ast_hash": "f9da08e635c6a7150dcee4d535b8e9a8",
     "semantic_hash": ""
   },
   "apps/game-server/src/socket/handlers/canvasHandlers.ts": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "apps/game-server/src/socket/handlers/lobbyHandlers.ts": {
-    "mtime": 1783172461.556388,
-    "ast_hash": "ea6aacbbc16df6467ef48e4f5b0e2c4f",
+    "mtime": 1783351410.6127658,
+    "ast_hash": "33e6689c2eb84c8ae199deb1d21bb50c",
     "semantic_hash": ""
   },
   "apps/game-server/src/socket/handlers/messageHandlers.ts": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaOrchestrator.tsx": {
-    "mtime": 1783172461.737126,
-    "ast_hash": "f2dbea1cac1e790e3ddb0a398d6cb58b",
+    "mtime": 1783354563.0615592,
+    "ast_hash": "1b8ff62dc702ea4f3b655b1ef08bc5d4",
     "semantic_hash": ""
   },
   "apps/web/src/components/Footer.tsx": {
@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/store/gameStore.ts": {
-    "mtime": 1783172461.876615,
-    "ast_hash": "79cc203e9b6cd10adf4c8a87b428006f",
+    "mtime": 1783354563.0795596,
+    "ast_hash": "46b067b8c0aef1b1cf07c353cc482cc7",
     "semantic_hash": ""
   },
   "apps/web/src/store/toastStore.ts": {
@@ -420,9 +420,9 @@
     "semantic_hash": "01afd2e849c0952eb0cf0012275898f1"
   },
   "packages/types/src/events.ts": {
-    "mtime": 1781777736.8975964,
-    "ast_hash": "034bb4d0bde99c0c82aa5fa8a73c1439",
-    "semantic_hash": "034bb4d0bde99c0c82aa5fa8a73c1439"
+    "mtime": 1783354563.0905578,
+    "ast_hash": "2db531d2d7a42aa54918fb4576dfa59a",
+    "semantic_hash": ""
   },
   "packages/types/src/game.ts": {
     "mtime": 1782401717.9386284,
@@ -577,6 +577,11 @@
   "apps/web/src/components/ui/WhyScribblitzModal.tsx": {
     "mtime": 1783307167.4669094,
     "ast_hash": "365811dfd3ee2fa2b658b0576da7aa40",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/ui/GameAbortModal.tsx": {
+    "mtime": 1783354563.0705593,
+    "ast_hash": "85a6680b33a9b53e93040d651d5f013d",
     "semantic_hash": ""
   }
 }

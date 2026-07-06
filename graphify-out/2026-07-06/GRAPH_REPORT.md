@@ -2,18 +2,18 @@
 
 ## Corpus Check
 
-- 112 files · ~43,538 words
+- 112 files · ~44,769 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 557 nodes · 704 edges · 45 communities (35 shown, 10 thin omitted)
+- 557 nodes · 705 edges · 45 communities (36 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `a7882c55`
+- Built from commit: `72d5f374`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -72,8 +72,8 @@
 6. `GameFSM` - 10 edges
 7. `startNextRound()` - 9 edges
 8. `clearTimer()` - 9 edges
-9. `useToastStore` - 7 edges
-10. `ServerRoomState` - 7 edges
+9. `useGameSocket()` - 8 edges
+10. `getWordPoolWithCustomPriority()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 
@@ -83,21 +83,21 @@
   pnpm-workspace.yaml → README.md
 - `@turbo/eslint-config README` --references--> `@repo/eslint-config` [EXTRACTED]
   packages/eslint-config/README.md → README.md
+- `HUDTimer()` --calls--> `useSyncedTimer()` [EXTRACTED]
+  apps/web/src/components/Arena/ArenaHUD.tsx → apps/web/src/hooks/useSyncedTimer.ts
 - `Footer()` --calls--> `useGameStore` [EXTRACTED]
   apps/web/src/components/Footer.tsx → apps/web/src/store/gameStore.ts
-- `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
-  apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
 
 ## Import Cycles
 
 - None detected.
 
-## Communities (45 total, 10 thin omitted)
+## Communities (45 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.07
-Nodes (40): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+32 more)
+Cohesion: 0.08
+Nodes (38): endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap, handleGameStart() (+30 more)
 
 ### Community 1 - "Community 1"
 
@@ -158,6 +158,11 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
+
+### Community 14 - "Community 14"
+
+Cohesion: 0.13
+Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -256,9 +261,9 @@ Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVarian
 
 ## Knowledge Gaps
 
-- **314 isolated node(s):** `name`, `version`, `private`, `dev`, `build` (+309 more)
+- **314 isolated node(s):** `DEFAULT_WORDS`, `ArenaHUDProps`, `PlayerStanding`, `GameOverModalProps`, `containerVariants` (+309 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
@@ -268,12 +273,12 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `name`, `version`, `private` to the rest of the system?**
+- **What connects `DEFAULT_WORDS`, `ArenaHUDProps`, `PlayerStanding` to the rest of the system?**
   _314 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.07033248081841433 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08305084745762711 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.07529411764705882 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07607843137254902 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
