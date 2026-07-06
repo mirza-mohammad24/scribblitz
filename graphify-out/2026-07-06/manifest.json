@@ -1,11 +1,11 @@
 {
   ".husky/_/applypatch-msg": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8589306,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/commit-msg": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8589306,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
@@ -15,67 +15,67 @@
     "semantic_hash": "15239a01c5554e56ff745570fb583a91"
   },
   ".husky/_/husky.sh": {
-    "mtime": 1783299660.7594583,
+    "mtime": 1781497699.8609307,
     "ast_hash": "13871d2ab13e8423790ecb2c01c78c18",
     "semantic_hash": "13871d2ab13e8423790ecb2c01c78c18"
   },
   ".husky/_/post-applypatch": {
-    "mtime": 1783299660.7584574,
+    "mtime": 1781497699.8589306,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/post-checkout": {
-    "mtime": 1783299660.7584574,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/post-commit": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8589306,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/post-merge": {
-    "mtime": 1783299660.7594583,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/post-rewrite": {
-    "mtime": 1783299660.7584574,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-applypatch": {
-    "mtime": 1783299660.7584574,
+    "mtime": 1781497699.8589306,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-auto-gc": {
-    "mtime": 1783299660.7594583,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-commit": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8569314,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-merge-commit": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8579311,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-push": {
-    "mtime": 1783299660.7594583,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/pre-rebase": {
-    "mtime": 1783299660.7584574,
+    "mtime": 1781497699.8599315,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
   ".husky/_/prepare-commit-msg": {
-    "mtime": 1783299660.7574582,
+    "mtime": 1781497699.8579311,
     "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
     "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
   },
@@ -220,9 +220,9 @@
     "semantic_hash": ""
   },
   "apps/web/package.json": {
-    "mtime": 1783299660.8055649,
-    "ast_hash": "b481e2a792d1cab58cccf13434ab8f17",
-    "semantic_hash": ""
+    "mtime": 1781410406.043162,
+    "ast_hash": "841dd30cee5d8d60569696aaf28d9a88",
+    "semantic_hash": "841dd30cee5d8d60569696aaf28d9a88"
   },
   "apps/web/postcss.config.mjs": {
     "mtime": 1780201912.7475567,
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Footer.tsx": {
-    "mtime": 1783301457.4720552,
-    "ast_hash": "d9b61fa9da76161e2f619ddcbab96026",
+    "mtime": 1783168609.198995,
+    "ast_hash": "fc54d3dd92d1780a88906aa76b5780ba",
     "semantic_hash": ""
   },
   "apps/web/src/components/Home/HomeScreen.tsx": {
@@ -305,19 +305,19 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/GameOverModal.tsx": {
-    "mtime": 1783298652.4635184,
-    "ast_hash": "3f16edabe05494ff957af6a1dd28e3ff",
+    "mtime": 1783167577.4950972,
+    "ast_hash": "29748ef10c89d836efe4d75bbfb29277",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RulesModal.tsx": {
-    "mtime": 1783298530.591862,
-    "ast_hash": "aeb9e7b718db5129639365ea551d9c42",
-    "semantic_hash": ""
+    "mtime": 1781797615.9382122,
+    "ast_hash": "7087c5c61c2701d044f196956dbde8f5",
+    "semantic_hash": "7087c5c61c2701d044f196956dbde8f5"
   },
   "apps/web/src/components/ui/ToastManager.tsx": {
-    "mtime": 1783301296.3748,
-    "ast_hash": "dd5b39faca2de325676bfb9d13eb18bd",
-    "semantic_hash": ""
+    "mtime": 1781534172.6699479,
+    "ast_hash": "4e4ed2128a595b8180dd6d80ff1c2679",
+    "semantic_hash": "4e4ed2128a595b8180dd6d80ff1c2679"
   },
   "apps/web/src/hooks/useCanvasDrawing.ts": {
     "mtime": 1783168187.586478,
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/store/toastStore.ts": {
-    "mtime": 1783301152.9452808,
-    "ast_hash": "8e92bf817cc53607efa5b0f8ce50f068",
+    "mtime": 1783172461.883528,
+    "ast_hash": "0010f8a9af78896c40484ff7afdb7ca1",
     "semantic_hash": ""
   },
   "apps/web/src/utils/floodFill.ts": {
@@ -550,8 +550,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RoundEndOverlay.tsx": {
-    "mtime": 1783298696.417281,
-    "ast_hash": "7bc4b5a28c3297372fe2e68f5361ea5f",
+    "mtime": 1782331834.2095206,
+    "ast_hash": "9693bc2138575c106460da6e5729ef37",
     "semantic_hash": ""
   },
   "apps/web/src/hooks/useSyncedTimer.ts": {
@@ -560,8 +560,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/WordSelectionOverlay.tsx": {
-    "mtime": 1783298745.374015,
-    "ast_hash": "adf8607cb940833a6fecc17c860a19ac",
+    "mtime": 1782331834.2205215,
+    "ast_hash": "5de4701fb33533d7868ebd7105eae665",
     "semantic_hash": ""
   },
   "apps/web/src/components/Lobby/CustomWordsDrawer.tsx": {
@@ -570,13 +570,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/StrictModeWarningOverlay.tsx": {
-    "mtime": 1783298558.0240724,
-    "ast_hash": "63989f17737a57f54a6389471bdde548",
-    "semantic_hash": ""
-  },
-  "apps/web/src/components/ui/WhyScribblitzModal.tsx": {
-    "mtime": 1783301457.5536566,
-    "ast_hash": "aac58e8666da53649c7af80396acc235",
+    "mtime": 1783172461.844522,
+    "ast_hash": "3bd3adf1fa659074a9dafc5cd41b63ec",
     "semantic_hash": ""
   }
 }
