@@ -4,1014 +4,354 @@
   "graph": {},
   "nodes": [
     {
-      "label": "GameFSM.ts",
+      "label": "package.json",
       "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_file": "apps/web/package.json",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "fsm_gamefsm",
-      "community": 13,
-      "norm_label": "gamefsm.ts"
+      "id": "web_package",
+      "community": 4,
+      "norm_label": "package.json"
     },
     {
-      "label": "TransitionMap",
+      "label": "name",
       "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L14",
+      "source_file": "apps/web/package.json",
+      "source_location": "L2",
       "_origin": "ast",
-      "id": "fsm_gamefsm_transitionmap",
-      "community": 13,
-      "norm_label": "transitionmap"
+      "id": "web_package_name",
+      "community": 4,
+      "norm_label": "name"
     },
     {
-      "label": "LEGAL_TRANSITIONS",
+      "label": "version",
       "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L36",
+      "source_file": "apps/web/package.json",
+      "source_location": "L3",
       "_origin": "ast",
-      "id": "fsm_gamefsm_legal_transitions",
-      "community": 13,
-      "norm_label": "legal_transitions"
+      "id": "web_package_version",
+      "community": 4,
+      "norm_label": "version"
     },
     {
-      "label": "GameFSM",
+      "label": "private",
       "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm",
-      "community": 13,
-      "norm_label": "gamefsm"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_constructor",
-      "community": 13,
-      "norm_label": ".constructor()"
-    },
-    {
-      "label": ".getState()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_getstate",
-      "community": 13,
-      "norm_label": ".getstate()"
-    },
-    {
-      "label": ".isState()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L71",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_isstate",
-      "community": 13,
-      "norm_label": ".isstate()"
-    },
-    {
-      "label": ".canTransition()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L79",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_cantransition",
-      "community": 13,
-      "norm_label": ".cantransition()"
-    },
-    {
-      "label": ".transition()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L90",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_transition",
-      "community": 13,
-      "norm_label": ".transition()"
-    },
-    {
-      "label": ".onTransition()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
-      "source_location": "L108",
-      "_origin": "ast",
-      "id": "fsm_gamefsm_gamefsm_ontransition",
-      "community": 13,
-      "norm_label": ".ontransition()"
-    },
-    {
-      "label": "roundManager.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "fsm_roundmanager",
-      "community": 0,
-      "norm_label": "roundmanager.ts"
-    },
-    {
-      "label": "pickRandomItem()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_pickrandomitem",
-      "community": 0,
-      "norm_label": "pickrandomitem()"
-    },
-    {
-      "label": "startGame()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L44",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_startgame",
-      "community": 0,
-      "norm_label": "startgame()"
-    },
-    {
-      "label": "startNextRound()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L79",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_startnextround",
-      "community": 0,
-      "norm_label": "startnextround()"
-    },
-    {
-      "label": "selectWord()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L182",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_selectword",
-      "community": 0,
-      "norm_label": "selectword()"
-    },
-    {
-      "label": "endRound()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L278",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_endround",
-      "community": 0,
-      "norm_label": "endround()"
-    },
-    {
-      "label": "endGame()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L341",
-      "_origin": "ast",
-      "id": "fsm_roundmanager_endgame",
-      "community": 0,
-      "norm_label": "endgame()"
-    },
-    {
-      "label": "Room.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "rooms_room",
-      "community": 0,
-      "norm_label": "room.ts"
-    },
-    {
-      "label": "ServerRoomState",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "rooms_room_serverroomstate",
-      "community": 0,
-      "norm_label": "serverroomstate"
-    },
-    {
-      "label": "AddPlayerResult",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L24",
-      "_origin": "ast",
-      "id": "rooms_room_addplayerresult",
-      "community": 0,
-      "norm_label": "addplayerresult"
-    },
-    {
-      "label": "Room",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L35",
-      "_origin": "ast",
-      "id": "rooms_room_room",
-      "community": 14,
-      "norm_label": "room"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "rooms_room_room_constructor",
-      "community": 14,
-      "norm_label": ".constructor()"
-    },
-    {
-      "label": ".generateRoomCode()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L87",
-      "_origin": "ast",
-      "id": "rooms_room_room_generateroomcode",
-      "community": 14,
-      "norm_label": ".generateroomcode()"
-    },
-    {
-      "label": ".getRoomCode()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L96",
-      "_origin": "ast",
-      "id": "rooms_room_room_getroomcode",
-      "community": 14,
-      "norm_label": ".getroomcode()"
-    },
-    {
-      "label": ".getState()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L100",
-      "_origin": "ast",
-      "id": "rooms_room_room_getstate",
-      "community": 14,
-      "norm_label": ".getstate()"
-    },
-    {
-      "label": ".updateConfig()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L109",
-      "_origin": "ast",
-      "id": "rooms_room_room_updateconfig",
-      "community": 14,
-      "norm_label": ".updateconfig()"
-    },
-    {
-      "label": ".addPlayer()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L124",
-      "_origin": "ast",
-      "id": "rooms_room_room_addplayer",
-      "community": 14,
-      "norm_label": ".addplayer()"
-    },
-    {
-      "label": ".removePlayer()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L148",
-      "_origin": "ast",
-      "id": "rooms_room_room_removeplayer",
-      "community": 14,
-      "norm_label": ".removeplayer()"
-    },
-    {
-      "label": ".transitionState()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L199",
-      "_origin": "ast",
-      "id": "rooms_room_room_transitionstate",
-      "community": 14,
-      "norm_label": ".transitionstate()"
-    },
-    {
-      "label": ".resetForNewGame()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L207",
-      "_origin": "ast",
-      "id": "rooms_room_room_resetfornewgame",
-      "community": 14,
-      "norm_label": ".resetfornewgame()"
-    },
-    {
-      "label": ".cleanup()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/rooms/Room.ts",
-      "source_location": "L238",
-      "_origin": "ast",
-      "id": "rooms_room_room_cleanup",
-      "community": 14,
-      "norm_label": ".cleanup()"
-    },
-    {
-      "label": "server.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_server",
-      "community": 0,
-      "norm_label": "server.ts"
-    },
-    {
-      "label": "SocketData",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "src_server_socketdata",
-      "community": 0,
-      "norm_label": "socketdata"
-    },
-    {
-      "label": "app",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "src_server_app",
-      "community": 0,
-      "norm_label": "app"
-    },
-    {
-      "label": "httpServer",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "src_server_httpserver",
-      "community": 0,
-      "norm_label": "httpserver"
-    },
-    {
-      "label": "disconnectTimers",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L44",
-      "_origin": "ast",
-      "id": "src_server_disconnecttimers",
-      "community": 0,
-      "norm_label": "disconnecttimers"
-    },
-    {
-      "label": "io",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L58",
-      "_origin": "ast",
-      "id": "src_server_io",
-      "community": 1,
-      "norm_label": "io"
-    },
-    {
-      "label": "canvasHandlers.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handlers_canvashandlers",
-      "community": 0,
-      "norm_label": "canvashandlers.ts"
-    },
-    {
-      "label": "syncRateLimitMap",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
-      "source_location": "L24",
-      "_origin": "ast",
-      "id": "handlers_canvashandlers_syncratelimitmap",
-      "community": 0,
-      "norm_label": "syncratelimitmap"
-    },
-    {
-      "label": "registerCanvasHandlers()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
-      "source_location": "L33",
-      "_origin": "ast",
-      "id": "handlers_canvashandlers_registercanvashandlers",
-      "community": 0,
-      "norm_label": "registercanvashandlers()"
-    },
-    {
-      "label": "gameHandlers.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handlers_gamehandlers",
-      "community": 0,
-      "norm_label": "gamehandlers.ts"
-    },
-    {
-      "label": "handleGameStart()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "handlers_gamehandlers_handlegamestart",
-      "community": 0,
-      "norm_label": "handlegamestart()"
-    },
-    {
-      "label": "handleWordSelect()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "handlers_gamehandlers_handlewordselect",
-      "community": 0,
-      "norm_label": "handlewordselect()"
-    },
-    {
-      "label": "handleReturnToLobby()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L107",
-      "_origin": "ast",
-      "id": "handlers_gamehandlers_handlereturntolobby",
-      "community": 0,
-      "norm_label": "handlereturntolobby()"
-    },
-    {
-      "label": "lobbyHandlers.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handlers_lobbyhandlers",
-      "community": 0,
-      "norm_label": "lobbyhandlers.ts"
-    },
-    {
-      "label": "handleCreateRoom()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "handlers_lobbyhandlers_handlecreateroom",
-      "community": 0,
-      "norm_label": "handlecreateroom()"
-    },
-    {
-      "label": "handleJoinRoom()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L123",
-      "_origin": "ast",
-      "id": "handlers_lobbyhandlers_handlejoinroom",
-      "community": 0,
-      "norm_label": "handlejoinroom()"
-    },
-    {
-      "label": "handleUpdateConfig()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L196",
-      "_origin": "ast",
-      "id": "handlers_lobbyhandlers_handleupdateconfig",
-      "community": 0,
-      "norm_label": "handleupdateconfig()"
-    },
-    {
-      "label": "handleLeaveRoom()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L256",
-      "_origin": "ast",
-      "id": "handlers_lobbyhandlers_handleleaveroom",
-      "community": 0,
-      "norm_label": "handleleaveroom()"
-    },
-    {
-      "label": "messageHandlers.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handlers_messagehandlers",
-      "community": 0,
-      "norm_label": "messagehandlers.ts"
-    },
-    {
-      "label": "hasEveryoneGuessedCorrectly()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "handlers_messagehandlers_haseveryoneguessedcorrectly",
-      "community": 0,
-      "norm_label": "haseveryoneguessedcorrectly()"
-    },
-    {
-      "label": "handleChatMessage()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "handlers_messagehandlers_handlechatmessage",
-      "community": 0,
-      "norm_label": "handlechatmessage()"
-    },
-    {
-      "label": "getUserIdBySocket.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/utils/getUserIdBySocket.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_getuseridbysocket",
-      "community": 0,
-      "norm_label": "getuseridbysocket.ts"
-    },
-    {
-      "label": "getUserIdBySocket()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/utils/getUserIdBySocket.ts",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "utils_getuseridbysocket_getuseridbysocket",
-      "community": 0,
-      "norm_label": "getuseridbysocket()"
-    },
-    {
-      "label": "serializeRoom.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/utils/serializeRoom.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_serializeroom",
-      "community": 0,
-      "norm_label": "serializeroom.ts"
-    },
-    {
-      "label": "serializeRoom()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/socket/utils/serializeRoom.ts",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "utils_serializeroom_serializeroom",
-      "community": 0,
-      "norm_label": "serializeroom()"
-    },
-    {
-      "label": "emitError.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/emitError.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_emiterror",
-      "community": 0,
-      "norm_label": "emiterror.ts"
-    },
-    {
-      "label": "FATAL_ERRORS",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/emitError.ts",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "utils_emiterror_fatal_errors",
-      "community": 0,
-      "norm_label": "fatal_errors"
-    },
-    {
-      "label": "emitError()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/emitError.ts",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "utils_emiterror_emiterror",
-      "community": 0,
-      "norm_label": "emiterror()"
-    },
-    {
-      "label": "hintUtils.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/hintUtils.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_hintutils",
-      "community": 0,
-      "norm_label": "hintutils.ts"
-    },
-    {
-      "label": "generateHint()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/hintUtils.ts",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "utils_hintutils_generatehint",
-      "community": 0,
-      "norm_label": "generatehint()"
-    },
-    {
-      "label": "getRandomHiddenIndex()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/hintUtils.ts",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "utils_hintutils_getrandomhiddenindex",
-      "community": 0,
-      "norm_label": "getrandomhiddenindex()"
-    },
-    {
-      "label": "levenshtein.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/levenshtein.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_levenshtein",
-      "community": 0,
-      "norm_label": "levenshtein.ts"
-    },
-    {
-      "label": "levenshteinDistance()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/levenshtein.ts",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "utils_levenshtein_levenshteindistance",
-      "community": 0,
-      "norm_label": "levenshteindistance()"
-    },
-    {
-      "label": "timerCleanUp.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "utils_timercleanup",
-      "community": 0,
-      "norm_label": "timercleanup.ts"
-    },
-    {
-      "label": "clearTimer()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "utils_timercleanup_cleartimer",
-      "community": 0,
-      "norm_label": "cleartimer()"
-    },
-    {
-      "label": "clearIntervalTimer()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "utils_timercleanup_clearintervaltimer",
-      "community": 0,
-      "norm_label": "clearintervaltimer()"
-    },
-    {
-      "label": "wordPool.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "words_wordpool",
-      "community": 0,
-      "norm_label": "wordpool.ts"
-    },
-    {
-      "label": "DEFAULT_WORDS",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "words_wordpool_default_words",
-      "community": 0,
-      "norm_label": "default_words"
-    },
-    {
-      "label": "getWordPool()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "words_wordpool_getwordpool",
-      "community": 0,
-      "norm_label": "getwordpool()"
-    },
-    {
-      "label": "pickRandomWords()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L41",
-      "_origin": "ast",
-      "id": "words_wordpool_pickrandomwords",
-      "community": 0,
-      "norm_label": "pickrandomwords()"
-    },
-    {
-      "label": "normalize()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "words_wordpool_normalize",
-      "community": 0,
-      "norm_label": "normalize()"
-    },
-    {
-      "label": "filterRecentlyUsedWords()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "words_wordpool_filterrecentlyusedwords",
-      "community": 0,
-      "norm_label": "filterrecentlyusedwords()"
-    },
-    {
-      "label": "getAvailableWordPool()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L76",
-      "_origin": "ast",
-      "id": "words_wordpool_getavailablewordpool",
-      "community": 0,
-      "norm_label": "getavailablewordpool()"
-    },
-    {
-      "label": "getWordPoolWithCustomPriority()",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L100",
-      "_origin": "ast",
-      "id": "words_wordpool_getwordpoolwithcustompriority",
-      "community": 0,
-      "norm_label": "getwordpoolwithcustompriority()"
-    },
-    {
-      "label": "layout.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "app_layout",
-      "community": 19,
-      "norm_label": "layout.tsx"
-    },
-    {
-      "label": "viewport",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "app_layout_viewport",
-      "community": 19,
-      "norm_label": "viewport"
-    },
-    {
-      "label": "geistSans",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "app_layout_geistsans",
-      "community": 19,
-      "norm_label": "geistsans"
-    },
-    {
-      "label": "geistMono",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "app_layout_geistmono",
-      "community": 19,
-      "norm_label": "geistmono"
-    },
-    {
-      "label": "fredoka",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "app_layout_fredoka",
-      "community": 19,
-      "norm_label": "fredoka"
-    },
-    {
-      "label": "metadata",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "app_layout_metadata",
-      "community": 19,
-      "norm_label": "metadata"
-    },
-    {
-      "label": "RootLayout()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/layout.tsx",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "app_layout_rootlayout",
-      "community": 19,
-      "norm_label": "rootlayout()"
-    },
-    {
-      "label": "not-found.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/not-found.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "app_not_found",
-      "community": 34,
-      "norm_label": "not-found.tsx"
-    },
-    {
-      "label": "NotFound()",
-      "file_type": "code",
-      "source_file": "apps/web/src/app/not-found.tsx",
+      "source_file": "apps/web/package.json",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "app_not_found_notfound",
-      "community": 34,
-      "norm_label": "notfound()"
+      "id": "web_package_private",
+      "community": 4,
+      "norm_label": "private"
     },
     {
-      "label": "page.tsx",
+      "label": "scripts",
       "file_type": "code",
-      "source_file": "apps/web/src/app/page.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L5",
       "_origin": "ast",
-      "id": "app_page",
-      "community": 44,
-      "norm_label": "page.tsx"
+      "id": "web_package_scripts",
+      "community": 4,
+      "norm_label": "scripts"
     },
     {
-      "label": "Home()",
+      "label": "dev",
       "file_type": "code",
-      "source_file": "apps/web/src/app/page.tsx",
+      "source_file": "apps/web/package.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "web_package_scripts_dev",
+      "community": 4,
+      "norm_label": "dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "app_page_home",
-      "community": 44,
-      "norm_label": "home()"
+      "id": "web_package_scripts_build",
+      "community": 4,
+      "norm_label": "build"
     },
     {
-      "label": "ArenaCanvas.tsx",
+      "label": "start",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L8",
       "_origin": "ast",
-      "id": "arena_arenacanvas",
-      "community": 1,
-      "norm_label": "arenacanvas.tsx"
+      "id": "web_package_scripts_start",
+      "community": 4,
+      "norm_label": "start"
     },
     {
-      "label": "ArenaCanvasProps",
+      "label": "lint",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L30",
+      "source_file": "apps/web/package.json",
+      "source_location": "L9",
       "_origin": "ast",
-      "id": "arena_arenacanvas_arenacanvasprops",
-      "community": 1,
-      "norm_label": "arenacanvasprops"
+      "id": "web_package_scripts_lint",
+      "community": 4,
+      "norm_label": "lint"
     },
     {
-      "label": "PRESET_COLORS",
+      "label": "dependencies",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L39",
+      "source_file": "apps/web/package.json",
+      "source_location": "L11",
       "_origin": "ast",
-      "id": "arena_arenacanvas_preset_colors",
-      "community": 1,
-      "norm_label": "preset_colors"
+      "id": "web_package_dependencies",
+      "community": 4,
+      "norm_label": "dependencies"
     },
     {
-      "label": "BRUSH_SIZES",
+      "label": "@scribblitz/shared",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L55",
+      "source_file": "apps/web/package.json",
+      "source_location": "L12",
       "_origin": "ast",
-      "id": "arena_arenacanvas_brush_sizes",
-      "community": 1,
-      "norm_label": "brush_sizes"
+      "id": "web_package_dependencies_scribblitz_shared",
+      "community": 4,
+      "norm_label": "@scribblitz/shared"
     },
     {
-      "label": "ArenaCanvas()",
+      "label": "@scribblitz/types",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L77",
+      "source_file": "apps/web/package.json",
+      "source_location": "L13",
       "_origin": "ast",
-      "id": "arena_arenacanvas_arenacanvas",
-      "community": 1,
-      "norm_label": "arenacanvas()"
+      "id": "web_package_dependencies_scribblitz_types",
+      "community": 4,
+      "norm_label": "@scribblitz/types"
     },
     {
-      "label": "ArenaChat.tsx",
+      "label": "@scribblitz/validation",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L14",
       "_origin": "ast",
-      "id": "arena_arenachat",
-      "community": 1,
-      "norm_label": "arenachat.tsx"
+      "id": "web_package_dependencies_scribblitz_validation",
+      "community": 4,
+      "norm_label": "@scribblitz/validation"
     },
     {
-      "label": "ArenaChat()",
+      "label": "canvas-confetti",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
-      "source_location": "L47",
+      "source_file": "apps/web/package.json",
+      "source_location": "L15",
       "_origin": "ast",
-      "id": "arena_arenachat_arenachat",
-      "community": 1,
-      "norm_label": "arenachat()"
+      "id": "web_package_dependencies_canvas_confetti",
+      "community": 4,
+      "norm_label": "canvas-confetti"
     },
     {
-      "label": "ArenaHUD.tsx",
+      "label": "framer-motion",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L16",
       "_origin": "ast",
-      "id": "arena_arenahud",
-      "community": 1,
-      "norm_label": "arenahud.tsx"
+      "id": "web_package_dependencies_framer_motion",
+      "community": 4,
+      "norm_label": "framer-motion"
     },
     {
-      "label": "ArenaHUDProps",
+      "label": "lucide-react",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
+      "source_file": "apps/web/package.json",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "web_package_dependencies_lucide_react",
+      "community": 4,
+      "norm_label": "lucide-react"
+    },
+    {
+      "label": "next",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "web_package_dependencies_next",
+      "community": 4,
+      "norm_label": "next"
+    },
+    {
+      "label": "next-themes",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "web_package_dependencies_next_themes",
+      "community": 4,
+      "norm_label": "next-themes"
+    },
+    {
+      "label": "react",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "web_package_dependencies_react",
+      "community": 4,
+      "norm_label": "react"
+    },
+    {
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "web_package_dependencies_react_dom",
+      "community": 4,
+      "norm_label": "react-dom"
+    },
+    {
+      "label": "react-icons",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "web_package_dependencies_react_icons",
+      "community": 4,
+      "norm_label": "react-icons"
+    },
+    {
+      "label": "socket.io-client",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "web_package_dependencies_socket_io_client",
+      "community": 4,
+      "norm_label": "socket.io-client"
+    },
+    {
+      "label": "uuid",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "web_package_dependencies_uuid",
+      "community": 4,
+      "norm_label": "uuid"
+    },
+    {
+      "label": "zustand",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "web_package_dependencies_zustand",
+      "community": 4,
+      "norm_label": "zustand"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "web_package_devdependencies",
+      "community": 11,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@tailwindcss/postcss",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "arena_arenahud_arenahudprops",
-      "community": 1,
-      "norm_label": "arenahudprops"
+      "id": "web_package_devdependencies_tailwindcss_postcss",
+      "community": 11,
+      "norm_label": "@tailwindcss/postcss"
     },
     {
-      "label": "HUDTimer()",
+      "label": "@types/canvas-confetti",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
-      "source_location": "L46",
+      "source_file": "apps/web/package.json",
+      "source_location": "L29",
       "_origin": "ast",
-      "id": "arena_arenahud_hudtimer",
-      "community": 1,
-      "norm_label": "hudtimer()"
+      "id": "web_package_devdependencies_types_canvas_confetti",
+      "community": 11,
+      "norm_label": "@types/canvas-confetti"
     },
     {
-      "label": "ArenaHUD()",
+      "label": "@types/node",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
-      "source_location": "L75",
+      "source_file": "apps/web/package.json",
+      "source_location": "L30",
       "_origin": "ast",
-      "id": "arena_arenahud_arenahud",
-      "community": 1,
-      "norm_label": "arenahud()"
+      "id": "web_package_devdependencies_types_node",
+      "community": 11,
+      "norm_label": "@types/node"
     },
     {
-      "label": "ArenaLeaderboard.tsx",
+      "label": "@types/react",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaLeaderboard.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L31",
       "_origin": "ast",
-      "id": "arena_arenaleaderboard",
-      "community": 1,
-      "norm_label": "arenaleaderboard.tsx"
+      "id": "web_package_devdependencies_types_react",
+      "community": 11,
+      "norm_label": "@types/react"
     },
     {
-      "label": "ArenaLeaderboard()",
+      "label": "@types/react-dom",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaLeaderboard.tsx",
-      "source_location": "L55",
+      "source_file": "apps/web/package.json",
+      "source_location": "L32",
       "_origin": "ast",
-      "id": "arena_arenaleaderboard_arenaleaderboard",
-      "community": 1,
-      "norm_label": "arenaleaderboard()"
+      "id": "web_package_devdependencies_types_react_dom",
+      "community": 11,
+      "norm_label": "@types/react-dom"
     },
     {
-      "label": "ArenaOrchestrator.tsx",
+      "label": "babel-plugin-react-compiler",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L1",
+      "source_file": "apps/web/package.json",
+      "source_location": "L33",
       "_origin": "ast",
-      "id": "arena_arenaorchestrator",
-      "community": 1,
-      "norm_label": "arenaorchestrator.tsx"
+      "id": "web_package_devdependencies_babel_plugin_react_compiler",
+      "community": 11,
+      "norm_label": "babel-plugin-react-compiler"
     },
     {
-      "label": "ArenaOrchestrator()",
+      "label": "eslint",
       "file_type": "code",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L82",
+      "source_file": "apps/web/package.json",
+      "source_location": "L34",
       "_origin": "ast",
-      "id": "arena_arenaorchestrator_arenaorchestrator",
-      "community": 1,
-      "norm_label": "arenaorchestrator()"
+      "id": "web_package_devdependencies_eslint",
+      "community": 11,
+      "norm_label": "eslint"
+    },
+    {
+      "label": "eslint-config-next",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "web_package_devdependencies_eslint_config_next",
+      "community": 11,
+      "norm_label": "eslint-config-next"
+    },
+    {
+      "label": "tailwindcss",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "web_package_devdependencies_tailwindcss",
+      "community": 11,
+      "norm_label": "tailwindcss"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "apps/web/package.json",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "web_package_devdependencies_typescript",
+      "community": 11,
+      "norm_label": "typescript"
     },
     {
       "label": "Footer.tsx",
@@ -1020,198 +360,18 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_footer",
-      "community": 1,
+      "community": 44,
       "norm_label": "footer.tsx"
     },
     {
       "label": "Footer()",
       "file_type": "code",
       "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L24",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "components_footer_footer",
-      "community": 1,
+      "community": 44,
       "norm_label": "footer()"
-    },
-    {
-      "label": "HomeScreen.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "home_homescreen",
-      "community": 1,
-      "norm_label": "homescreen.tsx"
-    },
-    {
-      "label": "HomeScreenProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "home_homescreen_homescreenprops",
-      "community": 1,
-      "norm_label": "homescreenprops"
-    },
-    {
-      "label": "HomeScreen()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "home_homescreen_homescreen",
-      "community": 1,
-      "norm_label": "homescreen()"
-    },
-    {
-      "label": "CustomWordsDrawer.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "lobby_customwordsdrawer",
-      "community": 45,
-      "norm_label": "customwordsdrawer.tsx"
-    },
-    {
-      "label": "CustomWordsDrawerProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "lobby_customwordsdrawer_customwordsdrawerprops",
-      "community": 45,
-      "norm_label": "customwordsdrawerprops"
-    },
-    {
-      "label": "CustomWordsDrawer()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "lobby_customwordsdrawer_customwordsdrawer",
-      "community": 45,
-      "norm_label": "customwordsdrawer()"
-    },
-    {
-      "label": "LobbyScreen.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen",
-      "community": 45,
-      "norm_label": "lobbyscreen.tsx"
-    },
-    {
-      "label": "LobbyScreenProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L20",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_lobbyscreenprops",
-      "community": 45,
-      "norm_label": "lobbyscreenprops"
-    },
-    {
-      "label": "listVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_listvariants",
-      "community": 45,
-      "norm_label": "listvariants"
-    },
-    {
-      "label": "itemVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_itemvariants",
-      "community": 45,
-      "norm_label": "itemvariants"
-    },
-    {
-      "label": "LobbyScreen()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L55",
-      "_origin": "ast",
-      "id": "lobby_lobbyscreen_lobbyscreen",
-      "community": 45,
-      "norm_label": "lobbyscreen()"
-    },
-    {
-      "label": "ThemeProvider.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ThemeProvider.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_themeprovider",
-      "community": 19,
-      "norm_label": "themeprovider.tsx"
-    },
-    {
-      "label": "ThemeProvider()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ThemeProvider.tsx",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "components_themeprovider_themeprovider",
-      "community": 19,
-      "norm_label": "themeprovider()"
-    },
-    {
-      "label": "ThemeToggle.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ThemeToggle.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_themetoggle",
-      "community": 44,
-      "norm_label": "themetoggle.tsx"
-    },
-    {
-      "label": "ThemeToggle()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ThemeToggle.tsx",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "components_themetoggle_themetoggle",
-      "community": 44,
-      "norm_label": "themetoggle()"
-    },
-    {
-      "label": "ConfirmModal.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "ui_confirmmodal",
-      "community": 1,
-      "norm_label": "confirmmodal.tsx"
-    },
-    {
-      "label": "ConfirmModalProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "ui_confirmmodal_confirmmodalprops",
-      "community": 1,
-      "norm_label": "confirmmodalprops"
-    },
-    {
-      "label": "ConfirmModal()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "ui_confirmmodal_confirmmodal",
-      "community": 1,
-      "norm_label": "confirmmodal()"
     },
     {
       "label": "GameOverModal.tsx",
@@ -1254,6 +414,76 @@
       "norm_label": "gameovermodal()"
     },
     {
+      "label": "RoundEndOverlay.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ui_roundendoverlay",
+      "community": 1,
+      "norm_label": "roundendoverlay.tsx"
+    },
+    {
+      "label": "containerVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "ui_roundendoverlay_containervariants",
+      "community": 1,
+      "norm_label": "containervariants"
+    },
+    {
+      "label": "itemVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "ui_roundendoverlay_itemvariants",
+      "community": 1,
+      "norm_label": "itemvariants"
+    },
+    {
+      "label": "RoundEndOverlay()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "ui_roundendoverlay_roundendoverlay",
+      "community": 1,
+      "norm_label": "roundendoverlay()"
+    },
+    {
+      "label": "RulesModal.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ui_rulesmodal",
+      "community": 44,
+      "norm_label": "rulesmodal.tsx"
+    },
+    {
+      "label": "RulesModalProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "ui_rulesmodal_rulesmodalprops",
+      "community": 44,
+      "norm_label": "rulesmodalprops"
+    },
+    {
+      "label": "RulesModal()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "ui_rulesmodal_rulesmodal",
+      "community": 44,
+      "norm_label": "rulesmodal()"
+    },
+    {
       "label": "StrictModeWarningOverlay.tsx",
       "file_type": "code",
       "source_file": "apps/web/src/components/ui/StrictModeWarningOverlay.tsx",
@@ -1284,164 +514,114 @@
       "norm_label": "strictmodewarningoverlay()"
     },
     {
-      "label": "useCanvasDrawing.ts",
+      "label": "ToastManager.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "hooks_usecanvasdrawing",
-      "community": 1,
-      "norm_label": "usecanvasdrawing.ts"
+      "id": "ui_toastmanager",
+      "community": 44,
+      "norm_label": "toastmanager.tsx"
     },
     {
-      "label": "CANVAS_CONFIG",
+      "label": "toastConfig",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
-      "source_location": "L17",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "hooks_usecanvasdrawing_canvas_config",
-      "community": 1,
-      "norm_label": "canvas_config"
+      "id": "ui_toastmanager_toastconfig",
+      "community": 44,
+      "norm_label": "toastconfig"
     },
     {
-      "label": "getCoordinates()",
+      "label": "ToastManager()",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
-      "source_location": "L31",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L27",
       "_origin": "ast",
-      "id": "hooks_usecanvasdrawing_getcoordinates",
-      "community": 1,
-      "norm_label": "getcoordinates()"
+      "id": "ui_toastmanager_toastmanager",
+      "community": 44,
+      "norm_label": "toastmanager()"
     },
     {
-      "label": "useCanvasDrawing()",
+      "label": "WhyScribblitzModal.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "hooks_usecanvasdrawing_usecanvasdrawing",
-      "community": 1,
-      "norm_label": "usecanvasdrawing()"
-    },
-    {
-      "label": "useGameSocket.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "hooks_usegamesocket",
-      "community": 1,
-      "norm_label": "usegamesocket.ts"
+      "id": "ui_whyscribblitzmodal",
+      "community": 44,
+      "norm_label": "whyscribblitzmodal.tsx"
     },
     {
-      "label": "getBackendUrl()",
+      "label": "WhyScribblitzModalProps",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L28",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L6",
       "_origin": "ast",
-      "id": "hooks_usegamesocket_getbackendurl",
-      "community": 1,
-      "norm_label": "getbackendurl()"
+      "id": "ui_whyscribblitzmodal_whyscribblitzmodalprops",
+      "community": 44,
+      "norm_label": "whyscribblitzmodalprops"
     },
     {
-      "label": "getSocket()",
+      "label": "WhyScribblitzModal()",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L51",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L11",
       "_origin": "ast",
-      "id": "hooks_usegamesocket_getsocket",
-      "community": 1,
-      "norm_label": "getsocket()"
+      "id": "ui_whyscribblitzmodal_whyscribblitzmodal",
+      "community": 44,
+      "norm_label": "whyscribblitzmodal()"
     },
     {
-      "label": "disconnectSocket()",
+      "label": "WordSelectionOverlay.tsx",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L77",
-      "_origin": "ast",
-      "id": "hooks_usegamesocket_disconnectsocket",
-      "community": 1,
-      "norm_label": "disconnectsocket()"
-    },
-    {
-      "label": "useGameSocket()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "hooks_usegamesocket_usegamesocket",
-      "community": 1,
-      "norm_label": "usegamesocket()"
-    },
-    {
-      "label": "useSyncedTimer.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useSyncedTimer.ts",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "hooks_usesyncedtimer",
+      "id": "ui_wordselectionoverlay",
       "community": 1,
-      "norm_label": "usesyncedtimer.ts"
+      "norm_label": "wordselectionoverlay.tsx"
     },
     {
-      "label": "useSyncedTimer()",
+      "label": "WordSelectionOverlayProps",
       "file_type": "code",
-      "source_file": "apps/web/src/hooks/useSyncedTimer.ts",
-      "source_location": "L24",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L8",
       "_origin": "ast",
-      "id": "hooks_usesyncedtimer_usesyncedtimer",
+      "id": "ui_wordselectionoverlay_wordselectionoverlayprops",
       "community": 1,
-      "norm_label": "usesyncedtimer()"
+      "norm_label": "wordselectionoverlayprops"
     },
     {
-      "label": "gameStore.ts",
+      "label": "containerVariants",
       "file_type": "code",
-      "source_file": "apps/web/src/store/gameStore.ts",
-      "source_location": "L1",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L15",
       "_origin": "ast",
-      "id": "store_gamestore",
+      "id": "ui_wordselectionoverlay_containervariants",
       "community": 1,
-      "norm_label": "gamestore.ts"
+      "norm_label": "containervariants"
     },
     {
-      "label": "PlayerStanding",
+      "label": "itemVariants",
       "file_type": "code",
-      "source_file": "apps/web/src/store/gameStore.ts",
-      "source_location": "L10",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L32",
       "_origin": "ast",
-      "id": "store_gamestore_playerstanding",
+      "id": "ui_wordselectionoverlay_itemvariants",
       "community": 1,
-      "norm_label": "playerstanding"
+      "norm_label": "itemvariants"
     },
     {
-      "label": "GameStore",
+      "label": "WordSelectionOverlay()",
       "file_type": "code",
-      "source_file": "apps/web/src/store/gameStore.ts",
-      "source_location": "L17",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L42",
       "_origin": "ast",
-      "id": "store_gamestore_gamestore",
+      "id": "ui_wordselectionoverlay_wordselectionoverlay",
       "community": 1,
-      "norm_label": "gamestore"
-    },
-    {
-      "label": "initialState",
-      "file_type": "code",
-      "source_file": "apps/web/src/store/gameStore.ts",
-      "source_location": "L57",
-      "_origin": "ast",
-      "id": "store_gamestore_initialstate",
-      "community": 1,
-      "norm_label": "initialstate"
-    },
-    {
-      "label": "useGameStore",
-      "file_type": "code",
-      "source_file": "apps/web/src/store/gameStore.ts",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "store_gamestore_usegamestore",
-      "community": 1,
-      "norm_label": "usegamestore"
+      "norm_label": "wordselectionoverlay()"
     },
     {
       "label": "toastStore.ts",
@@ -1457,7 +637,7 @@
       "label": "ToastType",
       "file_type": "code",
       "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L8",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "store_toaststore_toasttype",
       "community": 44,
@@ -1467,7 +647,7 @@
       "label": "Toast",
       "file_type": "code",
       "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L10",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "store_toaststore_toast",
       "community": 44,
@@ -1477,7 +657,7 @@
       "label": "ToastStore",
       "file_type": "code",
       "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L16",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "store_toaststore_toaststore",
       "community": 44,
@@ -1487,11 +667,1361 @@
       "label": "useToastStore",
       "file_type": "code",
       "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "store_toaststore_usetoaststore",
       "community": 44,
       "norm_label": "usetoaststore"
+    },
+    {
+      "label": "GameFSM.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "gamefsm.ts",
+      "id": "fsm_gamefsm"
+    },
+    {
+      "label": "TransitionMap",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "transitionmap",
+      "id": "fsm_gamefsm_transitionmap"
+    },
+    {
+      "label": "LEGAL_TRANSITIONS",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "legal_transitions",
+      "id": "fsm_gamefsm_legal_transitions"
+    },
+    {
+      "label": "GameFSM",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L50",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": "gamefsm",
+      "id": "fsm_gamefsm_gamefsm"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".constructor()",
+      "id": "fsm_gamefsm_gamefsm_constructor"
+    },
+    {
+      "label": ".getState()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".getstate()",
+      "id": "fsm_gamefsm_gamefsm_getstate"
+    },
+    {
+      "label": ".isState()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L71",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".isstate()",
+      "id": "fsm_gamefsm_gamefsm_isstate"
+    },
+    {
+      "label": ".canTransition()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L79",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".cantransition()",
+      "id": "fsm_gamefsm_gamefsm_cantransition"
+    },
+    {
+      "label": ".transition()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L90",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".transition()",
+      "id": "fsm_gamefsm_gamefsm_transition"
+    },
+    {
+      "label": ".onTransition()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/GameFSM.ts",
+      "source_location": "L108",
+      "_origin": "ast",
+      "community": 13,
+      "norm_label": ".ontransition()",
+      "id": "fsm_gamefsm_gamefsm_ontransition"
+    },
+    {
+      "label": "roundManager.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "roundmanager.ts",
+      "id": "fsm_roundmanager"
+    },
+    {
+      "label": "pickRandomItem()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "pickrandomitem()",
+      "id": "fsm_roundmanager_pickrandomitem"
+    },
+    {
+      "label": "startGame()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "startgame()",
+      "id": "fsm_roundmanager_startgame"
+    },
+    {
+      "label": "startNextRound()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L79",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "startnextround()",
+      "id": "fsm_roundmanager_startnextround"
+    },
+    {
+      "label": "selectWord()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L182",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "selectword()",
+      "id": "fsm_roundmanager_selectword"
+    },
+    {
+      "label": "endRound()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L278",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "endround()",
+      "id": "fsm_roundmanager_endround"
+    },
+    {
+      "label": "endGame()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L341",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "endgame()",
+      "id": "fsm_roundmanager_endgame"
+    },
+    {
+      "label": "Room.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "room.ts",
+      "id": "rooms_room"
+    },
+    {
+      "label": "ServerRoomState",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "serverroomstate",
+      "id": "rooms_room_serverroomstate"
+    },
+    {
+      "label": "AddPlayerResult",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L24",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "addplayerresult",
+      "id": "rooms_room_addplayerresult"
+    },
+    {
+      "label": "Room",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L35",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": "room",
+      "id": "rooms_room_room"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".constructor()",
+      "id": "rooms_room_room_constructor"
+    },
+    {
+      "label": ".generateRoomCode()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L87",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".generateroomcode()",
+      "id": "rooms_room_room_generateroomcode"
+    },
+    {
+      "label": ".getRoomCode()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L96",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".getroomcode()",
+      "id": "rooms_room_room_getroomcode"
+    },
+    {
+      "label": ".getState()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L100",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".getstate()",
+      "id": "rooms_room_room_getstate"
+    },
+    {
+      "label": ".updateConfig()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L109",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".updateconfig()",
+      "id": "rooms_room_room_updateconfig"
+    },
+    {
+      "label": ".addPlayer()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L124",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".addplayer()",
+      "id": "rooms_room_room_addplayer"
+    },
+    {
+      "label": ".removePlayer()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L148",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".removeplayer()",
+      "id": "rooms_room_room_removeplayer"
+    },
+    {
+      "label": ".transitionState()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L199",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".transitionstate()",
+      "id": "rooms_room_room_transitionstate"
+    },
+    {
+      "label": ".resetForNewGame()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L207",
+      "_origin": "ast",
+      "community": 14,
+      "norm_label": ".resetfornewgame()",
+      "id": "rooms_room_room_resetfornewgame"
+    },
+    {
+      "label": ".cleanup()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/rooms/Room.ts",
+      "source_location": "L238",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": ".cleanup()",
+      "id": "rooms_room_room_cleanup"
+    },
+    {
+      "label": "server.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "server.ts",
+      "id": "src_server"
+    },
+    {
+      "label": "SocketData",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "socketdata",
+      "id": "src_server_socketdata"
+    },
+    {
+      "label": "app",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L37",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "app",
+      "id": "src_server_app"
+    },
+    {
+      "label": "httpServer",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "httpserver",
+      "id": "src_server_httpserver"
+    },
+    {
+      "label": "disconnectTimers",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L44",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "disconnecttimers",
+      "id": "src_server_disconnecttimers"
+    },
+    {
+      "label": "io",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L58",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "io",
+      "id": "src_server_io"
+    },
+    {
+      "label": "canvasHandlers.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "canvashandlers.ts",
+      "id": "handlers_canvashandlers"
+    },
+    {
+      "label": "syncRateLimitMap",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
+      "source_location": "L24",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "syncratelimitmap",
+      "id": "handlers_canvashandlers_syncratelimitmap"
+    },
+    {
+      "label": "registerCanvasHandlers()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/canvasHandlers.ts",
+      "source_location": "L33",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "registercanvashandlers()",
+      "id": "handlers_canvashandlers_registercanvashandlers"
+    },
+    {
+      "label": "gameHandlers.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "gamehandlers.ts",
+      "id": "handlers_gamehandlers"
+    },
+    {
+      "label": "handleGameStart()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L26",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlegamestart()",
+      "id": "handlers_gamehandlers_handlegamestart"
+    },
+    {
+      "label": "handleWordSelect()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L70",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlewordselect()",
+      "id": "handlers_gamehandlers_handlewordselect"
+    },
+    {
+      "label": "handleReturnToLobby()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L107",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlereturntolobby()",
+      "id": "handlers_gamehandlers_handlereturntolobby"
+    },
+    {
+      "label": "lobbyHandlers.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "lobbyhandlers.ts",
+      "id": "handlers_lobbyhandlers"
+    },
+    {
+      "label": "handleCreateRoom()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlecreateroom()",
+      "id": "handlers_lobbyhandlers_handlecreateroom"
+    },
+    {
+      "label": "handleJoinRoom()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L123",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlejoinroom()",
+      "id": "handlers_lobbyhandlers_handlejoinroom"
+    },
+    {
+      "label": "handleUpdateConfig()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L196",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handleupdateconfig()",
+      "id": "handlers_lobbyhandlers_handleupdateconfig"
+    },
+    {
+      "label": "handleLeaveRoom()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L256",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handleleaveroom()",
+      "id": "handlers_lobbyhandlers_handleleaveroom"
+    },
+    {
+      "label": "messageHandlers.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "messagehandlers.ts",
+      "id": "handlers_messagehandlers"
+    },
+    {
+      "label": "hasEveryoneGuessedCorrectly()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
+      "source_location": "L26",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "haseveryoneguessedcorrectly()",
+      "id": "handlers_messagehandlers_haseveryoneguessedcorrectly"
+    },
+    {
+      "label": "handleChatMessage()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
+      "source_location": "L45",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "handlechatmessage()",
+      "id": "handlers_messagehandlers_handlechatmessage"
+    },
+    {
+      "label": "getUserIdBySocket.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/utils/getUserIdBySocket.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getuseridbysocket.ts",
+      "id": "utils_getuseridbysocket"
+    },
+    {
+      "label": "getUserIdBySocket()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/utils/getUserIdBySocket.ts",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getuseridbysocket()",
+      "id": "utils_getuseridbysocket_getuseridbysocket"
+    },
+    {
+      "label": "serializeRoom.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/utils/serializeRoom.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "serializeroom.ts",
+      "id": "utils_serializeroom"
+    },
+    {
+      "label": "serializeRoom()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/socket/utils/serializeRoom.ts",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "serializeroom()",
+      "id": "utils_serializeroom_serializeroom"
+    },
+    {
+      "label": "emitError.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/emitError.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "emiterror.ts",
+      "id": "utils_emiterror"
+    },
+    {
+      "label": "FATAL_ERRORS",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/emitError.ts",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "fatal_errors",
+      "id": "utils_emiterror_fatal_errors"
+    },
+    {
+      "label": "emitError()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/emitError.ts",
+      "source_location": "L22",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "emiterror()",
+      "id": "utils_emiterror_emiterror"
+    },
+    {
+      "label": "hintUtils.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/hintUtils.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "hintutils.ts",
+      "id": "utils_hintutils"
+    },
+    {
+      "label": "generateHint()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/hintUtils.ts",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "generatehint()",
+      "id": "utils_hintutils_generatehint"
+    },
+    {
+      "label": "getRandomHiddenIndex()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/hintUtils.ts",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getrandomhiddenindex()",
+      "id": "utils_hintutils_getrandomhiddenindex"
+    },
+    {
+      "label": "levenshtein.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/levenshtein.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "levenshtein.ts",
+      "id": "utils_levenshtein"
+    },
+    {
+      "label": "levenshteinDistance()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/levenshtein.ts",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "levenshteindistance()",
+      "id": "utils_levenshtein_levenshteindistance"
+    },
+    {
+      "label": "timerCleanUp.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "timercleanup.ts",
+      "id": "utils_timercleanup"
+    },
+    {
+      "label": "clearTimer()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "cleartimer()",
+      "id": "utils_timercleanup_cleartimer"
+    },
+    {
+      "label": "clearIntervalTimer()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/utils/timerCleanUp.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "clearintervaltimer()",
+      "id": "utils_timercleanup_clearintervaltimer"
+    },
+    {
+      "label": "wordPool.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "wordpool.ts",
+      "id": "words_wordpool"
+    },
+    {
+      "label": "DEFAULT_WORDS",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "default_words",
+      "id": "words_wordpool_default_words"
+    },
+    {
+      "label": "getWordPool()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getwordpool()",
+      "id": "words_wordpool_getwordpool"
+    },
+    {
+      "label": "pickRandomWords()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L41",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "pickrandomwords()",
+      "id": "words_wordpool_pickrandomwords"
+    },
+    {
+      "label": "normalize()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "normalize()",
+      "id": "words_wordpool_normalize"
+    },
+    {
+      "label": "filterRecentlyUsedWords()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "filterrecentlyusedwords()",
+      "id": "words_wordpool_filterrecentlyusedwords"
+    },
+    {
+      "label": "getAvailableWordPool()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L76",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getavailablewordpool()",
+      "id": "words_wordpool_getavailablewordpool"
+    },
+    {
+      "label": "getWordPoolWithCustomPriority()",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L100",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "getwordpoolwithcustompriority()",
+      "id": "words_wordpool_getwordpoolwithcustompriority"
+    },
+    {
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "layout.tsx",
+      "id": "app_layout"
+    },
+    {
+      "label": "viewport",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "viewport",
+      "id": "app_layout_viewport"
+    },
+    {
+      "label": "geistSans",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "geistsans",
+      "id": "app_layout_geistsans"
+    },
+    {
+      "label": "geistMono",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "geistmono",
+      "id": "app_layout_geistmono"
+    },
+    {
+      "label": "fredoka",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L26",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "fredoka",
+      "id": "app_layout_fredoka"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "metadata",
+      "id": "app_layout_metadata"
+    },
+    {
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/layout.tsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "rootlayout()",
+      "id": "app_layout_rootlayout"
+    },
+    {
+      "label": "not-found.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/not-found.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 34,
+      "norm_label": "not-found.tsx",
+      "id": "app_not_found"
+    },
+    {
+      "label": "NotFound()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/not-found.tsx",
+      "source_location": "L4",
+      "_origin": "ast",
+      "community": 34,
+      "norm_label": "notfound()",
+      "id": "app_not_found_notfound"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "page.tsx",
+      "id": "app_page"
+    },
+    {
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "apps/web/src/app/page.tsx",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "home()",
+      "id": "app_page_home"
+    },
+    {
+      "label": "ArenaCanvas.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenacanvas.tsx",
+      "id": "arena_arenacanvas"
+    },
+    {
+      "label": "ArenaCanvasProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenacanvasprops",
+      "id": "arena_arenacanvas_arenacanvasprops"
+    },
+    {
+      "label": "PRESET_COLORS",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L39",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "preset_colors",
+      "id": "arena_arenacanvas_preset_colors"
+    },
+    {
+      "label": "BRUSH_SIZES",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "brush_sizes",
+      "id": "arena_arenacanvas_brush_sizes"
+    },
+    {
+      "label": "ArenaCanvas()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenacanvas()",
+      "id": "arena_arenacanvas_arenacanvas"
+    },
+    {
+      "label": "ArenaChat.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenachat.tsx",
+      "id": "arena_arenachat"
+    },
+    {
+      "label": "ArenaChat()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
+      "source_location": "L47",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenachat()",
+      "id": "arena_arenachat_arenachat"
+    },
+    {
+      "label": "ArenaHUD.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenahud.tsx",
+      "id": "arena_arenahud"
+    },
+    {
+      "label": "ArenaHUDProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenahudprops",
+      "id": "arena_arenahud_arenahudprops"
+    },
+    {
+      "label": "HUDTimer()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
+      "source_location": "L46",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "hudtimer()",
+      "id": "arena_arenahud_hudtimer"
+    },
+    {
+      "label": "ArenaHUD()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
+      "source_location": "L75",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenahud()",
+      "id": "arena_arenahud_arenahud"
+    },
+    {
+      "label": "ArenaLeaderboard.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaLeaderboard.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenaleaderboard.tsx",
+      "id": "arena_arenaleaderboard"
+    },
+    {
+      "label": "ArenaLeaderboard()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaLeaderboard.tsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenaleaderboard()",
+      "id": "arena_arenaleaderboard_arenaleaderboard"
+    },
+    {
+      "label": "ArenaOrchestrator.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenaorchestrator.tsx",
+      "id": "arena_arenaorchestrator"
+    },
+    {
+      "label": "ArenaOrchestrator()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L82",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "arenaorchestrator()",
+      "id": "arena_arenaorchestrator_arenaorchestrator"
+    },
+    {
+      "label": "HomeScreen.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "homescreen.tsx",
+      "id": "home_homescreen"
+    },
+    {
+      "label": "HomeScreenProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L22",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "homescreenprops",
+      "id": "home_homescreen_homescreenprops"
+    },
+    {
+      "label": "HomeScreen()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "homescreen()",
+      "id": "home_homescreen_homescreen"
+    },
+    {
+      "label": "CustomWordsDrawer.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "customwordsdrawer.tsx",
+      "id": "lobby_customwordsdrawer"
+    },
+    {
+      "label": "CustomWordsDrawerProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "customwordsdrawerprops",
+      "id": "lobby_customwordsdrawer_customwordsdrawerprops"
+    },
+    {
+      "label": "CustomWordsDrawer()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "customwordsdrawer()",
+      "id": "lobby_customwordsdrawer_customwordsdrawer"
+    },
+    {
+      "label": "LobbyScreen.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "lobbyscreen.tsx",
+      "id": "lobby_lobbyscreen"
+    },
+    {
+      "label": "LobbyScreenProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L20",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "lobbyscreenprops",
+      "id": "lobby_lobbyscreen_lobbyscreenprops"
+    },
+    {
+      "label": "listVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "listvariants",
+      "id": "lobby_lobbyscreen_listvariants"
+    },
+    {
+      "label": "itemVariants",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "itemvariants",
+      "id": "lobby_lobbyscreen_itemvariants"
+    },
+    {
+      "label": "LobbyScreen()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 45,
+      "norm_label": "lobbyscreen()",
+      "id": "lobby_lobbyscreen_lobbyscreen"
+    },
+    {
+      "label": "ThemeProvider.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ThemeProvider.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "themeprovider.tsx",
+      "id": "components_themeprovider"
+    },
+    {
+      "label": "ThemeProvider()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ThemeProvider.tsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 19,
+      "norm_label": "themeprovider()",
+      "id": "components_themeprovider_themeprovider"
+    },
+    {
+      "label": "ThemeToggle.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ThemeToggle.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "themetoggle.tsx",
+      "id": "components_themetoggle"
+    },
+    {
+      "label": "ThemeToggle()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ThemeToggle.tsx",
+      "source_location": "L15",
+      "_origin": "ast",
+      "community": 44,
+      "norm_label": "themetoggle()",
+      "id": "components_themetoggle_themetoggle"
+    },
+    {
+      "label": "ConfirmModal.tsx",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "confirmmodal.tsx",
+      "id": "ui_confirmmodal"
+    },
+    {
+      "label": "ConfirmModalProps",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "confirmmodalprops",
+      "id": "ui_confirmmodal_confirmmodalprops"
+    },
+    {
+      "label": "ConfirmModal()",
+      "file_type": "code",
+      "source_file": "apps/web/src/components/ui/ConfirmModal.tsx",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "confirmmodal()",
+      "id": "ui_confirmmodal_confirmmodal"
+    },
+    {
+      "label": "useCanvasDrawing.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usecanvasdrawing.ts",
+      "id": "hooks_usecanvasdrawing"
+    },
+    {
+      "label": "CANVAS_CONFIG",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "canvas_config",
+      "id": "hooks_usecanvasdrawing_canvas_config"
+    },
+    {
+      "label": "getCoordinates()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "getcoordinates()",
+      "id": "hooks_usecanvasdrawing_getcoordinates"
+    },
+    {
+      "label": "useCanvasDrawing()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useCanvasDrawing.ts",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usecanvasdrawing()",
+      "id": "hooks_usecanvasdrawing_usecanvasdrawing"
+    },
+    {
+      "label": "useGameSocket.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usegamesocket.ts",
+      "id": "hooks_usegamesocket"
+    },
+    {
+      "label": "getBackendUrl()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "getbackendurl()",
+      "id": "hooks_usegamesocket_getbackendurl"
+    },
+    {
+      "label": "getSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L51",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "getsocket()",
+      "id": "hooks_usegamesocket_getsocket"
+    },
+    {
+      "label": "disconnectSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "disconnectsocket()",
+      "id": "hooks_usegamesocket_disconnectsocket"
+    },
+    {
+      "label": "useGameSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L92",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usegamesocket()",
+      "id": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "label": "useSyncedTimer.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useSyncedTimer.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usesyncedtimer.ts",
+      "id": "hooks_usesyncedtimer"
+    },
+    {
+      "label": "useSyncedTimer()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useSyncedTimer.ts",
+      "source_location": "L24",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usesyncedtimer()",
+      "id": "hooks_usesyncedtimer_usesyncedtimer"
+    },
+    {
+      "label": "gameStore.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/store/gameStore.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "gamestore.ts",
+      "id": "store_gamestore"
+    },
+    {
+      "label": "PlayerStanding",
+      "file_type": "code",
+      "source_file": "apps/web/src/store/gameStore.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "playerstanding",
+      "id": "store_gamestore_playerstanding"
+    },
+    {
+      "label": "GameStore",
+      "file_type": "code",
+      "source_file": "apps/web/src/store/gameStore.ts",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "gamestore",
+      "id": "store_gamestore_gamestore"
+    },
+    {
+      "label": "initialState",
+      "file_type": "code",
+      "source_file": "apps/web/src/store/gameStore.ts",
+      "source_location": "L57",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "initialstate",
+      "id": "store_gamestore_initialstate"
+    },
+    {
+      "label": "useGameStore",
+      "file_type": "code",
+      "source_file": "apps/web/src/store/gameStore.ts",
+      "source_location": "L81",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "usegamestore",
+      "id": "store_gamestore_usegamestore"
     },
     {
       "label": "floodFill.ts",
@@ -1499,9 +2029,9 @@
       "source_file": "apps/web/src/utils/floodFill.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "utils_floodfill",
       "community": 1,
-      "norm_label": "floodfill.ts"
+      "norm_label": "floodfill.ts",
+      "id": "utils_floodfill"
     },
     {
       "label": "hexToRgba()",
@@ -1509,9 +2039,9 @@
       "source_file": "apps/web/src/utils/floodFill.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "utils_floodfill_hextorgba",
       "community": 1,
-      "norm_label": "hextorgba()"
+      "norm_label": "hextorgba()",
+      "id": "utils_floodfill_hextorgba"
     },
     {
       "label": "applyFloodFill()",
@@ -1519,9 +2049,9 @@
       "source_file": "apps/web/src/utils/floodFill.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "id": "utils_floodfill_applyfloodfill",
       "community": 1,
-      "norm_label": "applyfloodfill()"
+      "norm_label": "applyfloodfill()",
+      "id": "utils_floodfill_applyfloodfill"
     },
     {
       "label": "constants.ts",
@@ -1529,9 +2059,9 @@
       "source_file": "packages/shared/src/constants.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_constants",
       "community": 33,
-      "norm_label": "constants.ts"
+      "norm_label": "constants.ts",
+      "id": "src_constants"
     },
     {
       "label": "GAME_CONSTANTS",
@@ -1539,9 +2069,9 @@
       "source_file": "packages/shared/src/constants.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "src_constants_game_constants",
       "community": 33,
-      "norm_label": "game_constants"
+      "norm_label": "game_constants",
+      "id": "src_constants_game_constants"
     },
     {
       "label": "game.ts",
@@ -1549,9 +2079,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_game",
       "community": 29,
-      "norm_label": "game.ts"
+      "norm_label": "game.ts",
+      "id": "src_game"
     },
     {
       "label": "GameState",
@@ -1559,9 +2089,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "src_game_gamestate",
       "community": 29,
-      "norm_label": "gamestate"
+      "norm_label": "gamestate",
+      "id": "src_game_gamestate"
     },
     {
       "label": "StrokeEvent",
@@ -1569,9 +2099,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "src_game_strokeevent",
       "community": 29,
-      "norm_label": "strokeevent"
+      "norm_label": "strokeevent",
+      "id": "src_game_strokeevent"
     },
     {
       "label": "Player",
@@ -1579,9 +2109,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "src_game_player",
       "community": 29,
-      "norm_label": "player"
+      "norm_label": "player",
+      "id": "src_game_player"
     },
     {
       "label": "RoomConfig",
@@ -1589,9 +2119,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L62",
       "_origin": "ast",
-      "id": "src_game_roomconfig",
       "community": 29,
-      "norm_label": "roomconfig"
+      "norm_label": "roomconfig",
+      "id": "src_game_roomconfig"
     },
     {
       "label": "RoomState",
@@ -1599,9 +2129,9 @@
       "source_file": "packages/types/src/game.ts",
       "source_location": "L77",
       "_origin": "ast",
-      "id": "src_game_roomstate",
       "community": 29,
-      "norm_label": "roomstate"
+      "norm_label": "roomstate",
+      "id": "src_game_roomstate"
     },
     {
       "label": "lobby.ts",
@@ -1609,9 +2139,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_lobby",
       "community": 25,
-      "norm_label": "lobby.ts"
+      "norm_label": "lobby.ts",
+      "id": "src_lobby"
     },
     {
       "label": "usernameSchema",
@@ -1619,9 +2149,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_lobby_usernameschema",
       "community": 25,
-      "norm_label": "usernameschema"
+      "norm_label": "usernameschema",
+      "id": "src_lobby_usernameschema"
     },
     {
       "label": "roomCodeSchema",
@@ -1629,9 +2159,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "src_lobby_roomcodeschema",
       "community": 25,
-      "norm_label": "roomcodeschema"
+      "norm_label": "roomcodeschema",
+      "id": "src_lobby_roomcodeschema"
     },
     {
       "label": "roomConfigSchema",
@@ -1639,9 +2169,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "src_lobby_roomconfigschema",
       "community": 25,
-      "norm_label": "roomconfigschema"
+      "norm_label": "roomconfigschema",
+      "id": "src_lobby_roomconfigschema"
     },
     {
       "label": "createRoomSchema",
@@ -1649,9 +2179,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L115",
       "_origin": "ast",
-      "id": "src_lobby_createroomschema",
       "community": 25,
-      "norm_label": "createroomschema"
+      "norm_label": "createroomschema",
+      "id": "src_lobby_createroomschema"
     },
     {
       "label": "joinRoomSchema",
@@ -1659,9 +2189,9 @@
       "source_file": "packages/validation/src/lobby.ts",
       "source_location": "L121",
       "_origin": "ast",
-      "id": "src_lobby_joinroomschema",
       "community": 25,
-      "norm_label": "joinroomschema"
+      "norm_label": "joinroomschema",
+      "id": "src_lobby_joinroomschema"
     },
     {
       "label": "next.config.ts",
@@ -1682,96 +2212,6 @@
       "community": 38,
       "norm_label": "nextconfig",
       "id": "web_next_config_nextconfig"
-    },
-    {
-      "label": "RoundEndOverlay.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "roundendoverlay.tsx",
-      "id": "ui_roundendoverlay"
-    },
-    {
-      "label": "containerVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L10",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "containervariants",
-      "id": "ui_roundendoverlay_containervariants"
-    },
-    {
-      "label": "itemVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "itemvariants",
-      "id": "ui_roundendoverlay_itemvariants"
-    },
-    {
-      "label": "RoundEndOverlay()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L37",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "roundendoverlay()",
-      "id": "ui_roundendoverlay_roundendoverlay"
-    },
-    {
-      "label": "WordSelectionOverlay.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "wordselectionoverlay.tsx",
-      "id": "ui_wordselectionoverlay"
-    },
-    {
-      "label": "WordSelectionOverlayProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "wordselectionoverlayprops",
-      "id": "ui_wordselectionoverlay_wordselectionoverlayprops"
-    },
-    {
-      "label": "containerVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "containervariants",
-      "id": "ui_wordselectionoverlay_containervariants"
-    },
-    {
-      "label": "itemVariants",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "itemvariants",
-      "id": "ui_wordselectionoverlay_itemvariants"
-    },
-    {
-      "label": "WordSelectionOverlay()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L42",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "wordselectionoverlay()",
-      "id": "ui_wordselectionoverlay_wordselectionoverlay"
     },
     {
       "label": "husky.sh",
@@ -2315,7 +2755,7 @@
       "source_file": "apps/game-server/src/rooms/RoomManager.ts",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 0,
+      "community": 14,
       "norm_label": ".getroom()",
       "community_name": "Community 14",
       "id": "rooms_roommanager_roommanager_getroom"
@@ -2370,7 +2810,7 @@
       "source_file": "apps/game-server/src/rooms/RoomManager.ts",
       "source_location": "L125",
       "_origin": "ast",
-      "community": 0,
+      "community": 14,
       "norm_label": ".getallrooms()",
       "community_name": "Community 0",
       "id": "rooms_roommanager_roommanager_getallrooms"
@@ -2541,369 +2981,6 @@
       "id": "web_next_env_d"
     },
     {
-      "label": "package.json",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "package.json",
-      "community_name": "Community 4",
-      "id": "web_package"
-    },
-    {
-      "label": "name",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L2",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "name",
-      "community_name": "Community 4",
-      "id": "web_package_name"
-    },
-    {
-      "label": "version",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "version",
-      "community_name": "Community 4",
-      "id": "web_package_version"
-    },
-    {
-      "label": "private",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "private",
-      "community_name": "Community 4",
-      "id": "web_package_private"
-    },
-    {
-      "label": "scripts",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "scripts",
-      "community_name": "Community 4",
-      "id": "web_package_scripts"
-    },
-    {
-      "label": "dev",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "dev",
-      "community_name": "Community 4",
-      "id": "web_package_scripts_dev"
-    },
-    {
-      "label": "build",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "build",
-      "community_name": "Community 4",
-      "id": "web_package_scripts_build"
-    },
-    {
-      "label": "start",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L8",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "start",
-      "community_name": "Community 4",
-      "id": "web_package_scripts_start"
-    },
-    {
-      "label": "lint",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "lint",
-      "community_name": "Community 4",
-      "id": "web_package_scripts_lint"
-    },
-    {
-      "label": "dependencies",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "dependencies",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies"
-    },
-    {
-      "label": "@scribblitz/shared",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "@scribblitz/shared",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_scribblitz_shared"
-    },
-    {
-      "label": "@scribblitz/types",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "@scribblitz/types",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_scribblitz_types"
-    },
-    {
-      "label": "@scribblitz/validation",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L14",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "@scribblitz/validation",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_scribblitz_validation"
-    },
-    {
-      "label": "framer-motion",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "framer-motion",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_framer_motion"
-    },
-    {
-      "label": "lucide-react",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "lucide-react",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_lucide_react"
-    },
-    {
-      "label": "next",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L17",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "next",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_next"
-    },
-    {
-      "label": "next-themes",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "next-themes",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_next_themes"
-    },
-    {
-      "label": "react",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L19",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "react",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_react"
-    },
-    {
-      "label": "react-dom",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L20",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "react-dom",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_react_dom"
-    },
-    {
-      "label": "react-icons",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "react-icons",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_react_icons"
-    },
-    {
-      "label": "socket.io-client",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L22",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "socket.io-client",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_socket_io_client"
-    },
-    {
-      "label": "uuid",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L23",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "uuid",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_uuid"
-    },
-    {
-      "label": "zustand",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L24",
-      "_origin": "ast",
-      "community": 4,
-      "norm_label": "zustand",
-      "community_name": "Community 4",
-      "id": "web_package_dependencies_zustand"
-    },
-    {
-      "label": "devDependencies",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "devdependencies",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies"
-    },
-    {
-      "label": "@tailwindcss/postcss",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "@tailwindcss/postcss",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_tailwindcss_postcss"
-    },
-    {
-      "label": "@types/node",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "@types/node",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_types_node"
-    },
-    {
-      "label": "@types/react",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L29",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "@types/react",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_types_react"
-    },
-    {
-      "label": "@types/react-dom",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L30",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "@types/react-dom",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_types_react_dom"
-    },
-    {
-      "label": "babel-plugin-react-compiler",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L31",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "babel-plugin-react-compiler",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_babel_plugin_react_compiler"
-    },
-    {
-      "label": "eslint",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "eslint",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_eslint"
-    },
-    {
-      "label": "eslint-config-next",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L33",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "eslint-config-next",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_eslint_config_next"
-    },
-    {
-      "label": "tailwindcss",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "tailwindcss",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_tailwindcss"
-    },
-    {
-      "label": "typescript",
-      "file_type": "code",
-      "source_file": "apps/web/package.json",
-      "source_location": "L35",
-      "_origin": "ast",
-      "community": 11,
-      "norm_label": "typescript",
-      "community_name": "Community 11",
-      "id": "web_package_devdependencies_typescript"
-    },
-    {
       "label": "postcss.config.mjs",
       "file_type": "code",
       "source_file": "apps/web/postcss.config.mjs",
@@ -2931,7 +3008,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "logoloop.tsx",
       "community_name": "Community 9",
       "id": "reactbits_logoloop"
@@ -2942,7 +3019,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "logoitem",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_logoitem"
@@ -2953,7 +3030,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "logoloopprops",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_logoloopprops"
@@ -2964,7 +3041,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "animation_config",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_animation_config"
@@ -2975,7 +3052,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "tocsslength()",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_tocsslength"
@@ -2986,7 +3063,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "cx()",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_cx"
@@ -2997,7 +3074,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "useresizeobserver()",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_useresizeobserver"
@@ -3008,7 +3085,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "useimageloader()",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_useimageloader"
@@ -3019,7 +3096,7 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "useanimationloop()",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_useanimationloop"
@@ -3030,76 +3107,10 @@
       "source_file": "apps/web/src/components/ReactBits/LogoLoop.tsx",
       "source_location": "L197",
       "_origin": "ast",
-      "community": 9,
+      "community": 44,
       "norm_label": "logoloop",
       "community_name": "Community 9",
       "id": "reactbits_logoloop_logoloop"
-    },
-    {
-      "label": "RulesModal.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "rulesmodal.tsx",
-      "community_name": "Community 9",
-      "id": "ui_rulesmodal"
-    },
-    {
-      "label": "RulesModalProps",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "rulesmodalprops",
-      "community_name": "Community 9",
-      "id": "ui_rulesmodal_rulesmodalprops"
-    },
-    {
-      "label": "RulesModal()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "rulesmodal()",
-      "community_name": "Community 9",
-      "id": "ui_rulesmodal_rulesmodal"
-    },
-    {
-      "label": "ToastManager.tsx",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 44,
-      "norm_label": "toastmanager.tsx",
-      "community_name": "Community 1",
-      "id": "ui_toastmanager"
-    },
-    {
-      "label": "toastConfig",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 44,
-      "norm_label": "toastconfig",
-      "community_name": "Community 1",
-      "id": "ui_toastmanager_toastconfig"
-    },
-    {
-      "label": "ToastManager()",
-      "file_type": "code",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 44,
-      "norm_label": "toastmanager()",
-      "community_name": "Community 1",
-      "id": "ui_toastmanager_toastmanager"
     },
     {
       "label": "tsconfig.json",
@@ -5953,6 +5964,1016 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_dependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_devdependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_private"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_scripts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package",
+      "target": "web_package_version"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_scripts",
+      "target": "web_package_scripts_build"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_scripts",
+      "target": "web_package_scripts_dev"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_scripts",
+      "target": "web_package_scripts_lint"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_scripts",
+      "target": "web_package_scripts_start"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_canvas_confetti",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_framer_motion"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_lucide_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_next"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_next_themes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_react_dom"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_react_icons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_scribblitz_shared"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_scribblitz_types"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_scribblitz_validation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_socket_io_client"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_uuid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_dependencies",
+      "target": "web_package_dependencies_zustand"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_babel_plugin_react_compiler"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_eslint"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_eslint_config_next"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_tailwindcss"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_tailwindcss_postcss"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_types_canvas_confetti",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_types_node"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_types_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_types_react_dom"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies",
+      "target": "web_package_devdependencies_typescript"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/package.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "import",
+      "confidence_score": 1.0,
+      "source": "web_package_devdependencies_eslint_config_next",
+      "target": "eslint_config_next"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "components_footer_footer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "reactbits_logoloop"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_gamestore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "components_footer",
+      "target": "store_toaststore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "components_footer",
+      "target": "store_toaststore_usetoaststore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_rulesmodal"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_rulesmodal_rulesmodal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "components_footer",
+      "target": "ui_whyscribblitzmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "components_footer",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "components_footer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_footer_footer",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "components_footer_footer",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "components_footer_footer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_gameovermodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_gameovermodal",
+      "target": "ui_gameovermodal_gameovermodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_gameovermodal",
+      "target": "ui_gameovermodal_gameovermodalprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_gameovermodal",
+      "target": "ui_gameovermodal_playerstanding"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_gameovermodal_gameovermodal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_roundendoverlay"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "hooks_usesyncedtimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "hooks_usesyncedtimer_usesyncedtimer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "store_gamestore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "ui_roundendoverlay_containervariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "ui_roundendoverlay_itemvariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_roundendoverlay",
+      "target": "ui_roundendoverlay_roundendoverlay"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_roundendoverlay_roundendoverlay"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "ui_roundendoverlay_roundendoverlay",
+      "target": "hooks_usesyncedtimer_usesyncedtimer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "ui_roundendoverlay_roundendoverlay",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_rulesmodal",
+      "target": "ui_rulesmodal_rulesmodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_rulesmodal",
+      "target": "ui_rulesmodal_rulesmodalprops"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "ui_strictmodewarningoverlay"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/StrictModeWarningOverlay.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_strictmodewarningoverlay",
+      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlay"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/StrictModeWarningOverlay.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_strictmodewarningoverlay",
+      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlayprops"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lobby_lobbyscreen",
+      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlay"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_page",
+      "target": "ui_toastmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_toastmanager",
+      "target": "store_toaststore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_toastmanager",
+      "target": "store_toaststore_toasttype"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_toastmanager",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_toastmanager",
+      "target": "ui_toastmanager_toastconfig"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_toastmanager",
+      "target": "ui_toastmanager_toastmanager"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/app/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_page",
+      "target": "ui_toastmanager_toastmanager"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "ui_toastmanager_toastmanager",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "ui_whyscribblitzmodal",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "ui_whyscribblitzmodal",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodalprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_wordselectionoverlay"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "hooks_usesyncedtimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "hooks_usesyncedtimer_usesyncedtimer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "ui_wordselectionoverlay_containervariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "ui_wordselectionoverlay_itemvariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "ui_wordselectionoverlay_wordselectionoverlay"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_wordselectionoverlay",
+      "target": "ui_wordselectionoverlay_wordselectionoverlayprops"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "ui_wordselectionoverlay_wordselectionoverlay"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "ui_wordselectionoverlay_wordselectionoverlay",
+      "target": "hooks_usesyncedtimer_usesyncedtimer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "store_toaststore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/store/toastStore.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "store_toaststore",
+      "target": "store_toaststore_toast"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/store/toastStore.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "store_toaststore",
+      "target": "store_toaststore_toaststore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/store/toastStore.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "store_toaststore",
+      "target": "store_toaststore_toasttype"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/store/toastStore.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "store_toaststore",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "arena_arenaorchestrator_arenaorchestrator",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "apps/game-server/src/fsm/GameFSM.ts",
       "source_location": "L50",
       "weight": 1.0,
@@ -6349,9 +7370,9 @@
       "source_file": "apps/game-server/src/fsm/roundManager.ts",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "fsm_roundmanager",
-      "target": "words_wordpool_getwordpoolwithcustompriority",
-      "confidence_score": 1.0
+      "target": "words_wordpool_getwordpoolwithcustompriority"
     },
     {
       "relation": "imports",
@@ -7890,9 +8911,9 @@
       "source_file": "apps/game-server/src/words/wordPool.ts",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "words_wordpool",
-      "target": "words_wordpool_getwordpoolwithcustompriority",
-      "confidence_score": 1.0
+      "target": "words_wordpool_getwordpoolwithcustompriority"
     },
     {
       "relation": "contains",
@@ -7921,9 +8942,9 @@
       "source_file": "apps/game-server/src/words/wordPool.ts",
       "source_location": "L105",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_getwordpool",
-      "confidence_score": 1.0
+      "target": "words_wordpool_getwordpool"
     },
     {
       "relation": "calls",
@@ -7932,9 +8953,9 @@
       "source_file": "apps/game-server/src/words/wordPool.ts",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_pickrandomwords",
-      "confidence_score": 1.0
+      "target": "words_wordpool_pickrandomwords"
     },
     {
       "relation": "calls",
@@ -7954,9 +8975,9 @@
       "source_file": "apps/game-server/src/words/wordPool.ts",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_filterrecentlyusedwords",
-      "confidence_score": 1.0
+      "target": "words_wordpool_filterrecentlyusedwords"
     },
     {
       "relation": "calls",
@@ -7965,9 +8986,9 @@
       "source_file": "apps/game-server/src/words/wordPool.ts",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_getavailablewordpool",
-      "confidence_score": 1.0
+      "target": "words_wordpool_getavailablewordpool"
     },
     {
       "relation": "contains",
@@ -8114,28 +9135,6 @@
       "confidence_score": 1.0,
       "source": "app_page",
       "target": "components_themetoggle_themetoggle"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/page.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_page",
-      "target": "ui_toastmanager"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/app/page.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_page",
-      "target": "ui_toastmanager_toastmanager"
     },
     {
       "relation": "contains",
@@ -8660,28 +9659,6 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "store_toaststore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
       "source_location": "L23",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -8698,72 +9675,6 @@
       "confidence_score": 1.0,
       "source": "arena_arenaorchestrator",
       "target": "ui_confirmmodal_confirmmodal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_gameovermodal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_gameovermodal_gameovermodal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_roundendoverlay"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_roundendoverlay_roundendoverlay"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_wordselectionoverlay"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "ui_wordselectionoverlay_wordselectionoverlay"
     },
     {
       "relation": "calls",
@@ -8786,115 +9697,6 @@
       "weight": 1.0,
       "source": "arena_arenaorchestrator_arenaorchestrator",
       "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L47",
-      "weight": 1.0,
-      "source": "arena_arenaorchestrator_arenaorchestrator",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "components_footer_footer"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "reactbits_logoloop"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_gamestore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_rulesmodal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_rulesmodal_rulesmodal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "components_footer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "components_footer_footer",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "components_footer_footer"
     },
     {
       "relation": "contains",
@@ -8922,9 +9724,9 @@
       "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lobby_customwordsdrawer",
-      "target": "lobby_customwordsdrawer_customwordsdrawer",
-      "confidence_score": 1.0
+      "target": "lobby_customwordsdrawer_customwordsdrawer"
     },
     {
       "relation": "contains",
@@ -8932,9 +9734,9 @@
       "source_file": "apps/web/src/components/Lobby/CustomWordsDrawer.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lobby_customwordsdrawer",
-      "target": "lobby_customwordsdrawer_customwordsdrawerprops",
-      "confidence_score": 1.0
+      "target": "lobby_customwordsdrawer_customwordsdrawerprops"
     },
     {
       "relation": "imports_from",
@@ -8943,9 +9745,9 @@
       "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lobby_lobbyscreen",
-      "target": "lobby_customwordsdrawer",
-      "confidence_score": 1.0
+      "target": "lobby_customwordsdrawer"
     },
     {
       "relation": "imports",
@@ -8954,9 +9756,9 @@
       "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lobby_lobbyscreen",
-      "target": "lobby_customwordsdrawer_customwordsdrawer",
-      "confidence_score": 1.0
+      "target": "lobby_customwordsdrawer_customwordsdrawer"
     },
     {
       "relation": "contains",
@@ -8999,28 +9801,6 @@
       "target": "lobby_lobbyscreen_lobbyscreenprops"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "ui_strictmodewarningoverlay",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Lobby/LobbyScreen.tsx",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "lobby_lobbyscreen",
-      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlay",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/ThemeProvider.tsx",
@@ -9059,56 +9839,6 @@
       "confidence_score": 1.0,
       "source": "ui_confirmmodal",
       "target": "ui_confirmmodal_confirmmodalprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_gameovermodal",
-      "target": "ui_gameovermodal_gameovermodal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_gameovermodal",
-      "target": "ui_gameovermodal_gameovermodalprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_gameovermodal",
-      "target": "ui_gameovermodal_playerstanding"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/StrictModeWarningOverlay.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "source": "ui_strictmodewarningoverlay",
-      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlay",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/StrictModeWarningOverlay.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "ui_strictmodewarningoverlay",
-      "target": "ui_strictmodewarningoverlay_strictmodewarningoverlayprops",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -9246,72 +9976,6 @@
       "target": "hooks_usesyncedtimer_usesyncedtimer"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "hooks_usesyncedtimer"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "hooks_usesyncedtimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "hooks_usesyncedtimer_usesyncedtimer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L41",
-      "weight": 1.0,
-      "source": "ui_roundendoverlay_roundendoverlay",
-      "target": "hooks_usesyncedtimer_usesyncedtimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "hooks_usesyncedtimer_usesyncedtimer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "ui_wordselectionoverlay_wordselectionoverlay",
-      "target": "hooks_usesyncedtimer_usesyncedtimer"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/store/gameStore.ts",
@@ -9350,123 +10014,6 @@
       "confidence_score": 1.0,
       "source": "store_gamestore",
       "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "store_gamestore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "ui_roundendoverlay_roundendoverlay",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "store_toaststore",
-      "target": "store_toaststore_toast"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "store_toaststore",
-      "target": "store_toaststore_toaststore"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "store_toaststore",
-      "target": "store_toaststore_toasttype"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/store/toastStore.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "store_toaststore",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_toastmanager",
-      "target": "store_toaststore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_toastmanager",
-      "target": "store_toaststore_toasttype"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_toastmanager",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "ui_toastmanager_toastmanager",
-      "target": "store_toaststore_usetoaststore"
     },
     {
       "relation": "contains",
@@ -9640,76 +10187,6 @@
       "confidence_score": 1.0,
       "source": "web_next_config",
       "target": "web_next_config_nextconfig"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "ui_roundendoverlay_containervariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "ui_roundendoverlay_itemvariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RoundEndOverlay.tsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_roundendoverlay",
-      "target": "ui_roundendoverlay_roundendoverlay"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "ui_wordselectionoverlay_containervariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "ui_wordselectionoverlay_itemvariants"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "ui_wordselectionoverlay_wordselectionoverlay"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WordSelectionOverlay.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_wordselectionoverlay",
-      "target": "ui_wordselectionoverlay_wordselectionoverlayprops"
     },
     {
       "relation": "contains",
@@ -10338,337 +10815,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_dependencies"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_devdependencies"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_name"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_private"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_scripts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package",
-      "target": "web_package_version"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_scripts",
-      "target": "web_package_scripts_build"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_scripts",
-      "target": "web_package_scripts_dev"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_scripts",
-      "target": "web_package_scripts_lint"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_scripts",
-      "target": "web_package_scripts_start"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_framer_motion"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_lucide_react"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_next"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_next_themes"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_react"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_react_dom"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_react_icons"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_scribblitz_shared"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_scribblitz_types"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_scribblitz_validation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_socket_io_client"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_uuid"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_dependencies",
-      "target": "web_package_dependencies_zustand"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_babel_plugin_react_compiler"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L32",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_eslint"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L33",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_eslint_config_next"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_tailwindcss"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_tailwindcss_postcss"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L28",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_types_node"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L29",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_types_react"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_types_react_dom"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L35",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies",
-      "target": "web_package_devdependencies_typescript"
-    },
-    {
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/package.json",
-      "source_location": "L33",
-      "weight": 1.0,
-      "context": "import",
-      "confidence_score": 1.0,
-      "source": "web_package_devdependencies_eslint_config_next",
-      "target": "eslint_config_next"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "apps/web/postcss.config.mjs",
       "source_location": "L1",
       "weight": 1.0,
@@ -10765,46 +10911,6 @@
       "confidence_score": 1.0,
       "source": "reactbits_logoloop",
       "target": "reactbits_logoloop_useresizeobserver"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_rulesmodal",
-      "target": "ui_rulesmodal_rulesmodal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_rulesmodal",
-      "target": "ui_rulesmodal_rulesmodalprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_toastmanager",
-      "target": "ui_toastmanager_toastconfig"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/ToastManager.tsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_toastmanager",
-      "target": "ui_toastmanager_toastmanager"
     },
     {
       "relation": "contains",
@@ -13135,5 +13241,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a40b69b3c36f8751f9718374063cfade07cfa205"
+  "built_at_commit": "a7882c55fbc3e9acab02808d2a699c1f8bc8e1b3"
 }

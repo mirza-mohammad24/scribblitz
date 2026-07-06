@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "apps/game-server/src/words/wordPool.ts": {
-    "mtime": 1783172461.6125824,
-    "ast_hash": "dd2c57c421ebf2a05fb9dfa583abeaf8",
+    "mtime": 1783346151.4750693,
+    "ast_hash": "5604e173005d5a86869f6288507eae32",
     "semantic_hash": ""
   },
   "apps/game-server/tsconfig.json": {
@@ -250,13 +250,13 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaChat.tsx": {
-    "mtime": 1783171736.984095,
-    "ast_hash": "75617c9f81885224261f4d816500d1ef",
+    "mtime": 1783346151.5122366,
+    "ast_hash": "ca71ed780a302a83c6260a417ba49025",
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaHUD.tsx": {
-    "mtime": 1783171846.6181967,
-    "ast_hash": "f1af54e4d9a322435559b7c602dc6c4b",
+    "mtime": 1783308041.3710275,
+    "ast_hash": "81d6866175a98e7d1b439e1f5936f435",
     "semantic_hash": ""
   },
   "apps/web/src/components/Arena/ArenaLeaderboard.tsx": {
@@ -305,18 +305,18 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/GameOverModal.tsx": {
-    "mtime": 1783298652.4635184,
-    "ast_hash": "3f16edabe05494ff957af6a1dd28e3ff",
+    "mtime": 1783346151.5532396,
+    "ast_hash": "a442e78599bd7bb97439a38e1bb7d3b0",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RulesModal.tsx": {
-    "mtime": 1783298530.591862,
-    "ast_hash": "aeb9e7b718db5129639365ea551d9c42",
+    "mtime": 1783307021.6777494,
+    "ast_hash": "65dc6962a283fb8399f772a62c516642",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/ToastManager.tsx": {
-    "mtime": 1783301296.3748,
-    "ast_hash": "dd5b39faca2de325676bfb9d13eb18bd",
+    "mtime": 1783343265.1578128,
+    "ast_hash": "50a902aacbfb7c424954c600e6044b39",
     "semantic_hash": ""
   },
   "apps/web/src/hooks/useCanvasDrawing.ts": {
@@ -550,8 +550,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RoundEndOverlay.tsx": {
-    "mtime": 1783298696.417281,
-    "ast_hash": "7bc4b5a28c3297372fe2e68f5361ea5f",
+    "mtime": 1783346151.5672336,
+    "ast_hash": "214205361615ed9950d35f878f0c148b",
     "semantic_hash": ""
   },
   "apps/web/src/hooks/useSyncedTimer.ts": {
@@ -560,8 +560,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/WordSelectionOverlay.tsx": {
-    "mtime": 1783298745.374015,
-    "ast_hash": "adf8607cb940833a6fecc17c860a19ac",
+    "mtime": 1783346151.6102383,
+    "ast_hash": "c2f7380f14eb79f813e522b94bb96024",
     "semantic_hash": ""
   },
   "apps/web/src/components/Lobby/CustomWordsDrawer.tsx": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/StrictModeWarningOverlay.tsx": {
-    "mtime": 1783298558.0240724,
-    "ast_hash": "63989f17737a57f54a6389471bdde548",
+    "mtime": 1783307070.2079084,
+    "ast_hash": "641372f237d900c870dda756a734fd05",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/WhyScribblitzModal.tsx": {
-    "mtime": 1783301457.5536566,
-    "ast_hash": "aac58e8666da53649c7af80396acc235",
+    "mtime": 1783307167.4669094,
+    "ast_hash": "365811dfd3ee2fa2b658b0576da7aa40",
     "semantic_hash": ""
   }
 }
