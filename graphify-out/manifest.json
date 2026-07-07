@@ -215,8 +215,8 @@
     "semantic_hash": "d0f8375ae1199dc7acd3977fc33b78b8"
   },
   "apps/web/next.config.ts": {
-    "mtime": 1783432137.6716585,
-    "ast_hash": "c2f201c4ac2b480679c3a7eccfd8bbb3",
+    "mtime": 1783445683.8078232,
+    "ast_hash": "5350082e9cf0d0fceafa39a2ae9f77f0",
     "semantic_hash": ""
   },
   "apps/web/package.json": {
@@ -590,8 +590,8 @@
     "semantic_hash": ""
   },
   "docker-compose.prod.yml": {
-    "mtime": 1783432376.4691553,
-    "ast_hash": "c431403a4fa4b13fcc277716717528d2",
+    "mtime": 1783446988.105178,
+    "ast_hash": "06ae86807d66ef5b0b266fe1cd90460d",
     "semantic_hash": ""
   }
 }
