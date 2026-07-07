@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args: 
+        NEXT_PUBLIC_GAME_SERVER_URL: ${NEXT_PUBLIC_GAME_SERVER_URL}
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_GAME_SERVER_URL=${NEXT_PUBLIC_GAME_SERVER_URL}
@@ -62,7 +64,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-scribblitz_user}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-scribblitz_user} -d $${POSTGRES_DB:-scribblitz_db}"]
       interval: 10s
       timeout: 5s
       retries: 5

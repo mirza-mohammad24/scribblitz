@@ -1,4 +1,3 @@
-# apps/game-server/Dockerfile
 FROM node:22-alpine AS base
 RUN npm install -g pnpm
 WORKDIR /app
@@ -21,14 +20,13 @@ FROM deps AS build
 RUN pnpm dlx prisma generate
 RUN pnpm --filter game-server build
 
-# Create the final, lightweight runner image
+# Create the final runner image
 FROM node:22-alpine AS runner
 WORKDIR /app
-COPY --from=build /app/apps/game-server/dist ./apps/game-server/dist
-COPY --from=build /app/apps/game-server/package.json ./apps/game-server/package.json
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/prisma ./prisma
+RUN npm install -g pnpm
+
+#Copy the ENTIRE built workspace so pnpm symlinks stay perfectly intact
+COPY --from=build /app ./
 
 RUN chown -R node:node /app
 USER node

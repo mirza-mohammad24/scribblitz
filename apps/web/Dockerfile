@@ -1,4 +1,3 @@
-# apps/web/Dockerfile
 FROM node:22-alpine AS base
 RUN npm install -g pnpm
 WORKDIR /app
@@ -11,6 +10,8 @@ FROM base AS deps
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
+ARG NEXT_PUBLIC_GAME_SERVER_URL
+ENV NEXT_PUBLIC_GAME_SERVER_URL=${NEXT_PUBLIC_GAME_SERVER_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter web build
 
@@ -28,4 +29,4 @@ USER node
 
 EXPOSE 3000
 WORKDIR /app/apps/web
-CMD ["node", ".next/standalone/server.js"]
+CMD ["pnpm", "start"]
