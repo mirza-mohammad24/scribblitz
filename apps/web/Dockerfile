@@ -28,4 +28,4 @@ USER node
 
 EXPOSE 3000
 WORKDIR /app/apps/web
-CMD ["pnpm", "start"]
+CMD ["node", ".next/standalone/server.js"]
