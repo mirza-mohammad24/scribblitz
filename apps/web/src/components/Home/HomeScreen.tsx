@@ -9,7 +9,7 @@
  */
 
 import { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Transition } from 'framer-motion';
 import { Dices, Play, ArrowRightCircle } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,6 +19,76 @@ import { Footer } from '../Footer';
 const AVATAR_STORAGE_KEY = 'scribblitz_avatar_seed';
 const USERNAME_STORAGE_KEY = 'scribblitz_username';
 
+const pulseTransition: Transition = {
+  duration: 1.5,
+  ease: 'easeInOut',
+  times: [0, 0.2, 0.4, 0.6, 1],
+};
+
+const buttonVariants = {
+  rest: { scale: 1 },
+  pulse: {
+    scale: [1, 1.04, 1, 1.04, 1],
+    transition: pulseTransition,
+  },
+};
+
+// Draws an animated glowing line around the border of the parent element
+const AnimatedTrace = ({ active, colorClass }: { active: boolean; colorClass: string }) => {
+  const traceAnimation = {
+    strokeDasharray: ['0 100', '50 100', '50 100'],
+    strokeDashoffset: [0, 0, -100],
+    opacity: [0, 1, 1, 0],
+  };
+
+  const traceTransition: Transition = {
+    duration: 1.5,
+    times: [0, 0.2, 0.8, 1],
+    ease: 'easeInOut',
+  };
+
+  return (
+    <AnimatePresence>
+      {active && (
+        <svg
+          className={`absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible ${colorClass}`}
+        >
+          {/* Glowing Outer Halo */}
+          <motion.rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            rx="16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="6"
+            style={{ filter: 'blur(4px)' }}
+            pathLength="100"
+            initial={{ strokeDasharray: '0 100', strokeDashoffset: 0, opacity: 0 }}
+            animate={traceAnimation}
+            transition={traceTransition}
+          />
+          {/* Sharp Inner Core Line */}
+          <motion.rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            rx="16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            pathLength="100"
+            initial={{ strokeDasharray: '0 100', strokeDashoffset: 0, opacity: 0 }}
+            animate={traceAnimation}
+            transition={traceTransition}
+          />
+        </svg>
+      )}
+    </AnimatePresence>
+  );
+};
 interface HomeScreenProps {
   onActionCreate: (username: string, avatarSeed: string) => void;
   onActionJoin: (username: string, roomCode: string, avatarSeed: string) => void;
@@ -40,6 +110,9 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
   // Track keyboard state to push the bottom-sheet up
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [showMobileCard, setShowMobileCard] = useState(false);
+
+  // The Attention State
+  const [attentionPulse, setAttentionPulse] = useState(false);
 
   useEffect(() => {
     const hydrationTimer = setTimeout(() => {
@@ -105,6 +178,14 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
   const triggerCodeShake = () => {
     setCodeShake(true);
     setTimeout(() => setCodeShake(false), 400);
+  };
+
+  const handleAttentionTrigger = () => {
+    setAttentionPulse(true);
+    // Auto-remove state right as the 1.5s SVG animation finishes
+    setTimeout(() => {
+      setAttentionPulse(false);
+    }, 1500);
   };
 
   /**
@@ -289,7 +370,7 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
         >
           <motion.div
             animate={{ paddingBottom: isKeyboardOpen ? '2.5rem' : '1.5rem' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            transition={{ paddingBottom: { type: 'spring', damping: 25, stiffness: 200 } }}
             className="bg-white/95 dark:bg-discord-card/95 backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 rounded-t-[2.5rem] md:rounded-4xl border-t-4 border-l-4 border-r-4 md:border-b-4 border-gray-200 dark:border-discord-main shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] md:dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex flex-col gap-6"
           >
             {/* Mobile swipe-down drag handle */}
@@ -363,10 +444,18 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
 
             <motion.button
               onClick={handleCreate}
+              initial="rest"
+              animate={attentionPulse ? 'pulse' : 'rest'}
+              variants={buttonVariants}
               whileTap={{ scale: 0.97 }}
-              className="w-full flex items-center justify-center gap-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white p-4 rounded-2xl font-black text-xl border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all"
+              className="relative w-full flex items-center justify-center gap-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white p-4 rounded-2xl font-black text-xl border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all"
             >
-              <Play fill="currentColor" size={24} /> Create Room
+              <AnimatedTrace
+                active={attentionPulse}
+                colorClass="text-green-300 dark:text-cyan-300"
+              />
+              <Play fill="currentColor" size={24} className="relative z-10" />
+              <span className="relative z-10">Create Room</span>
             </motion.button>
 
             <div className="flex items-center gap-4 py-2">
@@ -400,12 +489,20 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
                     }`}
                   />
                 </motion.div>
+
                 <motion.button
                   onClick={handleJoin}
+                  initial="rest"
+                  animate={attentionPulse ? 'pulse' : 'rest'}
+                  variants={buttonVariants}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-red-600 dark:bg-neon-pink hover:bg-red-700 dark:hover:bg-neon-pink-hover text-white px-6 rounded-2xl font-black text-xl flex items-center justify-center border-b-4 border-red-800 dark:border-neon-pink-border active:border-b-0 active:translate-y-1 transition-all"
+                  className="relative shrink-0 bg-red-600 dark:bg-neon-pink hover:bg-red-700 dark:hover:bg-neon-pink-hover text-white px-6 rounded-2xl font-black text-xl flex items-center justify-center border-b-4 border-red-800 dark:border-neon-pink-border active:border-b-0 active:translate-y-1 transition-all"
                 >
-                  <ArrowRightCircle size={28} strokeWidth={2.5} />
+                  <AnimatedTrace
+                    active={attentionPulse}
+                    colorClass="text-red-300 dark:text-pink-300"
+                  />
+                  <ArrowRightCircle size={28} strokeWidth={2.5} className="relative z-10" />
                 </motion.button>
               </div>
               {codeError && (
@@ -437,7 +534,7 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
       </div>
 
       {/*Our footer*/}
-      <Footer />
+      <Footer onTriggerPlay={handleAttentionTrigger} />
     </div>
   );
 };

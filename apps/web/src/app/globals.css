@@ -22,6 +22,7 @@
 
   /* Shimmer Animation for the Lobby Skeleton */
   --animate-shimmer: shimmer 2s infinite linear;
+    
 }
 
 /* The Keyframes for the Shimmer */

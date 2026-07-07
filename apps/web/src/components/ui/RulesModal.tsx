@@ -12,7 +12,7 @@ import { X, Gamepad2, Users, Brush, MessageSquare, Trophy } from 'lucide-react';
 
 interface RulesModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (action?: 'play') => void; //if play intent received it will help in triggering the animation
 }
 
 /**
@@ -33,7 +33,7 @@ export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={() => onClose()} //should not trigger the animation
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm cursor-pointer"
           />
 
@@ -46,7 +46,7 @@ export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
               className="w-full max-w-xl bg-white dark:bg-discord-card rounded-4xl border-4 border-gray-200 dark:border-discord-main p-6 md:p-8 shadow-2xl flex flex-col gap-6 relative pointer-events-auto"
             >
               <button
-                onClick={onClose}
+                onClick={() => onClose()} //should not trigger the animation
                 className="absolute top-6 right-6 text-gray-400 hover:text-red-500 dark:hover:text-neon-pink transition-colors bg-gray-100 dark:bg-discord-main p-2 rounded-full active:scale-95"
               >
                 <X size={20} strokeWidth={3} />
@@ -116,7 +116,7 @@ export const RulesModal = ({ isOpen, onClose }: RulesModalProps) => {
               </div>
 
               <button
-                onClick={onClose}
+                onClick={() => onClose('play')} //will trigger the animation on the card which shows create/join buttons
                 className="w-full mt-2 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white py-3.5 rounded-xl font-black text-lg border-b-4 border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1 transition-all shadow-sm"
               >
                 Got it! Let&apos;s Draw

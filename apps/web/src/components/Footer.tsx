@@ -44,13 +44,18 @@ import { useToastStore } from '@/store/toastStore';
 const focusClasses =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:focus-visible:ring-neon-blue rounded-sm';
 
+// Prop to bubble up the play trigger
+interface FooterProps {
+  onTriggerPlay?: () => void;
+}
 /**
  * Renders the site footer with brand info, explore links, a tech stack marquee,
  * copyright notice, and social links. Returns `null` when the game is active
  * (i.e., `gameState` is not `null`) to keep the UI focused on gameplay.
+ * @param {FooterProps} props - The component props.
  * @returns {React.JSX.Element | null} The footer JSX or null if the game is active.
  */
-export const Footer = () => {
+export const Footer = ({ onTriggerPlay }: FooterProps) => {
   const gameState = useGameStore((state) => state.gameState);
   const addToast = useToastStore((state) => state.addToast);
 
@@ -64,6 +69,19 @@ export const Footer = () => {
   if (gameState !== null) {
     return null;
   }
+
+  /**
+   * Handles closing the modal and triggering the play action if necessary(play action received).
+   * @param action
+   */
+  const handleModalClose = (action?: 'play') => {
+    setIsRulesOpen(false);
+    setIsWhyOpen(false);
+    if (action === 'play' && onTriggerPlay) {
+      // if the play action is received, trigger the play callback
+      onTriggerPlay();
+    }
+  };
 
   /**
    * THE EASTER EGG LOGIC
@@ -412,8 +430,8 @@ export const Footer = () => {
       </footer>
 
       {/* Global Footer Modals */}
-      <RulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
-      <WhyScribblitzModal isOpen={isWhyOpen} onClose={() => setIsWhyOpen(false)} />
+      <RulesModal isOpen={isRulesOpen} onClose={handleModalClose} />
+      <WhyScribblitzModal isOpen={isWhyOpen} onClose={handleModalClose} />
     </>
   );
 };
