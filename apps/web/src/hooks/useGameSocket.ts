@@ -10,31 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 const LOCAL_STORAGE_KEY = 'scribblitz_token';
 export const ACTIVE_ROOM_KEY = 'scribblitz_active_room';
 
-//DON'T DELETE THIS IS ORIGINAL (FUCK YOU IF YOU TOUCH THIS) THE DYNAMIC REPLACEMENT IS BELOW FOR TESTING PURPOSE
-//const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
-
-/**
- * Resolves the backend game-server URL at runtime.
- * During SSR it falls back to the `NEXT_PUBLIC_GAME_SERVER_URL` env var (or localhost).
- * In the browser it dynamically derives the URL from the current `window.location.hostname`,
- * so the frontend works automatically when accessed from any device on the local network.
- *
- * Dynamic URL generation — allows the frontend to automatically talk to your
- * computer's local IP address instead of being hardcoded to localhost or a specific
- * environment variable.
- *
- * @returns {string} The fully-qualified HTTP URL of the game server (e.g. `http://192.168.1.5:3001`).
- */
-const getBackendUrl = () => {
-  // If we are on the server (SSR), fallback to the default localhost
-  if (typeof window === 'undefined') {
-    return process.env.NEXT_PUBLIC_GAME_SERVER_URL || 'http://localhost:3001';
-  }
-
-  // Dynamically uses whatever IP/Hostname you typed into your phone/browser address bar
-  return `http://${window.location.hostname}:3001`;
-};
-
 //We declare the socket instance OUTSIDE the hook.
 //This ensures that React Strict Mode's double-mounting does not create duplicate socket connection
 let socketInstance: Socket | null = null;
@@ -51,6 +26,14 @@ let socketInstance: Socket | null = null;
 const getSocket = (): Socket => {
   if (socketInstance) return socketInstance; // Return existing instance if already created
 
+  const SERVER_URL = process.env.NEXT_PUBLIC_GAME_SERVER_URL;
+  if (!SERVER_URL && process.env.NODE_ENV === 'production') {
+    throw new Error('FATAL: NEXT_PUBLIC_GAME_SERVER_URL is missing! Check your VPS .env file.');
+  }
+
+  // Safe to fallback to localhost ONLY in development mode
+  const FINAL_URL = SERVER_URL || 'http://localhost:3001';
+
   //Check for an existing session token or create a new one
   let token = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (!token) {
@@ -59,7 +42,7 @@ const getSocket = (): Socket => {
   }
 
   //Initialize the connection
-  socketInstance = io(getBackendUrl(), {
+  socketInstance = io(FINAL_URL, {
     auth: { token }, // Send the token for authentication during the handshake
     autoConnect: false,
   });

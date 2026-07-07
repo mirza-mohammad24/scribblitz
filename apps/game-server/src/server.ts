@@ -44,8 +44,7 @@ const httpServer = createServer(app);
 const disconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 //Socket.io initialized with Strict CORS for Next.js frontend
-// Original one commented out (DON'T TOUCH WILL UNCOMMENT LATER FUCK YOU IF TRY TO TOUCH THIS)
-/*
+
 const io = new Server<any, any, any, SocketData>(httpServer, {
   cors: {
     origin: process.env.WEB_URL || 'http://localhost:3000',
@@ -53,20 +52,6 @@ const io = new Server<any, any, any, SocketData>(httpServer, {
     credentials: true,
   },
 });
-*/
-//Using this for testing with help of mobile phone
-const io = new Server<any, any, any, SocketData>(httpServer, {
-  cors: {
-    // Allow the origin that the request is coming from.
-    // This allows you to access from localhost:3000 OR 192.168.1.X:3000
-    origin: (origin, callback) => {
-      callback(null, true);
-    },
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
 // =========================
 // Socket Middleware
 // =========================
