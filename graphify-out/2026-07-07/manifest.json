@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "apps/game-server/src/words/wordPool.ts": {
-    "mtime": 1783346151.4750693,
-    "ast_hash": "5604e173005d5a86869f6288507eae32",
+    "mtime": 1783400398.5304854,
+    "ast_hash": "4019f2d2fbc7f46bb8c4d69811d0d2b5",
     "semantic_hash": ""
   },
   "apps/game-server/tsconfig.json": {
@@ -270,13 +270,13 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/Footer.tsx": {
-    "mtime": 1783301457.4720552,
-    "ast_hash": "d9b61fa9da76161e2f619ddcbab96026",
+    "mtime": 1783414070.5024176,
+    "ast_hash": "2a18bbbea34cc1127266c1fcec8d7186",
     "semantic_hash": ""
   },
   "apps/web/src/components/Home/HomeScreen.tsx": {
-    "mtime": 1783169097.3138616,
-    "ast_hash": "dfa366cb42baf964aa4e219791db5f92",
+    "mtime": 1783414070.5506234,
+    "ast_hash": "08fbd8dfbab6f2fd1844c1bbc9f9fe60",
     "semantic_hash": ""
   },
   "apps/web/src/components/Lobby/LobbyScreen.tsx": {
@@ -310,8 +310,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/RulesModal.tsx": {
-    "mtime": 1783307021.6777494,
-    "ast_hash": "65dc6962a283fb8399f772a62c516642",
+    "mtime": 1783414070.5636172,
+    "ast_hash": "b8336d64454ab1923d6eba812bfaba87",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/ToastManager.tsx": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/WhyScribblitzModal.tsx": {
-    "mtime": 1783307167.4669094,
-    "ast_hash": "365811dfd3ee2fa2b658b0576da7aa40",
+    "mtime": 1783400771.3119907,
+    "ast_hash": "fb4b5f86e4bd537a6da775fc29c14a63",
     "semantic_hash": ""
   },
   "apps/web/src/components/ui/GameAbortModal.tsx": {

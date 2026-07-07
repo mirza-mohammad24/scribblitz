@@ -1,19 +1,19 @@
-# Graph Report - scribblitz (2026-07-06)
+# Graph Report - scribblitz (2026-07-07)
 
 ## Corpus Check
 
-- 113 files · ~45,414 words
+- 113 files · ~45,850 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 561 nodes · 712 edges · 44 communities (35 shown, 9 thin omitted)
+- 565 nodes · 716 edges · 44 communities (34 shown, 10 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `09d8c232`
+- Built from commit: `af9cb8c7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -82,21 +82,21 @@
   pnpm-workspace.yaml → README.md
 - `@turbo/eslint-config README` --references--> `@repo/eslint-config` [EXTRACTED]
   packages/eslint-config/README.md → README.md
+- `Footer()` --calls--> `useGameStore` [EXTRACTED]
+  apps/web/src/components/Footer.tsx → apps/web/src/store/gameStore.ts
 - `getSocket()` --calls--> `io` [INFERRED]
   apps/web/src/hooks/useGameSocket.ts → apps/game-server/src/server.ts
-- `ArenaOrchestrator()` --calls--> `useToastStore` [EXTRACTED]
-  apps/web/src/components/Arena/ArenaOrchestrator.tsx → apps/web/src/store/toastStore.ts
 
 ## Import Cycles
 
 - None detected.
 
-## Communities (44 total, 9 thin omitted)
+## Communities (44 total, 10 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.09
-Nodes (39): abortGame(), endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap (+31 more)
+Cohesion: 0.07
+Nodes (41): abortGame(), endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap (+33 more)
 
 ### Community 1 - "Community 1"
 
@@ -152,11 +152,6 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
-
-### Community 14 - "Community 14"
-
-Cohesion: 0.12
-Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -245,8 +240,8 @@ Nodes (4): compilerOptions, jsx, extends, $schema
 
 ### Community 44 - "Community 44"
 
-Cohesion: 0.08
-Nodes (18): Footer(), ThemeToggle(), HomeScreen(), HomeScreenProps, ANIMATION_CONFIG, LogoItem, LogoLoop, LogoLoopProps (+10 more)
+Cohesion: 0.07
+Nodes (21): Footer(), FooterProps, ThemeToggle(), buttonVariants, HomeScreen(), HomeScreenProps, pulseTransition, ANIMATION_CONFIG (+13 more)
 
 ### Community 45 - "Community 45"
 
@@ -255,22 +250,22 @@ Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVarian
 
 ## Knowledge Gaps
 
-- **315 isolated node(s):** `SocketData`, `app`, `httpServer`, `disconnectTimers`, `GameAbortedModalProps` (+310 more)
+- **318 isolated node(s):** `DEFAULT_WORDS`, `FooterProps`, `pulseTransition`, `buttonVariants`, `HomeScreenProps` (+313 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `io` connect `Community 1` to `Community 0`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+  _High betweenness centrality (0.059) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `SocketData`, `app`, `httpServer` to the rest of the system?**
-  _315 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `DEFAULT_WORDS`, `FooterProps`, `pulseTransition` to the rest of the system?**
+  _318 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08591466978375219 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0711849957374254 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.07058001397624039 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

@@ -140,8 +140,8 @@
     "semantic_hash": "000a54f74d51365cdbf71dcf71c238da"
   },
   "apps/game-server/src/server.ts": {
-    "mtime": 1783351591.7991197,
-    "ast_hash": "f9da08e635c6a7150dcee4d535b8e9a8",
+    "mtime": 1783416696.1252582,
+    "ast_hash": "ee9db587be8a0c531ea10a39e8e15eb6",
     "semantic_hash": ""
   },
   "apps/game-server/src/socket/handlers/canvasHandlers.ts": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "apps/game-server/src/words/wordPool.ts": {
-    "mtime": 1783400398.5304854,
-    "ast_hash": "4019f2d2fbc7f46bb8c4d69811d0d2b5",
+    "mtime": 1783442401.5586452,
+    "ast_hash": "edb74fccf6e2388a72300d0fac8a93b2",
     "semantic_hash": ""
   },
   "apps/game-server/tsconfig.json": {
@@ -215,8 +215,8 @@
     "semantic_hash": "d0f8375ae1199dc7acd3977fc33b78b8"
   },
   "apps/web/next.config.ts": {
-    "mtime": 1782284595.5582328,
-    "ast_hash": "9adc87d0c16d9cdbe06103d1613bddb7",
+    "mtime": 1783432137.6716585,
+    "ast_hash": "c2f201c4ac2b480679c3a7eccfd8bbb3",
     "semantic_hash": ""
   },
   "apps/web/package.json": {
@@ -325,8 +325,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/hooks/useGameSocket.ts": {
-    "mtime": 1783168254.8019865,
-    "ast_hash": "b5b154fbd9e9a35724f82079dea19c4d",
+    "mtime": 1783442662.5076084,
+    "ast_hash": "f28ed664155216e373b52f18b92be483",
     "semantic_hash": ""
   },
   "apps/web/src/store/gameStore.ts": {
@@ -582,6 +582,16 @@
   "apps/web/src/components/ui/GameAbortModal.tsx": {
     "mtime": 1783354563.0705593,
     "ast_hash": "85a6680b33a9b53e93040d651d5f013d",
+    "semantic_hash": ""
+  },
+  "apps/game-server/scripts/generateWords.js": {
+    "mtime": 1783442662.351506,
+    "ast_hash": "ffe58e4323740707ed95cf402a41af61",
+    "semantic_hash": ""
+  },
+  "docker-compose.prod.yml": {
+    "mtime": 1783432376.4691553,
+    "ast_hash": "c431403a4fa4b13fcc277716717528d2",
     "semantic_hash": ""
   }
 }

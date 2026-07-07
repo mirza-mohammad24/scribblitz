@@ -4,6 +4,106 @@
   "graph": {},
   "nodes": [
     {
+      "label": "generateWords.js",
+      "file_type": "code",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_generatewords",
+      "community": 11,
+      "norm_label": "generatewords.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_generatewords_fs",
+      "community": 11,
+      "norm_label": "fs"
+    },
+    {
+      "label": "rawData",
+      "file_type": "code",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "scripts_generatewords_rawdata",
+      "community": 11,
+      "norm_label": "rawdata"
+    },
+    {
+      "label": "validWords",
+      "file_type": "code",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "scripts_generatewords_validwords",
+      "community": 11,
+      "norm_label": "validwords"
+    },
+    {
+      "label": "server.ts",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_server",
+      "community": 0,
+      "norm_label": "server.ts"
+    },
+    {
+      "label": "SocketData",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_server_socketdata",
+      "community": 0,
+      "norm_label": "socketdata"
+    },
+    {
+      "label": "app",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "src_server_app",
+      "community": 0,
+      "norm_label": "app"
+    },
+    {
+      "label": "httpServer",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "src_server_httpserver",
+      "community": 0,
+      "norm_label": "httpserver"
+    },
+    {
+      "label": "disconnectTimers",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "src_server_disconnecttimers",
+      "community": 0,
+      "norm_label": "disconnecttimers"
+    },
+    {
+      "label": "io",
+      "file_type": "code",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "src_server_io",
+      "community": 1,
+      "norm_label": "io"
+    },
+    {
       "label": "wordPool.ts",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
@@ -17,7 +117,7 @@
       "label": "DEFAULT_WORDS",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L11",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "words_wordpool_default_words",
       "community": 0,
@@ -27,7 +127,7 @@
       "label": "getWordPool()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L45",
+      "source_location": "L4045",
       "_origin": "ast",
       "id": "words_wordpool_getwordpool",
       "community": 0,
@@ -37,7 +137,7 @@
       "label": "pickRandomWords()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L56",
+      "source_location": "L4056",
       "_origin": "ast",
       "id": "words_wordpool_pickrandomwords",
       "community": 0,
@@ -47,7 +147,7 @@
       "label": "normalize()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L68",
+      "source_location": "L4068",
       "_origin": "ast",
       "id": "words_wordpool_normalize",
       "community": 0,
@@ -57,7 +157,7 @@
       "label": "filterRecentlyUsedWords()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L77",
+      "source_location": "L4077",
       "_origin": "ast",
       "id": "words_wordpool_filterrecentlyusedwords",
       "community": 0,
@@ -67,7 +167,7 @@
       "label": "getAvailableWordPool()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L91",
+      "source_location": "L4091",
       "_origin": "ast",
       "id": "words_wordpool_getavailablewordpool",
       "community": 0,
@@ -77,11 +177,51 @@
       "label": "getWordPoolWithCustomPriority()",
       "file_type": "code",
       "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L115",
+      "source_location": "L4115",
       "_origin": "ast",
       "id": "words_wordpool_getwordpoolwithcustompriority",
       "community": 0,
       "norm_label": "getwordpoolwithcustompriority()"
+    },
+    {
+      "label": "useGameSocket.ts",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "hooks_usegamesocket",
+      "community": 1,
+      "norm_label": "usegamesocket.ts"
+    },
+    {
+      "label": "getSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "hooks_usegamesocket_getsocket",
+      "community": 1,
+      "norm_label": "getsocket()"
+    },
+    {
+      "label": "disconnectSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "hooks_usegamesocket_disconnectsocket",
+      "community": 1,
+      "norm_label": "disconnectsocket()"
+    },
+    {
+      "label": "useGameSocket()",
+      "file_type": "code",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "hooks_usegamesocket_usegamesocket",
+      "community": 1,
+      "norm_label": "usegamesocket()"
     },
     {
       "label": "Footer.tsx",
@@ -89,9 +229,9 @@
       "source_file": "apps/web/src/components/Footer.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "components_footer",
       "community": 44,
-      "norm_label": "footer.tsx"
+      "norm_label": "footer.tsx",
+      "id": "components_footer"
     },
     {
       "label": "FooterProps",
@@ -99,9 +239,9 @@
       "source_file": "apps/web/src/components/Footer.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "components_footer_footerprops",
       "community": 44,
-      "norm_label": "footerprops"
+      "norm_label": "footerprops",
+      "id": "components_footer_footerprops"
     },
     {
       "label": "Footer()",
@@ -109,9 +249,9 @@
       "source_file": "apps/web/src/components/Footer.tsx",
       "source_location": "L58",
       "_origin": "ast",
-      "id": "components_footer_footer",
       "community": 44,
-      "norm_label": "footer()"
+      "norm_label": "footer()",
+      "id": "components_footer_footer"
     },
     {
       "label": "HomeScreen.tsx",
@@ -119,9 +259,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "home_homescreen",
       "community": 44,
-      "norm_label": "homescreen.tsx"
+      "norm_label": "homescreen.tsx",
+      "id": "home_homescreen"
     },
     {
       "label": "pulseTransition",
@@ -129,9 +269,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "home_homescreen_pulsetransition",
       "community": 44,
-      "norm_label": "pulsetransition"
+      "norm_label": "pulsetransition",
+      "id": "home_homescreen_pulsetransition"
     },
     {
       "label": "buttonVariants",
@@ -139,9 +279,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "home_homescreen_buttonvariants",
       "community": 44,
-      "norm_label": "buttonvariants"
+      "norm_label": "buttonvariants",
+      "id": "home_homescreen_buttonvariants"
     },
     {
       "label": "AnimatedTrace()",
@@ -149,9 +289,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "id": "home_homescreen_animatedtrace",
       "community": 44,
-      "norm_label": "animatedtrace()"
+      "norm_label": "animatedtrace()",
+      "id": "home_homescreen_animatedtrace"
     },
     {
       "label": "HomeScreenProps",
@@ -159,9 +299,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L92",
       "_origin": "ast",
-      "id": "home_homescreen_homescreenprops",
       "community": 44,
-      "norm_label": "homescreenprops"
+      "norm_label": "homescreenprops",
+      "id": "home_homescreen_homescreenprops"
     },
     {
       "label": "HomeScreen()",
@@ -169,9 +309,9 @@
       "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
       "source_location": "L97",
       "_origin": "ast",
-      "id": "home_homescreen_homescreen",
       "community": 44,
-      "norm_label": "homescreen()"
+      "norm_label": "homescreen()",
+      "id": "home_homescreen_homescreen"
     },
     {
       "label": "RulesModal.tsx",
@@ -179,9 +319,9 @@
       "source_file": "apps/web/src/components/ui/RulesModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "ui_rulesmodal",
       "community": 44,
-      "norm_label": "rulesmodal.tsx"
+      "norm_label": "rulesmodal.tsx",
+      "id": "ui_rulesmodal"
     },
     {
       "label": "RulesModalProps",
@@ -189,9 +329,9 @@
       "source_file": "apps/web/src/components/ui/RulesModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "ui_rulesmodal_rulesmodalprops",
       "community": 44,
-      "norm_label": "rulesmodalprops"
+      "norm_label": "rulesmodalprops",
+      "id": "ui_rulesmodal_rulesmodalprops"
     },
     {
       "label": "RulesModal()",
@@ -199,9 +339,9 @@
       "source_file": "apps/web/src/components/ui/RulesModal.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "ui_rulesmodal_rulesmodal",
       "community": 44,
-      "norm_label": "rulesmodal()"
+      "norm_label": "rulesmodal()",
+      "id": "ui_rulesmodal_rulesmodal"
     },
     {
       "label": "WhyScribblitzModal.tsx",
@@ -209,9 +349,9 @@
       "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "ui_whyscribblitzmodal",
       "community": 44,
-      "norm_label": "whyscribblitzmodal.tsx"
+      "norm_label": "whyscribblitzmodal.tsx",
+      "id": "ui_whyscribblitzmodal"
     },
     {
       "label": "WhyScribblitzModalProps",
@@ -219,9 +359,9 @@
       "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "ui_whyscribblitzmodal_whyscribblitzmodalprops",
       "community": 44,
-      "norm_label": "whyscribblitzmodalprops"
+      "norm_label": "whyscribblitzmodalprops",
+      "id": "ui_whyscribblitzmodal_whyscribblitzmodalprops"
     },
     {
       "label": "WhyScribblitzModal()",
@@ -229,9 +369,9 @@
       "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "ui_whyscribblitzmodal_whyscribblitzmodal",
       "community": 44,
-      "norm_label": "whyscribblitzmodal()"
+      "norm_label": "whyscribblitzmodal()",
+      "id": "ui_whyscribblitzmodal_whyscribblitzmodal"
     },
     {
       "label": "roundManager.ts",
@@ -312,66 +452,6 @@
       "community": 0,
       "norm_label": "abortgame()",
       "id": "fsm_roundmanager_abortgame"
-    },
-    {
-      "label": "server.ts",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "server.ts",
-      "id": "src_server"
-    },
-    {
-      "label": "SocketData",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "socketdata",
-      "id": "src_server_socketdata"
-    },
-    {
-      "label": "app",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L37",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "app",
-      "id": "src_server_app"
-    },
-    {
-      "label": "httpServer",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L38",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "httpserver",
-      "id": "src_server_httpserver"
-    },
-    {
-      "label": "disconnectTimers",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "disconnecttimers",
-      "id": "src_server_disconnecttimers"
-    },
-    {
-      "label": "io",
-      "file_type": "code",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L58",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "io",
-      "id": "src_server_io"
     },
     {
       "label": "lobbyHandlers.ts",
@@ -1049,7 +1129,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "devdependencies",
       "id": "web_package_devdependencies"
     },
@@ -1059,7 +1139,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "@tailwindcss/postcss",
       "id": "web_package_devdependencies_tailwindcss_postcss"
     },
@@ -1069,7 +1149,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "@types/canvas-confetti",
       "id": "web_package_devdependencies_types_canvas_confetti"
     },
@@ -1079,7 +1159,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "@types/node",
       "id": "web_package_devdependencies_types_node"
     },
@@ -1089,7 +1169,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "@types/react",
       "id": "web_package_devdependencies_types_react"
     },
@@ -1099,7 +1179,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "@types/react-dom",
       "id": "web_package_devdependencies_types_react_dom"
     },
@@ -1109,7 +1189,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "babel-plugin-react-compiler",
       "id": "web_package_devdependencies_babel_plugin_react_compiler"
     },
@@ -1119,7 +1199,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "eslint",
       "id": "web_package_devdependencies_eslint"
     },
@@ -1129,7 +1209,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "eslint-config-next",
       "id": "web_package_devdependencies_eslint_config_next"
     },
@@ -1139,7 +1219,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "tailwindcss",
       "id": "web_package_devdependencies_tailwindcss"
     },
@@ -1149,7 +1229,7 @@
       "source_file": "apps/web/package.json",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "typescript",
       "id": "web_package_devdependencies_typescript"
     },
@@ -1439,7 +1519,7 @@
       "source_file": "apps/game-server/src/rooms/Room.ts",
       "source_location": "L238",
       "_origin": "ast",
-      "community": 0,
+      "community": 14,
       "norm_label": ".cleanup()",
       "id": "rooms_room_room_cleanup"
     },
@@ -2062,56 +2142,6 @@
       "community": 1,
       "norm_label": "usecanvasdrawing()",
       "id": "hooks_usecanvasdrawing_usecanvasdrawing"
-    },
-    {
-      "label": "useGameSocket.ts",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "usegamesocket.ts",
-      "id": "hooks_usegamesocket"
-    },
-    {
-      "label": "getBackendUrl()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "getbackendurl()",
-      "id": "hooks_usegamesocket_getbackendurl"
-    },
-    {
-      "label": "getSocket()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L51",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "getsocket()",
-      "id": "hooks_usegamesocket_getsocket"
-    },
-    {
-      "label": "disconnectSocket()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L77",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "disconnectsocket()",
-      "id": "hooks_usegamesocket_disconnectsocket"
-    },
-    {
-      "label": "useGameSocket()",
-      "file_type": "code",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L92",
-      "_origin": "ast",
-      "community": 1,
-      "norm_label": "usegamesocket()",
-      "id": "hooks_usegamesocket_usegamesocket"
     },
     {
       "label": "useSyncedTimer.ts",
@@ -4108,7 +4138,7 @@
       "source_file": "packages/eslint-config/base.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "base.js",
       "community_name": "Community 11",
       "id": "eslint_config_base"
@@ -4119,7 +4149,7 @@
       "source_file": "packages/eslint-config/base.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "config",
       "community_name": "Community 11",
       "id": "eslint_config_base_config"
@@ -4130,7 +4160,7 @@
       "source_file": "packages/eslint-config/next.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "next.js",
       "community_name": "Community 11",
       "id": "eslint_config_next"
@@ -4141,7 +4171,7 @@
       "source_file": "packages/eslint-config/next.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "nextjsconfig",
       "community_name": "Community 11",
       "id": "eslint_config_next_nextjsconfig"
@@ -4383,7 +4413,7 @@
       "source_file": "packages/eslint-config/react-internal.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "react-internal.js",
       "community_name": "Community 11",
       "id": "eslint_config_react_internal"
@@ -4394,7 +4424,7 @@
       "source_file": "packages/eslint-config/react-internal.js",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 4,
+      "community": 9,
       "norm_label": "config",
       "community_name": "Community 11",
       "id": "eslint_config_react_internal_config"
@@ -6039,738 +6069,34 @@
   ],
   "links": [
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "words_wordpool"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L11",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L1",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_default_words"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L62",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_filterrecentlyusedwords"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L76",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_getavailablewordpool"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_getwordpool"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L100",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_getwordpoolwithcustompriority"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L53",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_normalize"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L41",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool",
-      "target": "words_wordpool_pickrandomwords"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "words_wordpool_getwordpool"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L126",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "words_wordpool_getwordpool"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L105",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_getwordpool"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "words_wordpool_pickrandomwords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L128",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "words_wordpool_pickrandomwords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L125",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_pickrandomwords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L77",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool_getavailablewordpool",
-      "target": "words_wordpool_filterrecentlyusedwords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L113",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_filterrecentlyusedwords"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "words_wordpool_getavailablewordpool"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L127",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "words_wordpool_getavailablewordpool"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/words/wordPool.ts",
-      "source_location": "L109",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "words_wordpool_getwordpoolwithcustompriority",
-      "target": "words_wordpool_getavailablewordpool"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "words_wordpool_getwordpoolwithcustompriority"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L126",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "words_wordpool_getwordpoolwithcustompriority"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "components_footer_footer"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "components_footer",
-      "target": "components_footer_footerprops",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "reactbits_logoloop"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_gamestore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L38",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_toaststore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L38",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_rulesmodal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_rulesmodal_rulesmodal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_whyscribblitzmodal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "components_footer",
-      "target": "ui_whyscribblitzmodal_whyscribblitzmodal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "components_footer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "components_footer_footer",
-      "target": "store_gamestore_usegamestore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Footer.tsx",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "components_footer_footer",
-      "target": "store_toaststore_usetoaststore"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "components_footer_footer"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "home_homescreen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "home_homescreen",
-      "target": "home_homescreen_animatedtrace",
+      "source": "scripts_generatewords",
+      "target": "scripts_generatewords_fs",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L28",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L3",
       "weight": 1.0,
-      "source": "home_homescreen",
-      "target": "home_homescreen_buttonvariants",
+      "source": "scripts_generatewords",
+      "target": "scripts_generatewords_rawdata",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L19",
+      "source_file": "apps/game-server/scripts/generateWords.js",
+      "source_location": "L4",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "home_homescreen_homescreen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "home_homescreen",
-      "target": "home_homescreen_homescreenprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "home_homescreen",
-      "target": "home_homescreen_pulsetransition",
+      "source": "scripts_generatewords",
+      "target": "scripts_generatewords_validwords",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "home_homescreen_homescreen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_rulesmodal",
-      "target": "ui_rulesmodal_rulesmodal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_rulesmodal",
-      "target": "ui_rulesmodal_rulesmodalprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_whyscribblitzmodal",
-      "target": "ui_whyscribblitzmodal_whyscribblitzmodal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_whyscribblitzmodal",
-      "target": "ui_whyscribblitzmodal_whyscribblitzmodalprops"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L383",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_abortgame"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L331",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_endgame"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L271",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_endround"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_pickrandomitem"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L179",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_selectword"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_startgame"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L79",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "fsm_roundmanager_startnextround"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "lib_redis"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "lib_redis_redis"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "rooms_roommanager"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "rooms_roommanager_roommanager"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_getsocketbyuserid"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_getsocketbyuserid_getsocketbyuserid"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_hintutils"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_hintutils_generatehint"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_hintutils_getrandomhiddenindex"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_timercleanup"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_timercleanup_clearintervaltimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager",
-      "target": "utils_timercleanup_cleartimer"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_gamehandlers",
-      "target": "fsm_roundmanager"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_lobbyhandlers",
-      "target": "fsm_roundmanager"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_messagehandlers",
-      "target": "fsm_roundmanager"
     },
     {
       "relation": "imports_from",
@@ -6782,193 +6108,6 @@
       "confidence_score": 1.0,
       "source": "src_server",
       "target": "fsm_roundmanager"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager_startgame",
-      "target": "fsm_roundmanager_startnextround"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_gamehandlers",
-      "target": "fsm_roundmanager_startgame"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L89",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "fsm_roundmanager_endgame"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L142",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "utils_getsocketbyuserid_getsocketbyuserid"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L149",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_startnextround",
-      "target": "utils_timercleanup_cleartimer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L208",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_selectword",
-      "target": "utils_hintutils_generatehint"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L191",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_selectword",
-      "target": "utils_timercleanup_cleartimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_gamehandlers",
-      "target": "fsm_roundmanager_selectword"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L283",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_endround",
-      "target": "utils_timercleanup_clearintervaltimer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L281",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_endround",
-      "target": "utils_timercleanup_cleartimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L20",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_lobbyhandlers",
-      "target": "fsm_roundmanager_endround"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_messagehandlers",
-      "target": "fsm_roundmanager_endround"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_server",
-      "target": "fsm_roundmanager_endround"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L343",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_endgame",
-      "target": "utils_timercleanup_clearintervaltimer"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/game-server/src/fsm/roundManager.ts",
-      "source_location": "L341",
-      "weight": 1.0,
-      "source": "fsm_roundmanager_endgame",
-      "target": "utils_timercleanup_cleartimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/server.ts",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_server",
-      "target": "fsm_roundmanager_endgame"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "handlers_lobbyhandlers",
-      "target": "fsm_roundmanager_abortgame"
     },
     {
       "relation": "imports",
@@ -6980,6 +6119,28 @@
       "confidence_score": 1.0,
       "source": "src_server",
       "target": "fsm_roundmanager_abortgame"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_server",
+      "target": "fsm_roundmanager_endgame"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/server.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_server",
+      "target": "fsm_roundmanager_endround"
     },
     {
       "relation": "imports_from",
@@ -7329,6 +6490,1045 @@
       "target": "src_server_io"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "words_wordpool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_default_words"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_filterrecentlyusedwords"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_getavailablewordpool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_getwordpool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L100",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_getwordpoolwithcustompriority"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L53",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_normalize"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool",
+      "target": "words_wordpool_pickrandomwords"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "words_wordpool_getwordpool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "words_wordpool_getwordpool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L105",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool_getwordpoolwithcustompriority",
+      "target": "words_wordpool_getwordpool"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "words_wordpool_pickrandomwords"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "words_wordpool_pickrandomwords"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L125",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool_getwordpoolwithcustompriority",
+      "target": "words_wordpool_pickrandomwords"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool_getavailablewordpool",
+      "target": "words_wordpool_filterrecentlyusedwords"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L113",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool_getwordpoolwithcustompriority",
+      "target": "words_wordpool_filterrecentlyusedwords"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "words_wordpool_getavailablewordpool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "words_wordpool_getavailablewordpool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/words/wordPool.ts",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "words_wordpool_getwordpoolwithcustompriority",
+      "target": "words_wordpool_getavailablewordpool"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "words_wordpool_getwordpoolwithcustompriority"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "words_wordpool_getwordpoolwithcustompriority"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenacanvas",
+      "target": "hooks_usegamesocket"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenachat",
+      "target": "hooks_usegamesocket"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "hooks_usegamesocket"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hooks_usegamesocket",
+      "target": "hooks_usegamesocket_disconnectsocket"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hooks_usegamesocket",
+      "target": "hooks_usegamesocket_getsocket"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/hooks/useGameSocket.ts",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hooks_usegamesocket",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenacanvas",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "arena_arenacanvas_arenacanvas",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenachat",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "arena_arenachat_arenachat",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "arena_arenaorchestrator_arenaorchestrator",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_gameovermodal",
+      "target": "hooks_usegamesocket_usegamesocket"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "components_footer_footer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "components_footer_footerprops"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "reactbits_logoloop"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_gamestore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_toaststore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_rulesmodal"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_rulesmodal_rulesmodal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_whyscribblitzmodal"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_footer",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "components_footer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_footer_footer",
+      "target": "store_gamestore_usegamestore"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/web/src/components/Footer.tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "components_footer_footer",
+      "target": "store_toaststore_usetoaststore"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "components_footer_footer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "home_homescreen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "home_homescreen_animatedtrace"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "home_homescreen_buttonvariants"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "home_homescreen_homescreen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "home_homescreen_homescreenprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Home/HomeScreen.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "home_homescreen",
+      "target": "home_homescreen_pulsetransition"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "arena_arenaorchestrator",
+      "target": "home_homescreen_homescreen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_rulesmodal",
+      "target": "ui_rulesmodal_rulesmodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/RulesModal.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_rulesmodal",
+      "target": "ui_rulesmodal_rulesmodalprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_whyscribblitzmodal",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/src/components/ui/WhyScribblitzModal.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "ui_whyscribblitzmodal",
+      "target": "ui_whyscribblitzmodal_whyscribblitzmodalprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L383",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_abortgame"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L331",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_endgame"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L271",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_endround"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_pickrandomitem"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L179",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_selectword"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_startgame"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "fsm_roundmanager_startnextround"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "lib_redis"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "lib_redis_redis"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "rooms_roommanager"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "rooms_roommanager_roommanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_getsocketbyuserid"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_getsocketbyuserid_getsocketbyuserid"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_hintutils"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_hintutils_generatehint"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_hintutils_getrandomhiddenindex"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_timercleanup"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_timercleanup_clearintervaltimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager",
+      "target": "utils_timercleanup_cleartimer"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_gamehandlers",
+      "target": "fsm_roundmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_lobbyhandlers",
+      "target": "fsm_roundmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_messagehandlers",
+      "target": "fsm_roundmanager"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager_startgame",
+      "target": "fsm_roundmanager_startnextround"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_gamehandlers",
+      "target": "fsm_roundmanager_startgame"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L89",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "fsm_roundmanager_endgame"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "utils_getsocketbyuserid_getsocketbyuserid"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_startnextround",
+      "target": "utils_timercleanup_cleartimer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L208",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_selectword",
+      "target": "utils_hintutils_generatehint"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L191",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_selectword",
+      "target": "utils_timercleanup_cleartimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/gameHandlers.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_gamehandlers",
+      "target": "fsm_roundmanager_selectword"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_endround",
+      "target": "utils_timercleanup_clearintervaltimer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L281",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_endround",
+      "target": "utils_timercleanup_cleartimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_lobbyhandlers",
+      "target": "fsm_roundmanager_endround"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/messageHandlers.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_messagehandlers",
+      "target": "fsm_roundmanager_endround"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L343",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_endgame",
+      "target": "utils_timercleanup_clearintervaltimer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/game-server/src/fsm/roundManager.ts",
+      "source_location": "L341",
+      "weight": 1.0,
+      "source": "fsm_roundmanager_endgame",
+      "target": "utils_timercleanup_cleartimer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "handlers_lobbyhandlers",
+      "target": "fsm_roundmanager_abortgame"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/game-server/src/socket/handlers/lobbyHandlers.ts",
@@ -7592,28 +7792,6 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "hooks_usegamesocket"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenaorchestrator",
-      "target": "hooks_usegamesocket_usegamesocket"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
       "source_location": "L20",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -7795,17 +7973,6 @@
       "confidence_score": 1.0,
       "source": "app_page",
       "target": "arena_arenaorchestrator_arenaorchestrator"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Arena/ArenaOrchestrator.tsx",
-      "source_location": "L33",
-      "weight": 1.0,
-      "source": "arena_arenaorchestrator_arenaorchestrator",
-      "target": "hooks_usegamesocket_usegamesocket"
     },
     {
       "relation": "calls",
@@ -8085,39 +8252,6 @@
       "target": "arena_arenachat_arenachat"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenachat",
-      "target": "hooks_usegamesocket"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenachat",
-      "target": "hooks_usegamesocket_usegamesocket"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Arena/ArenaChat.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "arena_arenachat_arenachat",
-      "target": "hooks_usegamesocket_usegamesocket"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/src/components/Arena/ArenaHUD.tsx",
@@ -8179,17 +8313,6 @@
       "confidence_score": 1.0,
       "source": "arena_arenahud_hudtimer",
       "target": "hooks_usesyncedtimer_usesyncedtimer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/ui/GameOverModal.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "ui_gameovermodal",
-      "target": "hooks_usegamesocket_usegamesocket"
     },
     {
       "relation": "contains",
@@ -9960,28 +10083,6 @@
       "target": "hooks_usecanvasdrawing_usecanvasdrawing"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenacanvas",
-      "target": "hooks_usegamesocket"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "arena_arenacanvas",
-      "target": "hooks_usegamesocket_usegamesocket"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -9991,17 +10092,6 @@
       "weight": 1.0,
       "source": "arena_arenacanvas_arenacanvas",
       "target": "hooks_usecanvasdrawing_usecanvasdrawing"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/web/src/components/Arena/ArenaCanvas.tsx",
-      "source_location": "L41",
-      "weight": 1.0,
-      "source": "arena_arenacanvas_arenacanvas",
-      "target": "hooks_usegamesocket_usegamesocket"
     },
     {
       "relation": "contains",
@@ -10186,57 +10276,6 @@
       "confidence_score": 1.0,
       "source": "hooks_usecanvasdrawing",
       "target": "utils_floodfill_applyfloodfill"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L60",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hooks_usegamesocket",
-      "target": "hooks_usegamesocket_disconnectsocket"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hooks_usegamesocket",
-      "target": "hooks_usegamesocket_getbackendurl"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L38",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hooks_usegamesocket",
-      "target": "hooks_usegamesocket_getsocket"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L75",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hooks_usegamesocket",
-      "target": "hooks_usegamesocket_usegamesocket"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/web/src/hooks/useGameSocket.ts",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "hooks_usegamesocket_getsocket",
-      "target": "hooks_usegamesocket_getbackendurl"
     },
     {
       "relation": "contains",
@@ -13443,5 +13482,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "af9cb8c7695ae1933c0ef5d7dd948e8e97a22d78"
+  "built_at_commit": "43f8b51957b5a6b80f82ad62dbe8954a2117577f"
 }
