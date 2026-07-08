@@ -47,7 +47,11 @@ const disconnectTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 const io = new Server<any, any, any, SocketData>(httpServer, {
   cors: {
-    origin: process.env.WEB_URL || 'http://localhost:3000',
+    origin: [
+      process.env.WEB_URL || 'http://localhost:3000',
+      'https://scribblitz.xyz',
+      'https://www.scribblitz.xyz', // Allow both apex and www subdomain for production
+    ],
     methods: ['GET', 'POST'],
     credentials: true,
   },
