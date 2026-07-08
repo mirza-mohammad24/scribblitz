@@ -17,6 +17,14 @@ jobs:
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            cd ~/scribblitz
-            git pull origin main
-            docker compose -f docker-compose.prod.yml up --build -d --remove-orphans
+            echo "=== SYSTEM DIAGNOSTICS ==="
+            whoami
+            echo "$PATH"
+            docker --version
+            docker compose version || echo "docker compose command failed"
+            echo "=== SEARCHING FOR PLUGIN ==="
+            ls -l /usr/lib/docker/cli-plugins 2>/dev/null || echo "Not in /usr/lib"
+            ls -l /usr/local/lib/docker/cli-plugins 2>/dev/null || echo "Not in /usr/local/lib"
+            ls -l /usr/libexec/docker/cli-plugins 2>/dev/null || echo "Not in /usr/libexec"
+            find /usr -path '*cli-plugins*' 2>/dev/null
+            echo "=========================="
