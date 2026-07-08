@@ -19,4 +19,4 @@ jobs:
           script: |
             cd ~/scribblitz
             git pull origin main
-            docker-compose -f docker-compose.prod.yml up --build -d
+            docker compose -f docker-compose.prod.yml up --build -d --remove-orphans
