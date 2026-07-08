@@ -18,6 +18,9 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS build
 # Generate Prisma client before building
 RUN pnpm dlx prisma generate
+# Build the shared packages first so the game server can find them
+RUN pnpm --filter "./packages/**" run --if-present build
+
 RUN pnpm --filter game-server build
 
 # Create the final runner image

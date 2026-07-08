@@ -13,6 +13,10 @@ FROM deps AS build
 ARG NEXT_PUBLIC_GAME_SERVER_URL
 ENV NEXT_PUBLIC_GAME_SERVER_URL=${NEXT_PUBLIC_GAME_SERVER_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# The flag is now BEFORE the script name so pnpm handles it, not tsc!
+RUN pnpm --filter "./packages/**" run --if-present build
+# Now build the Next.js app
 RUN pnpm --filter web build
 
 FROM node:22-alpine AS runner
