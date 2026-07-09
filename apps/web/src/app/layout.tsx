@@ -29,8 +29,23 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: 'Scribblitz',
-  description: 'Real-time multiplayer drawing game',
+  title: 'Scribblitz | Real-time Collaborative Drawing Game',
+  description:
+    'Join your friends in Scribblitz, a fast-paced, real-time multiplayer drawing and guessing game. Create a room, share the code, and start sketching!',
+  keywords: [
+    'multiplayer drawing',
+    'guessing game',
+    'scribblitz',
+    'real-time game',
+    'online pictionary',
+  ],
+  openGraph: {
+    title: 'Scribblitz',
+    description: 'Real-time collaborative drawing game.',
+    url: 'https://scribblitz.xyz',
+    siteName: 'Scribblitz',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
