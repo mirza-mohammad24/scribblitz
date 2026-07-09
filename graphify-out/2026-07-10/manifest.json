@@ -230,8 +230,8 @@
     "semantic_hash": "481fac0fdecd70e1821cc30b86030c1a"
   },
   "apps/web/src/app/layout.tsx": {
-    "mtime": 1783641169.8341346,
-    "ast_hash": "eb34fa4b63ddeededf3b180825852a1c",
+    "mtime": 1783167643.4881647,
+    "ast_hash": "a3f69b8aabee65607984ea1a85ba6e8b",
     "semantic_hash": ""
   },
   "apps/web/src/app/not-found.tsx": {
@@ -597,11 +597,6 @@
   ".github/workflows/deploy.yml": {
     "mtime": 1783554813.3048139,
     "ast_hash": "db158127b3d4b0e2dd8b09e91dda4603",
-    "semantic_hash": ""
-  },
-  "apps/web/src/app/sitemap.ts": {
-    "mtime": 1783641169.8391292,
-    "ast_hash": "9586766ee96b6efc664a3be58c33e89d",
     "semantic_hash": ""
   }
 }

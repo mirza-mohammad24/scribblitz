@@ -1,19 +1,19 @@
-# Graph Report - scribblitz (2026-07-10)
+# Graph Report - scribblitz (2026-07-07)
 
 ## Corpus Check
 
-- 115 files · ~51,910 words
+- 114 files · ~51,759 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
 
-- 570 nodes · 718 edges · 47 communities (38 shown, 9 thin omitted)
+- 568 nodes · 717 edges · 46 communities (36 shown, 10 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
 
-- Built from commit: `f9e4b5f5`
+- Built from commit: `43f8b519`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -93,12 +93,12 @@
 
 - None detected.
 
-## Communities (47 total, 9 thin omitted)
+## Communities (46 total, 10 thin omitted)
 
 ### Community 0 - "Community 0"
 
-Cohesion: 0.09
-Nodes (39): abortGame(), endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap (+31 more)
+Cohesion: 0.07
+Nodes (41): abortGame(), endGame(), endRound(), selectWord(), startGame(), startNextRound(), registerCanvasHandlers(), syncRateLimitMap (+33 more)
 
 ### Community 1 - "Community 1"
 
@@ -164,11 +164,6 @@ Nodes (12): dependencies, @scribblitz/shared, zod, devDependencies, typescript, 
 
 Cohesion: 0.24
 Nodes (3): GameFSM, LEGAL_TRANSITIONS, TransitionMap
-
-### Community 14 - "Community 14"
-
-Cohesion: 0.12
-Nodes (3): Room, RoomManager, mockConfig
 
 ### Community 15 - "Community 15"
 
@@ -267,9 +262,9 @@ Nodes (8): CustomWordsDrawer(), CustomWordsDrawerProps, itemVariants, listVarian
 
 ## Knowledge Gaps
 
-- **321 isolated node(s):** `viewport`, `geistSans`, `geistMono`, `fredoka`, `metadata` (+316 more)
+- **321 isolated node(s):** `fs`, `rawData`, `validWords`, `SocketData`, `app` (+316 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 
@@ -279,10 +274,10 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `Room` connect `Community 14` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **What connects `viewport`, `geistSans`, `geistMono` to the rest of the system?**
+- **What connects `fs`, `rawData`, `validWords` to the rest of the system?**
   _321 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08591466978375219 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07243195785776997 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.07184325108853411 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
