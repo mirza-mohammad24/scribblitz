@@ -40,5 +40,9 @@ yarn-error.log*
 /generated/prisma
 
 #Graphify
+graphify-out/
 graphify-out/cache/
 graphify-out/cost.json
+
+#server logs
+server-logs/
