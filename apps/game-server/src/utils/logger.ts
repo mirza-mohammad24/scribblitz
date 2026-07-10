@@ -8,6 +8,9 @@
 import pino from 'pino';
 
 const logger = pino(
+  {
+    timestamp: pino.stdTimeFunctions.isoTime, // human-readable ISO timestamps instead of raw epoch ms
+  },
   pino.transport({
     targets: [
       {
