@@ -16,6 +16,7 @@ import { roomManager } from '../../rooms/RoomManager';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { levenshteinDistance } from '../../utils/levenshtein';
 import { endRound } from '../../fsm/roundManager';
+import logger from '../../utils/logger';
 
 /**
  * Checks if all non-drawer and connected players have guessed the word correctly.
@@ -47,10 +48,11 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
   const result = chatMessageSchema.safeParse(payload);
 
   if (!result.success) {
-    console.log(
-      `[Chat] Invalid message payload from ${socket.id}: (from file messageHandlers.ts)`,
-      result.error.errors,
+    logger.warn(
+      { socketId: socket.id, errors: result.error.errors },
+      'Invalid chat message payload',
     );
+
     return; //Silently drop invalid payloads
   }
 
@@ -68,8 +70,9 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
 
   //RACE CONDITION GUARD: Drop delayed messages from old rounds
   if (result.data.roundId !== state.roundId) {
-    console.log(
-      `[Chat] Round Mismatch! Client sent: ${result.data.roundId}, Server expects: ${state.roundId} (from file messageHandlers.ts)`,
+    logger.warn(
+      { clientRoundId: result.data.roundId, serverRoundId: state.roundId },
+      'Chat message round ID mismatch',
     );
     return;
   }

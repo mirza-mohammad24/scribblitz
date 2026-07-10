@@ -20,6 +20,7 @@ import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
 import { generateHint, getRandomHiddenIndex } from '../utils/hintUtils';
 import { getSocketByUserId } from '../socket/utils/getSocketByUserId';
 import { redis } from '../lib/redis';
+import logger from '../utils/logger';
 
 /**
  * Helper utility to pick a random item from an array. Returns undefined if the array is empty.
@@ -298,7 +299,7 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   // ==========================================
   redis
     .del(`room:${roomCode}:canvas`)
-    .catch((err) => console.error(`[Redis] Failed to clear canvas for room ${roomCode}:`, err));
+    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for room'));
 
   room.transitionState(GameState.ROUND_END);
 
@@ -358,9 +359,7 @@ export const endGame = (io: Server, roomCode: string): void => {
   // ==========================================
   redis
     .del(`room:${roomCode}:canvas`)
-    .catch((err) =>
-      console.error(`[Redis] Failed to clear canvas for ended room ${roomCode}:`, err),
-    );
+    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for ended room'));
 
   room.transitionState(GameState.GAME_END);
 
@@ -398,9 +397,7 @@ export const abortGame = (io: Server, roomCode: string): void => {
   // Redis cleanup
   redis
     .del(`room:${roomCode}:canvas`)
-    .catch((err) =>
-      console.error(`[Redis] Failed to clear canvas for aborted room ${roomCode}:`, err),
-    );
+    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for aborted room'));
 
   // Transition to GAME_END internally
   room.transitionState(GameState.GAME_END);
@@ -410,5 +407,5 @@ export const abortGame = (io: Server, roomCode: string): void => {
     reason: 'insufficient_players',
   });
 
-  console.log(`[FSM] Game ABORTED in room ${roomCode} — insufficient players`);
+  logger.info({ roomCode }, 'Game aborted — insufficient players');
 };

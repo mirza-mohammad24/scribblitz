@@ -29,6 +29,28 @@ import { serializeRoom } from './socket/utils/serializeRoom';
 import { clearTimer, clearIntervalTimer } from './utils/timerCleanUp';
 import { redis } from './lib/redis';
 import { emitError } from './utils/emitError';
+import logger from './utils/logger';
+
+// ==========================================
+// FLIGHT DATA RECORDER: CRASH HANDLERS
+// ==========================================
+// These listeners act as a last line of defense. If a fatal error occurs that
+// would normally kill the Node.js process instantly, these catch it, log the
+// exact stack trace to our Pino file, and then safely shut down the server.
+
+// 1. Catch synchronous errors
+process.on('uncaughtException', (err) => {
+  logger.fatal({ err }, 'FATAL: uncaughtException — process crashing');
+  //Give some time to pino to do its job
+  setTimeout(() => process.exit(1), 100);
+});
+
+// 2. Catch asynchronous errors
+process.on('unhandledRejection', (reason, promise) => {
+  logger.fatal({ reason, promise }, 'FATAL: unhandledRejection — process crashing');
+  setTimeout(() => process.exit(1), 100);
+});
+
 interface SocketData {
   userId: string;
   roomCode?: string;
@@ -112,11 +134,10 @@ io.on('connection', (socket: Socket) => {
   if (!userId) return;
 
   // Log new connections with user ID for better traceability in logs
-  console.log(`[Socket] User Connected: ${userId} (from file server.ts)`);
+  logger.info({ userId }, 'User connected');
+
   // Connection count logging
-  console.log(
-    `[Socket] Connected: ${userId} | Total online: ${io.sockets.sockets.size} (from file server.ts)`,
-  );
+  logger.info({ userId, totalOnline: io.sockets.sockets.size }, 'User connected');
 
   /* =====================================================================
    * CONNECTION ARCHITECTURE & EDGE CASE HANDLING
@@ -156,9 +177,7 @@ io.on('connection', (socket: Socket) => {
     const room = roomManager.getRoom(expectedRoom);
     // If the room doesn't exist (e.g., server restarted) OR the user isn't in it
     if (!room || !room.getState().players.has(userId)) {
-      console.log(
-        `[Socket] Rejecting ghost connection for user ${userId} to dead room ${expectedRoom} (from file server.ts)`,
-      );
+      logger.info({ userId, expectedRoom }, 'Rejecting ghost connection to dead room');
 
       // Tell the frontend exactly what happened. The frontend's `isFatal`
       // logic will catch this, purge localStorage, and boot them to the Splash screen.
@@ -225,9 +244,7 @@ io.on('connection', (socket: Socket) => {
         }
 
         // Log reconnection event with user ID and room code for better traceability in logs
-        console.log(
-          `[Socket] User Reconnected: ${userId} to Room: ${state.roomCode} (from file server.ts)`,
-        );
+        logger.info({ userId, roomCode: state.roomCode }, 'User reconnected to room');
 
         //tell the other players (all sockets except the rejoining player) in the room
         // that this player has rejoined
@@ -264,8 +281,9 @@ io.on('connection', (socket: Socket) => {
   // DISCONNECT & GRACE PERIOD LOGIC
   // ---------------------------------------------------------
   socket.on('disconnect', () => {
-    console.log(
-      `[Socket] Disconnected: ${userId} | Remaining: ${Math.max(0, io.sockets.sockets.size - 1)} (from file server.ts)`,
+    logger.info(
+      { userId, remaining: Math.max(0, io.sockets.sockets.size - 1) },
+      'User disconnected',
     );
 
     //Use O(1) lookup to find the room code associated with this user ID safely
@@ -336,9 +354,7 @@ io.on('connection', (socket: Socket) => {
         }
 
         // Log permanent removal after grace period with user ID and room code for better traceability in logs
-        console.log(
-          `[Socket] Player ${userId} permanently purged from Room: ${roomCode} due to timeout (from file server.ts)`,
-        );
+        logger.info({ userId, roomCode }, 'Player permanently purged after grace period timeout');
 
         const remainingPlayers = Array.from(roomCheck.getState().players.values()).filter(
           (p) => p.isConnected,
@@ -351,9 +367,7 @@ io.on('connection', (socket: Socket) => {
 
         if (remainingPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && stillActive) {
           //Too few players to continue playing - abort the game immediately (server emit is handled in abortGame function)
-          console.log(
-            `[Socket] Aborting game in Room: ${roomCode} due to insufficient players after timeout (from file server.ts)`,
-          );
+          logger.info({ roomCode }, 'Aborting game — insufficient players after timeout');
           abortGame(io, roomCode);
         }
       }
@@ -383,22 +397,22 @@ const PORT = process.env.PORT || 3001;
 redis
   .connect()
   .then(() => {
-    console.log('[Redis] Connected successfully (from file server.ts)');
+    logger.info('Redis connected successfully');
     httpServer.listen(PORT, () => {
-      console.log(`Scribblitz Game Server running on port ${PORT} (from file server.ts)`);
+      logger.info({ port: PORT }, 'Scribblitz game server running');
     });
   })
   .catch((err) => {
-    console.error('[Redis] Fatal connection error (from file server.ts):', err);
+    logger.fatal({ err }, 'Redis fatal connection error');
   });
 
 // Graceful Shutdown to prevent Memory Leaks from orphan disconnect timers
 process.on('SIGTERM', () => {
-  console.log('[Server] SIGTERM received. Cleaning up disconnect timers...');
+  logger.info('SIGTERM received — cleaning up disconnect timers');
   disconnectTimers.forEach((timer) => clearTimeout(timer));
   disconnectTimers.clear();
   httpServer.close(() => {
-    console.log('[Server] Closed gracefully.');
+    logger.info('Server closed gracefully');
     process.exit(0);
   });
 });

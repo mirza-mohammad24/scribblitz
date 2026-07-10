@@ -19,6 +19,7 @@ import {
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { redis } from '../../lib/redis';
 import { roomManager } from '../../rooms/RoomManager';
+import logger from '../../utils/logger';
 
 // In-memory rate limiting map (cleared on disconnect)
 const syncRateLimitMap = new Map<string, number>();
@@ -42,9 +43,9 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       //1. Validate: Protect the server from malformed or malicious data that could cause crashes or exploits
       const result = CanvasBatchSchema.safeParse(payload);
       if (!result.success) {
-        console.warn(
-          `[Canvas] Invalid batch payload from ${socket.id} (from file canvasHandlers.ts):`,
-          result.error.errors,
+        logger.warn(
+          { socketId: socket.id, errors: result.error.errors },
+          'Invalid canvas batch payload',
         );
         return;
       }
@@ -67,8 +68,10 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         state.currentDrawerId !== socket.data.userId ||
         (state.gameState !== GameState.DRAWING && state.gameState !== GameState.PARALLEL_DRAWING)
       ) {
-        console.warn(`[Security] Blocked unauthorized drawing from ${socket.data.userId} in room ${roomCode} 
-          (from file canvasHandlers.ts)`);
+        logger.warn(
+          { userId: socket.data.userId, roomCode },
+          'Blocked unauthorized drawing attempt',
+        );
         return;
       }
 
@@ -92,10 +95,10 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       pipeline.expire(streamKey, 60 * 60 * 2); // 2 hour TTL: Auto-delete dead rooms
 
       pipeline.exec().catch((err) => {
-        console.error('[Redis] Failed to append canvas batch (from file canvasHandlers.ts): ', err);
+        logger.error({ err, roomCode }, 'Failed to append canvas batch to Redis');
       });
     } catch (error) {
-      console.error('[Canvas] Handler fatal error (from file canvasHandlers.ts): ', error);
+      logger.error({ err: error }, 'Canvas batch handler fatal error');
     }
   });
 
@@ -108,13 +111,14 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
   // rate limiting to prevent abuse, and security checks to ensure that only legitimate requests
   // from room members are processed.
   socket.on(ClientEvents.CANVAS_SYNC_REQUEST, async (payload: unknown) => {
+    let roomCode: string | undefined;
     try {
       //Zod validation for the sync request payload
       const result = CanvasSyncRequestSchema.safeParse(payload);
       if (!result.success) {
-        console.warn(
-          `[Canvas] Invalid sync request from ${socket.id} (from file canvasHandlers.ts):`,
-          result.error.errors,
+        logger.warn(
+          { socketId: socket.id, errors: result.error.errors },
+          'Invalid canvas sync request',
         );
         return;
       }
@@ -123,20 +127,16 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       const now = Date.now();
       const lastSync = syncRateLimitMap.get(socket.id) ?? 0;
       if (now - lastSync < GAME_CONSTANTS.SYNC_RATE_LIMIT_MS) {
-        console.warn(
-          `[Canvas] Sync request rate limit exceeded for ${socket.id} (from file canvasHandlers.ts)`,
-        );
+        logger.warn({ socketId: socket.id }, 'Canvas sync request rate limit exceeded');
         return;
       }
       syncRateLimitMap.set(socket.id, now);
 
-      const { roomCode } = result.data; //safe data to work with
+      roomCode = result.data.roomCode;
 
       //Room membership check: Ensure the requester is actually in the room they're asking to sync
       if (socket.data.roomCode !== roomCode) {
-        console.warn(
-          `[Security] Blocked unauthorized sync request from ${socket.id} for room ${roomCode} (from file canvasHandlers.ts)`,
-        );
+        logger.warn({ socketId: socket.id, roomCode }, 'Blocked unauthorized sync request');
         return;
       }
 
@@ -147,9 +147,7 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
 
       if (!rawStream || rawStream.length === 0) {
         socket.emit(ServerEvents.CANVAS_HISTORY, { strokes: [] }); //No history, send empty array
-        console.warn(
-          `[Canvas] No history found for room ${roomCode} during sync request (from file canvasHandlers.ts)`,
-        );
+        logger.warn({ roomCode }, 'No canvas history found during sync request');
         return;
       }
 
@@ -171,19 +169,17 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
           );
 
           if (!validatedBatchResult.success) {
-            console.warn(
-              `[Canvas] Invalid batch in history stream for room ${roomCode} (from file canvasHandlers.ts): `,
-              validatedBatchResult.error.errors,
+            logger.warn(
+              { roomCode, errors: validatedBatchResult.error.errors },
+              'Invalid batch found in history stream',
             );
+
             return [];
           }
 
           return validatedBatchResult.data; //This is the array of strokes from this batch
         } catch (err) {
-          console.error(
-            '[Redis] Failed to parse history batch (from file canvasHandlers.ts): ',
-            err,
-          );
+          logger.error({ err, roomCode }, 'Failed to parse history batch');
           return []; //Skip malformed entries but keep going
         }
       });
@@ -191,11 +187,15 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
       //3. Send the entire history back to the requester
       socket.emit(ServerEvents.CANVAS_HISTORY, { strokes: historyStrokes });
       //log it
-      console.log(
-        `[Canvas] Sent history of ${historyStrokes.length} strokes to ${socket.id} for room ${roomCode} (from file canvasHandlers.ts)`,
+      logger.info(
+        { strokeCount: historyStrokes.length, socketId: socket.id, roomCode },
+        'Sent canvas history to client',
       );
     } catch (error) {
-      console.error('[Canvas] History sync fatal error (from file canvasHandlers.ts): ', error);
+      logger.error(
+        { err: error, socketId: socket.id, roomCode },
+        'Canvas history sync fatal error',
+      );
     }
   });
 
@@ -205,8 +205,9 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
   // current drawer to clear the canvas if they want to start fresh, while ensuring that only authorized
   // users can perform this action.
   socket.on(ClientEvents.CANVAS_CLEAR, async () => {
+    let roomCode: string | undefined;
     try {
-      const roomCode = socket.data.roomCode;
+      roomCode = socket.data.roomCode;
       if (!roomCode) return;
 
       const room = roomManager.getRoom(roomCode);
@@ -217,9 +218,8 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         state.currentDrawerId !== socket.data.userId ||
         (state.gameState !== GameState.DRAWING && state.gameState !== GameState.PARALLEL_DRAWING)
       ) {
-        console.warn(
-          `[Security] Blocked unauthorized canvas clear from ${socket.data.userId} in room ${roomCode} (from file canvasHandlers.ts)`,
-        );
+        logger.warn({ userId: socket.data.userId, roomCode }, 'Blocked unauthorized canvas clear');
+
         return;
       }
 
@@ -228,7 +228,7 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
 
       io.to(roomCode).emit(ServerEvents.CANVAS_CLEARED);
     } catch (error) {
-      console.error('[Canvas] Clear handler error (from file canvasHandlers.ts): ', error);
+      logger.error({ err: error, roomCode }, 'Canvas clear handler error');
     }
   });
 
@@ -240,8 +240,9 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
   // the most recent batch of strokes, identifies the last stroke's ID, removes it from the stream,
   // and notifies all clients to remove that stroke from their canvases.
   socket.on(ClientEvents.CANVAS_UNDO, async () => {
+    let roomCode: string | undefined;
     try {
-      const roomCode = socket.data.roomCode;
+      roomCode = socket.data.roomCode;
       if (!roomCode) return;
 
       const room = roomManager.getRoom(roomCode);
@@ -253,9 +254,7 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         state.currentDrawerId !== socket.data.userId ||
         (state.gameState !== GameState.DRAWING && state.gameState !== GameState.PARALLEL_DRAWING)
       ) {
-        console.warn(
-          `[Security] Blocked unauthorized canvas undo from ${socket.data.userId} in room ${roomCode} (from file canvasHandlers.ts)`,
-        );
+        logger.warn({ userId: socket.data.userId, roomCode }, 'Blocked unauthorized canvas undo');
         return;
       }
 
@@ -292,7 +291,7 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
 
       io.to(roomCode).emit(ServerEvents.CANVAS_UNDONE, { strokeId: strokeIdToUndo });
     } catch (error) {
-      console.error('[Canvas] Undo Handler error (from file canvasHandlers.ts): ', error);
+      logger.error({ err: error, roomCode }, 'Canvas undo handler error');
     }
   });
 };

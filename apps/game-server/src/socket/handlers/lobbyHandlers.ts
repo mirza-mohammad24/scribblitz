@@ -19,6 +19,7 @@ import { emitError } from '../../utils/emitError';
 import { serializeRoom } from '../utils/serializeRoom';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { endRound, abortGame } from '../../fsm/roundManager';
+import logger from '../../utils/logger';
 
 /**
  * Handles the creation of a new game room. Validates input,
@@ -98,9 +99,7 @@ export const handleCreateRoom = (io: Server, socket: Socket) => (rawPayload: unk
   roomManager.addPlayer(roomState.roomCode, player);
 
   //logging for debugging and analytics
-  console.log(
-    `[Lobby] User ${payload.username} created room: ${roomState.roomCode} (from file lobbyHandlers.ts)`,
-  );
+  logger.info({ username: payload.username, roomCode: roomState.roomCode }, 'User created room');
 
   //Socket infra
   socket.join(roomState.roomCode);
@@ -235,10 +234,7 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
   room.updateConfig(result.data);
 
   //Logging for debug
-  console.log(
-    `[Lobby] Host updated config for room ${roomCode}: (from file lobbyHandlers.ts)`,
-    result.data,
-  );
+  logger.info({ roomCode, config: result.data }, 'Host updated room config');
 
   //Client Communication: Broadcast the new config so all UI sliders snap to the new values
   io.to(roomCode).emit(ServerEvents.ROOM_CONFIG_UPDATED, { config: room.getState().config });
@@ -285,18 +281,14 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
   // If the game is active and the player leaving is the drawer, end the round immediately (cumulative check above).
   // The leaving player's socket has already left the room, so they won't receive this.
   if (wasDrawerInActiveGame) {
-    console.log(
-      `[Game] Active drawer ${userId} left the room. Aborting turn. (from file lobbyHandlers.ts)`,
-    );
+    logger.info({ userId, roomCode }, 'Active drawer left room — aborting turn');
     endRound(io, roomCode, 'drawer-left');
   }
 
   //Now safely remove the player from the server memory.
   const removeResult = roomManager.removePlayer(roomCode, userId);
 
-  console.log(
-    `[Lobby] User ${userId} voluntarily left room: ${roomCode} (from file lobbyHandlers.ts)`,
-  );
+  logger.info({ userId, roomCode }, 'User voluntarily left room');
 
   //If the room was destroyed do nothing else or else we execute below if
 
@@ -309,9 +301,7 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
 
     //Broadcast the host reassignment (handled by removePlayer) cleanly without violently refreshing the whole UI
     if (removeResult.wasHost && removeResult.newHostId) {
-      console.log(
-        `[Lobby] Host left. New host assigned for room ${roomCode} is ${removeResult.newHostId} (from file lobbyHandlers.ts)`,
-      );
+      logger.info({ roomCode, newHostId: removeResult.newHostId }, 'Host left — new host assigned');
       io.to(roomCode).emit(ServerEvents.HOST_CHANGED, { newHostId: removeResult.newHostId });
     }
 

@@ -9,6 +9,7 @@
  */
 
 import { GameState } from '@scribblitz/types';
+import logger from '../utils/logger';
 
 //This will map out exactly which states are allowed to transition to which other states.
 type TransitionMap = Record<GameState, readonly GameState[]>;
@@ -106,6 +107,6 @@ export class GameFSM {
 
   //can be overridden by subclasses to perform side effects on state transitions, such as logging or analytics
   protected onTransition(from: GameState, to: GameState): void {
-    console.log(`[FSM] State changed: ${from} -> ${to}`);
+    logger.info({ from, to }, 'FSM state changed');
   }
 }
