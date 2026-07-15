@@ -331,6 +331,8 @@ io.on('connection', (socket: Socket) => {
 
     //60 second cleanup timeout
     const timer = setTimeout(() => {
+      disconnectTimers.delete(userId); //Clean up the timer reference from the map after execution
+
       const roomCheck = roomManager.getRoom(roomCode);
       if (!roomCheck) return;
 
@@ -371,8 +373,6 @@ io.on('connection', (socket: Socket) => {
           void abortGame(io, roomCode);
         }
       }
-
-      disconnectTimers.delete(userId); //Clean up the timer reference from the map after execution
     }, 60_000);
 
     // Store the disconnect timer so it can be cleared if the user reconnects within the grace period
@@ -404,15 +404,27 @@ redis
   })
   .catch((err) => {
     logger.fatal({ err }, 'Redis fatal connection error');
+    process.exit(1);
   });
 
-// Graceful Shutdown to prevent Memory Leaks from orphan disconnect timers
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received — cleaning up disconnect timers');
+const gracefulShutdown = async (signal: string) => {
+  logger.info(`${signal} received — cleaning up disconnect timers and closing connections`);
   disconnectTimers.forEach((timer) => clearTimeout(timer));
   disconnectTimers.clear();
-  httpServer.close(() => {
+
+  httpServer.close(async () => {
+    try {
+      // FIX: Cleanly shut down the Redis connection to prevent socket leaks in the DB
+      await redis.quit();
+      logger.info('Redis connection closed.');
+    } catch (err) {
+      logger.error({ err }, 'Error closing Redis connection');
+    }
     logger.info('Server closed gracefully');
     process.exit(0);
   });
-});
+};
+
+// Graceful Shutdown to prevent Memory Leaks from orphan disconnect timers
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));

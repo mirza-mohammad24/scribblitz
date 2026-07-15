@@ -6,6 +6,8 @@
 
 import { Player, RoomConfig, ErrorCode } from '@scribblitz/types';
 import { Room, ServerRoomState } from './Room';
+import { redis } from '../lib/redis';
+import logger from '../utils/logger';
 
 export class RoomManager {
   // Using a Map for O(1) lookups and efficient addition/removal of rooms
@@ -55,7 +57,21 @@ export class RoomManager {
 
     if (!room) return;
 
+    //Timer cleanup
     room.cleanup();
+
+    // Clean up the player index for ALL players who were in this room
+    // so they don't get stuck as "ghosts" in the RoomManager
+    for (const playerId of room.getState().players.keys()) {
+      this.playerRoomIndex.delete(playerId);
+    }
+
+    // Delete the Redis canvas stream to free up database RAM
+    // (Using fire-and-forget catch so we don't block room deletion if Redis hiccups)
+    redis.del(`room:${roomCode}:canvas`).catch((err: Error) => {
+      logger.error({ err, roomCode }, 'Failed to cleanup Redis canvas for deleted room');
+    });
+
     this.rooms.delete(roomCode);
   }
 
