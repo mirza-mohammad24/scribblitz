@@ -371,6 +371,16 @@ export const HomeScreen = ({ onActionCreate, onActionJoin }: HomeScreenProps) =>
           <motion.div
             animate={{ paddingBottom: isKeyboardOpen ? '2.5rem' : '1.5rem' }}
             transition={{ paddingBottom: { type: 'spring', damping: 25, stiffness: 200 } }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.6 }}
+            onDragEnd={(_, info) => {
+              // Dismiss if dragged down far enough, OR flicked down fast enough
+              // even without much distance — matches native bottom-sheet feel.
+              if (info.offset.y > 100 || info.velocity.y > 500) {
+                setShowMobileCard(false);
+              }
+            }}
             className="bg-white/95 dark:bg-discord-card/95 backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 rounded-t-[2.5rem] md:rounded-4xl border-t-4 border-l-4 border-r-4 md:border-b-4 border-gray-200 dark:border-discord-main shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] md:dark:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex flex-col gap-6"
           >
             {/* Mobile swipe-down drag handle */}

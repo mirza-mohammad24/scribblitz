@@ -292,7 +292,7 @@ export const ArenaChat = () => {
           whileTap={{ scale: 0.95 }}
           type="submit"
           disabled={isDrawer || !message.trim()}
-          className="shrink-0 bg-green-500 dark:bg-neon-blue hover:bg-green-600 text-white px-4 rounded-xl font-black disabled:opacity-50 border-b-4 border-green-700 dark:border-blue-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center"
+          className="shrink-0 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white px-4 rounded-xl font-black disabled:opacity-50 border-b-4 border-green-700 dark:border-blue-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center"
         >
           <SendHorizontal size={18} strokeWidth={2.5} />
         </motion.button>

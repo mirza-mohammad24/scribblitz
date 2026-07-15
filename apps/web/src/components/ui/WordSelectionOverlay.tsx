@@ -130,7 +130,7 @@ export const WordSelectionOverlay = ({
                   key={word}
                   variants={itemVariants}
                   onClick={() => onSelect(word)}
-                  className={`w-full bg-green-500 dark:bg-neon-blue text-white px-4 py-3.5 md:py-4 rounded-2xl font-black border-b-[5px] border-green-700 dark:border-blue-900 hover:bg-green-600 dark:hover:bg-blue-600 hover:-translate-y-1 hover:border-b-[6px] active:border-b-0 active:translate-y-1 transition-all shadow-sm whitespace-normal wrap-break-word leading-tight ${textSizeClass}`}
+                  className={`w-full bg-green-500 dark:bg-neon-blue text-white px-4 py-3.5 md:py-4 rounded-2xl font-black border-b-[5px] border-green-700 dark:border-blue-900 hover:bg-green-600 dark:hover:bg-neon-blue-hover hover:-translate-y-1 hover:border-b-[6px] active:border-b-0 active:translate-y-1 transition-all shadow-sm whitespace-normal wrap-break-word leading-tight ${textSizeClass}`}
                 >
                   {word}
                 </motion.button>
