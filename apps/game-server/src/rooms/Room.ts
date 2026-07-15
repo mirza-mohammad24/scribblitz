@@ -64,7 +64,7 @@ export class Room {
       currentHint: '',
       wordChoices: null,
       correctGuessers: new Set(),
-      roundStartTime: null, //now not used for the countdown we are using a synced hook
+      phaseEndTime: null, //now not used for the countdown we are using a synced hook
       wordSelectionTimer: null,
       drawingTimer: null,
       intermissionTimer: null,
@@ -230,7 +230,7 @@ export class Room {
     this.state.currentHint = '';
     this.state.wordChoices = null;
     this.state.correctGuessers.clear();
-    this.state.roundStartTime = null; //now not used for the countdown we are using a synced hook
+    this.state.phaseEndTime = null;
 
     // Reset all player scores and guess flags
     this.state.players.forEach((p) => {

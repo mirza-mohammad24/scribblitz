@@ -43,34 +43,39 @@ const pickRandomItem = <T>(array: T[]): T | undefined => {
  * @param roomCode The unique code identifying the game room
  */
 export const startGame = (io: Server, roomCode: string): void => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
+  try {
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
 
-  const state = room.getState();
-  if (state.gameState !== GameState.LOBBY) return; //Guard: prevents double-start crash
-  if (state.players.size < GAME_CONSTANTS.MIN_PLAYERS) return;
+    const state = room.getState();
+    if (state.gameState !== GameState.LOBBY) return; //Guard: prevents double-start crash
+    if (state.players.size < GAME_CONSTANTS.MIN_PLAYERS) return;
 
-  //Transition FSM TO ROUND_STARTING and validate
-  const transitioned = room.transitionState(GameState.ROUND_STARTING);
-  if (!transitioned) {
-    logger.error({ roomCode }, 'startGame: failed to transition to ROUND_STARTING');
-    return;
+    //Transition FSM TO ROUND_STARTING and validate
+    const transitioned = room.transitionState(GameState.ROUND_STARTING);
+    if (!transitioned) {
+      logger.error({ roomCode }, 'startGame: failed to transition to ROUND_STARTING');
+      return;
+    }
+
+    state.currentRound = 0;
+    state.roundId = 0;
+
+    //Reset all players
+    state.players.forEach((p) => {
+      p.score = 0;
+    });
+
+    //Broadcast FSM change to the whole room
+    io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
+      state: GameState.ROUND_STARTING,
+    });
+
+    startNextRound(io, roomCode);
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'FSM Crash prevented in startGame');
+    void abortGame(io, roomCode);
   }
-
-  state.currentRound = 0;
-  state.roundId = 0;
-
-  //Reset all players
-  state.players.forEach((p) => {
-    p.score = 0;
-  });
-
-  //Broadcast FSM change to the whole room
-  io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
-    state: GameState.ROUND_STARTING,
-  });
-
-  startNextRound(io, roomCode);
 };
 
 /**
@@ -84,104 +89,122 @@ export const startGame = (io: Server, roomCode: string): void => {
  * @param roomCode The unique code identifying the game room
  */
 export const startNextRound = (io: Server, roomCode: string): void => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
+  try {
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
 
-  const state = room.getState();
+    const state = room.getState();
 
-  //Guard: Ensure we have enough players to start the next round
-  const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
-  if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS) {
-    // If we don't have enough active players, abort the game immediately
-    void abortGame(io, roomCode); // Fire-and-forget since abortGame is async
-    return;
-  }
-
-  // FSM Transition for more than one Round - If we're starting the next round after the first one,
-  // we need to transition the FSM back to ROUND_STARTING
-  if (state.gameState === GameState.ROUND_END) {
-    const transitioned = room.transitionState(GameState.ROUND_STARTING);
-    if (!transitioned) {
-      logger.error(
-        { roomCode },
-        'startNextRound: failed to transition ROUND_END -> ROUND_STARTING',
-      );
+    //Guard: Ensure we have enough players to start the next round
+    const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
+    if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS) {
+      // If we don't have enough active players, abort the game immediately
+      void abortGame(io, roomCode); // Fire-and-forget since abortGame is async
       return;
     }
-    io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
-      state: GameState.ROUND_STARTING,
-    });
-  }
-  state.roundId++;
-  const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
 
-  state.currentRound++;
-  state.correctGuessers.clear();
-  state.roundWinner = null;
-  // Reset per-round guess flag on every player so serialized state is always accurate
-  state.players.forEach((p) => {
-    p.hasGuessedCorrectly = false;
-  });
-
-  //Select the next drawer (simple round-robin based on map insertion order)
-  // We MUST filter out disconnected players.
-  // If we pick a disconnected player, the AFK timer will auto-select a word,
-  // and the game will stall for 60-180 seconds on an empty canvas.
-  const connectedPlayerIds = [...state.players.entries()]
-    .filter(([, p]) => p.isConnected)
-    .map(([id]) => id);
-
-  // Fallback to all players if somehow the connected array is empty (though the MIN_PLAYERS guard above prevents this)
-  const activePool = connectedPlayerIds.length > 0 ? connectedPlayerIds : [...state.players.keys()];
-
-  const drawerIndex = (state.currentRound - 1) % activePool.length;
-  state.currentDrawerId = activePool[drawerIndex] ?? null;
-
-  const wordPool = getWordPoolWithCustomPriority(
-    state.config.customWordList,
-    state.usedWords,
-    state.config.customWordsOnly ?? false,
-  );
-  state.wordChoices = pickRandomWords(wordPool, GAME_CONSTANTS.WORD_CHOICES_COUNT);
-
-  io.to(roomCode).emit(ServerEvents.ROUND_STARTING, {
-    round: state.currentRound,
-    totalRounds: state.config.roundCount,
-    drawerId: state.currentDrawerId,
-    roundId: state.roundId,
-  });
-
-  // Send word choices exclusively to the drawer's socket.
-  // If the drawer is disconnected, we emit nothing here — the AFK timer below
-  // will auto-select a word after WORD_SELECTION_TIMEOUT_SECONDS, so the game
-  // continues without any special handling needed.
-  if (state.currentDrawerId) {
-    const drawerSocket = getSocketByUserId(io, state.currentDrawerId, roomCode);
-    if (drawerSocket) {
-      drawerSocket.emit(ServerEvents.WORD_CHOICES, { words: state.wordChoices });
+    // FSM Transition for more than one Round - If we're starting the next round after the first one,
+    // we need to transition the FSM back to ROUND_STARTING
+    if (state.gameState === GameState.ROUND_END) {
+      const transitioned = room.transitionState(GameState.ROUND_STARTING);
+      if (!transitioned) {
+        logger.error(
+          { roomCode },
+          'startNextRound: failed to transition ROUND_END -> ROUND_STARTING',
+        );
+        return;
+      }
+      io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
+        state: GameState.ROUND_STARTING,
+      });
     }
-  }
+    state.roundId++;
+    const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
 
-  //CRITICAL: Always clear existing timers before starting a new one
-  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+    state.currentRound++;
+    state.correctGuessers.clear();
+    state.roundWinner = null;
+    // Reset per-round guess flag on every player so serialized state is always accurate
+    state.players.forEach((p) => {
+      p.hasGuessedCorrectly = false;
+    });
 
-  //Auto select a word with help of pickRandomItem if the drawer is AFK and doesn't pick one
-  state.wordSelectionTimer = setTimeout(() => {
-    const currentState = room.getState();
+    //Select the next drawer (simple round-robin based on map insertion order)
+    // We MUST filter out disconnected players.
+    // If we pick a disconnected player, the AFK timer will auto-select a word,
+    // and the game will stall for 60-180 seconds on an empty canvas.
+    const connectedPlayerIds = [...state.players.entries()]
+      .filter(([, p]) => p.isConnected)
+      .map(([id]) => id);
 
-    //GUARD: If the round has moved on, abort execution
-    if (currentState.roundId !== currentRoundId) return;
+    // Fallback to all players if somehow the connected array is empty (though the MIN_PLAYERS guard above prevents this)
+    const activePool =
+      connectedPlayerIds.length > 0 ? connectedPlayerIds : [...state.players.keys()];
 
-    if (!currentState.currentWord && currentState.wordChoices) {
-      const randomWord = pickRandomItem(currentState.wordChoices);
-      if (randomWord) {
-        selectWord(io, roomCode, randomWord);
-      } else {
-        //This should never happen since wordChoices should always have 3 words, but just in case...
-        endRound(io, roomCode, 'no_word_selected');
+    const drawerIndex = (state.currentRound - 1) % activePool.length;
+    state.currentDrawerId = activePool[drawerIndex] ?? null;
+
+    const wordPool = getWordPoolWithCustomPriority(
+      state.config.customWordList,
+      state.usedWords,
+      state.config.customWordsOnly ?? false,
+    );
+    state.wordChoices = pickRandomWords(wordPool, GAME_CONSTANTS.WORD_CHOICES_COUNT);
+
+    // ==========================================
+    // SERVER TIME ANCHOR INJECTION
+    // ==========================================
+    const timeRemainingMs = GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS * 1000;
+    state.phaseEndTime = Date.now() + timeRemainingMs;
+
+    io.to(roomCode).emit(ServerEvents.ROUND_STARTING, {
+      round: state.currentRound,
+      totalRounds: state.config.roundCount,
+      drawerId: state.currentDrawerId,
+      roundId: state.roundId,
+      timeRemainingMs, // Send the server-anchored countdown to clients for synced timer display
+    });
+
+    // Send word choices exclusively to the drawer's socket.
+    // If the drawer is disconnected, we emit nothing here — the AFK timer below
+    // will auto-select a word after WORD_SELECTION_TIMEOUT_SECONDS, so the game
+    // continues without any special handling needed.
+    if (state.currentDrawerId) {
+      const drawerSocket = getSocketByUserId(io, state.currentDrawerId, roomCode);
+      if (drawerSocket) {
+        drawerSocket.emit(ServerEvents.WORD_CHOICES, { words: state.wordChoices });
       }
     }
-  }, GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS * 1000);
+
+    //CRITICAL: Always clear existing timers before starting a new one
+    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+
+    //Auto select a word with help of pickRandomItem if the drawer is AFK and doesn't pick one
+    state.wordSelectionTimer = setTimeout(() => {
+      try {
+        const currentState = room.getState();
+
+        //GUARD: If the round has moved on, abort execution
+        if (currentState.roundId !== currentRoundId) return;
+
+        if (!currentState.currentWord && currentState.wordChoices) {
+          const randomWord = pickRandomItem(currentState.wordChoices);
+          if (randomWord) {
+            selectWord(io, roomCode, randomWord);
+          } else {
+            //This should never happen since wordChoices should always have 3 words, but just in case
+            void endRound(io, roomCode, 'no_word_selected');
+          }
+        }
+      } catch (error) {
+        logger.error({ err: error, roomCode }, 'FSM Crash prevented in AFK Timer');
+        void abortGame(io, roomCode);
+      }
+    }, GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS * 1000);
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'FSM Crash prevented in startNextRound');
+    void abortGame(io, roomCode); //Abort the game to prevent further issues
+  }
 };
 
 /**
@@ -194,95 +217,118 @@ export const startNextRound = (io: Server, roomCode: string): void => {
  * @param word The word selected by the drawer for the current round
  */
 export const selectWord = (io: Server, roomCode: string, word: string): void => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
+  try {
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
 
-  const state = room.getState();
-  //Guard
-  if (state.gameState !== GameState.ROUND_STARTING) return; //Can only select a word during the ROUND_STARTING phase
-  if (!state.wordChoices?.includes(word)) return; //Invalid word choice
+    const state = room.getState();
+    //Guard
+    if (state.gameState !== GameState.ROUND_STARTING) return; //Can only select a word during the ROUND_STARTING phase
+    if (!state.wordChoices?.includes(word)) return; //Invalid word choice
 
-  const transitioned = room.transitionState(GameState.DRAWING);
-  if (!transitioned) {
-    logger.error({ roomCode, word }, 'selectWord: failed to transition ROUND_STARTING -> DRAWING');
-    return;
-  }
-
-  const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
-  //Cancel the AFK timer since the drawer has made a selection
-  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
-
-  state.currentWord = word;
-
-  //ADD TO HISTORY
-  state.usedWords.push(word);
-  if (state.usedWords.length > GAME_CONSTANTS.MAX_RECENT_WORDS) {
-    //Maintain a rolling history of recently used words to prevent repeats
-    //Remove oldest word if we hit the cap
-    state.usedWords.shift();
-  }
-  state.roundStartTime = Date.now(); // this is now not being used for the countdown we are using a synced hook (can be deleted but I kept it for now in case we want to use it for something else later)
-
-  //Initialize hints for this round
-  state.revealedHintIndexes.clear();
-  state.currentHint = generateHint(word, state.revealedHintIndexes);
-
-  io.to(roomCode).emit(ServerEvents.ROUND_STARTED, {
-    drawerId: state.currentDrawerId,
-    wordLength: word.length,
-    wordHint: state.currentHint, //Emit the generated hint string to the clients
-    roundStartTime: state.roundStartTime, //this is now not being used for the countdown we are using a synced hook
-  });
-
-  //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase
-  state.hintTimer = setInterval(() => {
-    const latestState = room.getState();
-
-    //GUARD: Abort and clear if round has changed or word is missing
-    if (latestState.roundId !== currentRoundId || !latestState.currentWord) {
-      latestState.hintTimer = clearIntervalTimer(latestState.hintTimer);
+    const transitioned = room.transitionState(GameState.DRAWING);
+    if (!transitioned) {
+      logger.error(
+        { roomCode, word },
+        'selectWord: failed to transition ROUND_STARTING -> DRAWING',
+      );
       return;
     }
 
-    // Get the dynamic cap based on the room's difficulty
-    const hintCap =
-      GAME_CONSTANTS.DIFFICULTY_HINT_CAPS[latestState.config.difficulty] ??
-      GAME_CONSTANTS.DIFFICULTY_HINT_CAPS.medium;
+    const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
+    //Cancel the AFK timer since the drawer has made a selection
+    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+    state.currentWord = word;
 
-    const randomHiddenIndex = getRandomHiddenIndex(
-      latestState.currentWord,
-      latestState.revealedHintIndexes,
-      hintCap,
-    );
-
-    //If null we hit our reveal cap. Stop the timer and exit
-    if (randomHiddenIndex === null) {
-      latestState.hintTimer = clearIntervalTimer(latestState.hintTimer);
-      return;
+    //ADD TO HISTORY
+    state.usedWords.push(word);
+    if (state.usedWords.length > GAME_CONSTANTS.MAX_RECENT_WORDS) {
+      //Maintain a rolling history of recently used words to prevent repeats
+      //Remove oldest word if we hit the cap
+      state.usedWords.shift();
     }
 
-    //Reveal the new hint index and regenerate the hint string
-    latestState.revealedHintIndexes.add(randomHiddenIndex);
-    latestState.currentHint = generateHint(
-      latestState.currentWord,
-      latestState.revealedHintIndexes,
-    );
+    //Initialize hints for this round
+    state.revealedHintIndexes.clear();
+    state.currentHint = generateHint(word, state.revealedHintIndexes);
 
-    //Emit the updated hint to all clients in the room
-    io.to(roomCode).emit(ServerEvents.WORD_HINT_UPDATED, {
-      hint: latestState.currentHint,
+    // ==========================================
+    // SERVER TIME ANCHOR INJECTION
+    // ==========================================
+    const timeRemainingMs = state.config.drawTimeSeconds * 1000;
+    state.phaseEndTime = Date.now() + timeRemainingMs;
+
+    io.to(roomCode).emit(ServerEvents.ROUND_STARTED, {
+      drawerId: state.currentDrawerId,
+      wordLength: word.length,
+      wordHint: state.currentHint, //Emit the generated hint string to the clients
+      timeRemainingMs,
     });
-  }, GAME_CONSTANTS.HINT_INTERVAL_SECONDS * 1000);
 
-  //Server-enforced round timer (The actual drawing phase)
-  state.drawingTimer = setTimeout(() => {
-    const latestState = room.getState();
+    //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase
+    state.hintTimer = setInterval(() => {
+      try {
+        const latestState = room.getState();
 
-    //GUARD: Abort if this timer callback is stale (i.e. round has already ended or moved on)
-    if (latestState.roundId !== currentRoundId) return;
+        //GUARD: Abort and clear if round has changed or word is missing
+        if (latestState.roundId !== currentRoundId || !latestState.currentWord) {
+          latestState.hintTimer = clearIntervalTimer(latestState.hintTimer);
+          return;
+        }
 
-    endRound(io, roomCode, 'timer_expired');
-  }, state.config.drawTimeSeconds * 1000);
+        // Get the dynamic cap based on the room's difficulty
+        const hintCap =
+          GAME_CONSTANTS.DIFFICULTY_HINT_CAPS[latestState.config.difficulty] ??
+          GAME_CONSTANTS.DIFFICULTY_HINT_CAPS.medium;
+
+        const randomHiddenIndex = getRandomHiddenIndex(
+          latestState.currentWord,
+          latestState.revealedHintIndexes,
+          hintCap,
+        );
+
+        //If null we hit our reveal cap. Stop the timer and exit
+        if (randomHiddenIndex === null) {
+          latestState.hintTimer = clearIntervalTimer(latestState.hintTimer);
+          return;
+        }
+
+        //Reveal the new hint index and regenerate the hint string
+        latestState.revealedHintIndexes.add(randomHiddenIndex);
+        latestState.currentHint = generateHint(
+          latestState.currentWord,
+          latestState.revealedHintIndexes,
+        );
+
+        //Emit the updated hint to all clients in the room
+        io.to(roomCode).emit(ServerEvents.WORD_HINT_UPDATED, {
+          hint: latestState.currentHint,
+        });
+      } catch (error) {
+        logger.error({ err: error, roomCode }, 'FSM Crash prevented in hintTimer');
+        // Stop the timer so it doesn't crash again in 10 seconds
+        state.hintTimer = clearIntervalTimer(state.hintTimer);
+      }
+    }, GAME_CONSTANTS.HINT_INTERVAL_SECONDS * 1000);
+
+    //Server-enforced round timer (The actual drawing phase)
+    state.drawingTimer = setTimeout(() => {
+      try {
+        const latestState = room.getState();
+
+        //GUARD: Abort if this timer callback is stale (i.e. round has already ended or moved on)
+        if (latestState.roundId !== currentRoundId) return;
+
+        void endRound(io, roomCode, 'timer_expired');
+      } catch (error) {
+        logger.error({ err: error, roomCode }, 'FSM Crash prevented in drawingTimer');
+        void abortGame(io, roomCode);
+      }
+    }, state.config.drawTimeSeconds * 1000);
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'FSM Crash prevented in selectWord');
+    void abortGame(io, roomCode); //Abort the game to prevent further issues
+  }
 };
 
 /**
@@ -293,69 +339,86 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
  * @param reason The reason for ending the round
  */
 export const endRound = async (io: Server, roomCode: string, reason: string): Promise<void> => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
-
-  const state = room.getState();
-  if (state.gameState === GameState.ROUND_END) return; //Guard against multiple round end calls
-
-  const currentRoundId = state.roundId; // SNAPSHOT
-
-  // Transition FIRST — if illegal, abort before touching timers or Redis,
-  // so the room stays in its current, still-consistent state instead of
-  // a half-cleaned one.
-  const transitioned = room.transitionState(GameState.ROUND_END);
-  if (!transitioned) {
-    logger.error({ roomCode, reason }, 'endRound: illegal transition blocked, aborting cleanup');
-    return;
-  }
-
-  const isLastRound = state.currentRound >= state.config.roundCount;
-
-  // FULL LIFECYCLE CLEANUP: Kill all active phase timers
-  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
-  state.drawingTimer = clearTimer(state.drawingTimer);
-  state.hintTimer = clearIntervalTimer(state.hintTimer);
-  state.intermissionTimer = clearTimer(state.intermissionTimer);
-
-  // ==========================================
-  // REDIS CLEANUP: Wipe the canvas history so the Time Machine
-  // doesn't serve overlapping drawings for the next round.
-  // ==========================================
   try {
-    await redis.del(`room:${roomCode}:canvas`);
-  } catch (err) {
-    logger.error({ err, roomCode }, 'Failed to clear canvas for room');
-  }
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
 
-  // Emit round end event with correct word, reason, and updated scores
-  io.to(roomCode).emit(ServerEvents.ROUND_END, {
-    correctWord: state.currentWord,
-    reason,
-    scores: [...state.players.values()].map((p) => ({
-      id: p.id,
-      username: p.username,
-      score: p.score,
-    })),
-    isFinalRound: isLastRound,
-  });
+    const state = room.getState();
+    if (state.gameState === GameState.ROUND_END) return; //Guard against multiple round end calls
 
-  state.currentWord = null;
+    const currentRoundId = state.roundId; // SNAPSHOT
 
-  //Display scores briefly before starting the next round or ending the game
-  //Set the intermission timer
-  state.intermissionTimer = setTimeout(() => {
-    const latestState = room.getState();
-
-    // GUARD: Abort if this timer leaked
-    if (latestState.roundId !== currentRoundId) return;
-
-    if (latestState.currentRound >= latestState.config.roundCount) {
-      void endGame(io, roomCode); //end the game if we've reached the configured number of rounds
-    } else {
-      startNextRound(io, roomCode); //otherwise start the next round
+    // Transition FIRST — if illegal, abort before touching timers or Redis,
+    // so the room stays in its current, still-consistent state instead of
+    // a half-cleaned one.
+    const transitioned = room.transitionState(GameState.ROUND_END);
+    if (!transitioned) {
+      logger.error({ roomCode, reason }, 'endRound: illegal transition blocked, aborting cleanup');
+      return;
     }
-  }, GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS * 1000);
+
+    const isLastRound = state.currentRound >= state.config.roundCount;
+
+    // FULL LIFECYCLE CLEANUP: Kill all active phase timers
+    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+    state.drawingTimer = clearTimer(state.drawingTimer);
+    state.hintTimer = clearIntervalTimer(state.hintTimer);
+    state.intermissionTimer = clearTimer(state.intermissionTimer);
+
+    // ==========================================
+    // REDIS CLEANUP: Wipe the canvas history so the Time Machine
+    // doesn't serve overlapping drawings for the next round.
+    // ==========================================
+    try {
+      await redis.del(`room:${roomCode}:canvas`);
+    } catch (err) {
+      logger.error({ err, roomCode }, 'Failed to clear canvas for room');
+    }
+
+    // ==========================================
+    // SERVER TIME ANCHOR INJECTION
+    // ==========================================
+    const timeRemainingMs = GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS * 1000;
+    state.phaseEndTime = Date.now() + timeRemainingMs;
+
+    // Emit round end event with correct word, reason, and updated scores
+    io.to(roomCode).emit(ServerEvents.ROUND_END, {
+      correctWord: state.currentWord,
+      reason,
+      scores: [...state.players.values()].map((p) => ({
+        id: p.id,
+        username: p.username,
+        score: p.score,
+      })),
+      isFinalRound: isLastRound,
+      timeRemainingMs,
+    });
+
+    state.currentWord = null;
+
+    //Display scores briefly before starting the next round or ending the game
+    //Set the intermission timer
+    state.intermissionTimer = setTimeout(() => {
+      try {
+        const latestState = room.getState();
+
+        // GUARD: Abort if this timer leaked
+        if (latestState.roundId !== currentRoundId) return;
+
+        if (latestState.currentRound >= latestState.config.roundCount) {
+          void endGame(io, roomCode); //end the game if we've reached the configured number of rounds
+        } else {
+          startNextRound(io, roomCode); //otherwise start the next round
+        }
+      } catch (error) {
+        logger.error({ err: error, roomCode }, 'FSM Crash prevented in intermissionTimer');
+        void abortGame(io, roomCode);
+      }
+    }, GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS * 1000);
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'FSM Crash prevented in endRound');
+    void abortGame(io, roomCode);
+  }
 };
 
 /**
@@ -365,40 +428,44 @@ export const endRound = async (io: Server, roomCode: string, reason: string): Pr
  * @param roomCode The unique code identifying the game room
  */
 export const endGame = async (io: Server, roomCode: string): Promise<void> => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
-
-  const state = room.getState();
-  if (state.gameState === GameState.GAME_END) return; //Guard against multiple game end calls
-
-  const transitioned = room.transitionState(GameState.GAME_END);
-  if (!transitioned) {
-    logger.error({ roomCode }, 'endGame: illegal transition blocked, aborting cleanup');
-    return;
-  }
-
-  // FULL LIFECYCLE CLEANUP: Kill all active timers to prevent any future callbacks from
-  // executing after the game has ended intentionally or abruptly due to disconnections
-  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
-  state.drawingTimer = clearTimer(state.drawingTimer);
-  state.hintTimer = clearIntervalTimer(state.hintTimer);
-  state.intermissionTimer = clearTimer(state.intermissionTimer);
-
-  // ==========================================
-  // REDIS CLEANUP: Destroy the canvas history to free server RAM immediately
-  // ==========================================
   try {
-    await redis.del(`room:${roomCode}:canvas`);
-  } catch (err) {
-    logger.error({ err, roomCode }, 'Failed to clear canvas for ended room');
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
+
+    const state = room.getState();
+    if (state.gameState === GameState.GAME_END) return; //Guard against multiple game end calls
+
+    const transitioned = room.transitionState(GameState.GAME_END);
+    if (!transitioned) {
+      logger.error({ roomCode }, 'endGame: illegal transition blocked, aborting cleanup');
+      return;
+    }
+
+    // FULL LIFECYCLE CLEANUP: Kill all active timers to prevent any future callbacks from
+    // executing after the game has ended intentionally or abruptly due to disconnections
+    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+    state.drawingTimer = clearTimer(state.drawingTimer);
+    state.hintTimer = clearIntervalTimer(state.hintTimer);
+    state.intermissionTimer = clearTimer(state.intermissionTimer);
+
+    // ==========================================
+    // REDIS CLEANUP: Destroy the canvas history to free server RAM immediately
+    // ==========================================
+    try {
+      await redis.del(`room:${roomCode}:canvas`);
+    } catch (err) {
+      logger.error({ err, roomCode }, 'Failed to clear canvas for ended room');
+    }
+
+    const standings = [...state.players.values()]
+      .sort((a, b) => b.score - a.score)
+      .map((p, i) => ({ ...p, rank: i + 1 }));
+
+    // Emit game end event with final standings
+    io.to(roomCode).emit(ServerEvents.GAME_END, { standings });
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'FSM Crash prevented in endGame');
   }
-
-  const standings = [...state.players.values()]
-    .sort((a, b) => b.score - a.score)
-    .map((p, i) => ({ ...p, rank: i + 1 }));
-
-  // Emit game end event with final standings
-  io.to(roomCode).emit(ServerEvents.GAME_END, { standings });
 };
 
 /**
@@ -410,36 +477,40 @@ export const endGame = async (io: Server, roomCode: string): Promise<void> => {
  * @param roomCode The unique code identifying the game room
  */
 export const abortGame = async (io: Server, roomCode: string): Promise<void> => {
-  const room = roomManager.getRoom(roomCode);
-  if (!room) return;
-
-  const state = room.getState();
-
-  // Guard: only abort from active gameplay states
-  if (state.gameState === GameState.LOBBY || state.gameState === GameState.GAME_END) return;
-
-  const transitioned = room.transitionState(GameState.GAME_END);
-  if (!transitioned) {
-    logger.error({ roomCode }, 'abortGame: illegal transition blocked, aborting cleanup');
-    return;
-  }
-
-  // Kill ALL timers
-  state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
-  state.drawingTimer = clearTimer(state.drawingTimer);
-  state.hintTimer = clearIntervalTimer(state.hintTimer);
-  state.intermissionTimer = clearTimer(state.intermissionTimer);
-
-  // Redis cleanup
   try {
-    await redis.del(`room:${roomCode}:canvas`);
-  } catch (err) {
-    logger.error({ err, roomCode }, 'Failed to clear canvas for aborted room');
-  }
-  // Emit the ABORT signal
-  io.to(roomCode).emit(ServerEvents.GAME_ABORTED, {
-    reason: 'insufficient_players',
-  });
+    const room = roomManager.getRoom(roomCode);
+    if (!room) return;
 
-  logger.info({ roomCode }, 'Game aborted — insufficient players');
+    const state = room.getState();
+
+    // Guard: only abort from active gameplay states
+    if (state.gameState === GameState.LOBBY || state.gameState === GameState.GAME_END) return;
+
+    const transitioned = room.transitionState(GameState.GAME_END);
+    if (!transitioned) {
+      logger.error({ roomCode }, 'abortGame: illegal transition blocked, aborting cleanup');
+      return;
+    }
+
+    // Kill ALL timers
+    state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
+    state.drawingTimer = clearTimer(state.drawingTimer);
+    state.hintTimer = clearIntervalTimer(state.hintTimer);
+    state.intermissionTimer = clearTimer(state.intermissionTimer);
+
+    // Redis cleanup
+    try {
+      await redis.del(`room:${roomCode}:canvas`);
+    } catch (err) {
+      logger.error({ err, roomCode }, 'Failed to clear canvas for aborted room');
+    }
+    // Emit the ABORT signal
+    io.to(roomCode).emit(ServerEvents.GAME_ABORTED, {
+      reason: 'insufficient_players',
+    });
+
+    logger.info({ roomCode }, 'Game aborted — insufficient players');
+  } catch (error) {
+    logger.error({ err: error, roomCode }, 'Fatal error during game abort sequence');
+  }
 };

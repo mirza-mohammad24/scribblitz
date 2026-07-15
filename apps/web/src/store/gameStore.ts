@@ -48,7 +48,7 @@ interface GameStore {
   previousScores: Record<string, number>;
   chatMessages: ChatMessage[];
   drawTimeSeconds: number;
-  roundStartTime: number | null;
+  localPhaseEndTime: number | null;
   isGameAborted: boolean;
   abortReason: string | null;
 
@@ -79,7 +79,7 @@ const initialState = {
   previousScores: {},
   chatMessages: [],
   drawTimeSeconds: 0,
-  roundStartTime: null,
+  localPhaseEndTime: null,
   isGameAborted: false,
   abortReason: null,
 };

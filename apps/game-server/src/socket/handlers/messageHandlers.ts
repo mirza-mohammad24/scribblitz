@@ -120,10 +120,13 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
     player.hasGuessedCorrectly = true; // Keep Player object in sync with correctGuessers Set
 
     //Time-Decay Scoring Math (Early guesser gets more points)
-    const timeElapsed = Date.now() - (state.roundStartTime || Date.now());
-    const totalTime = state.config.drawTimeSeconds * 1000;
-    // 1.0 is instant and 0.0 is the last second
-    const timeRatio = Math.max(0, 1 - timeElapsed / totalTime);
+    //Derive the elapsed time using absolute end time and the configured round duration(draw time).
+    const phaseDurationMs = state.config.drawTimeSeconds * 1000;
+    const derivedStartTime = state.phaseEndTime ? state.phaseEndTime - phaseDurationMs : Date.now();
+    const timeElapsed = Date.now() - derivedStartTime;
+    // 1.0 is instant and 0.0 is the last second (hard cap between 0 and 1 to avoid negative points if
+    // the timer is off)
+    const timeRatio = Math.min(1, Math.max(0, 1 - timeElapsed / phaseDurationMs));
 
     //Base 100 points + up to 400 speed bonus points
     const pointsEarned = Math.floor(100 + 400 * timeRatio);

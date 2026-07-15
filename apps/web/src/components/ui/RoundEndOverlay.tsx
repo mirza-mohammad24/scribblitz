@@ -48,10 +48,11 @@ const itemVariants: Variants = {
  * @returns {React.JSX.Element} The animated round-end overlay JSX.
  */
 export const RoundEndOverlay = () => {
-  const { correctWord, roundEndReason, players, previousScores, isFinalRound } = useGameStore();
+  const { correctWord, roundEndReason, players, previousScores, isFinalRound, localPhaseEndTime } =
+    useGameStore();
 
   //Call the hook with current duration
-  const { progress } = useSyncedTimer(GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS);
+  const { progress } = useSyncedTimer(localPhaseEndTime, GAME_CONSTANTS.ROUND_END_DISPLAY_SECONDS);
 
   // Sort players by who gained the most points this round
   const sortedPlayers = [...players]

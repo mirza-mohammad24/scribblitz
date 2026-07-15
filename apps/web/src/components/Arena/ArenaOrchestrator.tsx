@@ -120,14 +120,31 @@ export const ArenaOrchestrator = () => {
       setRoomState(room);
     };
 
-    const handleRoomJoined = ({ room }: { room: SerializedRoom }) => {
+    const handleRoomJoined = ({
+      room,
+      serverNow,
+    }: {
+      room: SerializedRoom;
+      serverNow?: number;
+    }) => {
       // Save active room code to localStorage for smart reconnection
       localStorage.setItem(ACTIVE_ROOM_KEY, room.roomCode);
+
+      //RECONNECT DRIFT CALCULATION
+      let localPhaseEndTime = null;
+      const phaseEndsAt = room.phaseEndTime;
+
+      if (phaseEndsAt) {
+        const referenceTime = serverNow || Date.now();
+        const timeRemainingMs = Math.max(0, phaseEndsAt - referenceTime);
+        localPhaseEndTime = Date.now() + timeRemainingMs;
+      }
       // Reset chat messages on join to avoid showing stale messages from previous sessions
       setRoomState({
         ...room,
         chatMessages: [],
         totalRounds: room.config?.roundCount ?? 0,
+        localPhaseEndTime,
       });
     };
 
@@ -173,11 +190,13 @@ export const ArenaOrchestrator = () => {
       round,
       totalRounds,
       roundId,
+      timeRemainingMs,
     }: {
       drawerId: string;
       round: number;
       totalRounds: number;
       roundId: number;
+      timeRemainingMs: number;
     }) => {
       //Capture the current scores before the round starts so we can use
       //them for the "score delta" in the post-round overlay
@@ -201,6 +220,7 @@ export const ArenaOrchestrator = () => {
         gameState: GameState.ROUND_STARTING,
         players: resetPlayers, // Reset guessing status at the start of each round
         previousScores,
+        localPhaseEndTime: Date.now() + timeRemainingMs,
       });
     };
 
@@ -212,18 +232,18 @@ export const ArenaOrchestrator = () => {
       drawerId,
       wordLength,
       wordHint,
-      roundStartTime,
+      timeRemainingMs,
     }: {
       drawerId: string;
       wordLength: number;
       wordHint: string;
-      roundStartTime: number;
+      timeRemainingMs: number;
     }) => {
       setRoomState({
         currentDrawerId: drawerId,
         wordLength,
         currentHint: wordHint,
-        roundStartTime,
+        localPhaseEndTime: Date.now() + timeRemainingMs,
         gameState: GameState.DRAWING,
         wordChoices: [],
       });
@@ -234,11 +254,13 @@ export const ArenaOrchestrator = () => {
       reason,
       scores,
       isFinalRound,
+      timeRemainingMs,
     }: {
       correctWord: string;
       reason: string;
       scores: Array<{ id: string; username: string; score: number }>;
       isFinalRound?: boolean;
+      timeRemainingMs: number;
     }) => {
       const currentPlayers = useGameStore.getState().players;
 
@@ -253,6 +275,7 @@ export const ArenaOrchestrator = () => {
         scores,
         players: updatedPlayers,
         isFinalRound: isFinalRound || false,
+        localPhaseEndTime: Date.now() + timeRemainingMs,
       });
     };
 

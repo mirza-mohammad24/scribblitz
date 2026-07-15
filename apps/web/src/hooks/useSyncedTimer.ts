@@ -1,64 +1,71 @@
 /**
- * useSyncedTimer Hook
- * Provides a high-precision countdown timer driven by `requestAnimationFrame`.
- * Computes an absolute end-time once and derives remaining seconds and a smooth
- * progress percentage (100 → 0) on every animation frame, avoiding drift that
- * `setInterval`-based timers are prone to.
+ * Custom React hook for a synchronized countdown timer.
+ *
+ * The hook keeps the timer aligned to the server-provided end timestamp and
+ * uses `requestAnimationFrame` plus `performance.now()` to avoid drift from
+ * tab throttling or local clock changes.
  */
 
 import { useState, useEffect, useRef } from 'react';
 
 /**
- * Custom React hook that runs a frame-accurate countdown timer.
+ * Tracks a countdown that stays in sync with a server-defined phase end time.
  *
- * On mount (or when `durationSeconds` changes) the hook calculates an absolute
- * end-time and uses `requestAnimationFrame` to update both a whole-second
- * `timeLeft` value (for display) and a smooth `progress` percentage (for
- * progress-bar animations). When the timer reaches zero, the optional
- * `onExpire` callback is invoked exactly once.
+ * The hook derives the remaining time from `localPhaseEndTime`, updates the
+ * display state on each animation frame, and calls `onExpire` once when the
+ * countdown reaches zero.
  *
- * @param {number} durationSeconds - Total countdown length in seconds.
- * @param {() => void} [onExpire] - Optional callback fired when the timer reaches zero.
- * @returns {{ timeLeft: number, progress: number }} An object with `timeLeft` (whole seconds remaining) and `progress` (percentage 100 → 0).
+ * @param localPhaseEndTime - Absolute end timestamp from the server, in milliseconds.
+ * @param durationSeconds - Total countdown length in seconds.
+ * @param onExpire - Optional callback invoked when the timer expires.
+ * @returns An object containing `timeLeft` and `progress`.
  */
-export const useSyncedTimer = (durationSeconds: number, onExpire?: () => void) => {
+export const useSyncedTimer = (
+  localPhaseEndTime: number | null,
+  durationSeconds: number,
+  onExpire?: () => void,
+) => {
   const [timeLeft, setTimeLeft] = useState(durationSeconds);
   const [progress, setProgress] = useState(100);
 
-  // We use refs to hold values that don't need to trigger re-renders
-  const endTimeRef = useRef<number>(0);
+  // Store the animation frame id without triggering re-renders.
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    // Use the provided server startTime, or fallback to Date.now()
-    endTimeRef.current = Date.now() + durationSeconds * 1000;
+    // Do not start ticking until the server provides an anchor.
+    if (!localPhaseEndTime) return;
+
+    // Capture the remaining time at the moment this effect starts.
+    const initialRemainingMs = Math.max(0, localPhaseEndTime - Date.now());
+
+    // Lock in a monotonic timestamp so local clock changes do not affect the countdown.
+    const startTimeMono = performance.now();
 
     const updateTimer = () => {
-      const now = Date.now();
-      const remainingMs = Math.max(0, endTimeRef.current - now);
+      // Calculate elapsed time using the monotonic clock only.
+      const elapsedMono = performance.now() - startTimeMono;
+      const currentRemainingMs = Math.max(0, initialRemainingMs - elapsedMono);
 
-      // Calculate smooth percentage for the progress bar (100 down to 0)
-      const newProgress = (remainingMs / (durationSeconds * 1000)) * 100;
+      // Update the display state.
+      const newProgress =
+        durationSeconds > 0 ? (currentRemainingMs / (durationSeconds * 1000)) * 100 : 0;
       setProgress(newProgress);
+      setTimeLeft(Math.ceil(currentRemainingMs / 1000));
 
-      // Calculate clean whole seconds for text display
-      setTimeLeft(Math.ceil(remainingMs / 1000));
-
-      if (remainingMs > 0) {
+      // Continue until the timer expires.
+      if (currentRemainingMs > 0) {
         rafRef.current = requestAnimationFrame(updateTimer);
       } else {
         if (onExpire) onExpire();
       }
     };
 
-    // Kick off the loop
     rafRef.current = requestAnimationFrame(updateTimer);
 
-    // Cleanup loop on unmount
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [durationSeconds, onExpire]);
+  }, [localPhaseEndTime, durationSeconds, onExpire]);
 
   return { timeLeft, progress };
 };

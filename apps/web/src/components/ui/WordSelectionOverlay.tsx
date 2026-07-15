@@ -5,7 +5,7 @@
  * @description An animated overlay that prompts the drawer to choose a word
  * while giving other players a waiting state and synced timer feedback.
  */
-
+import { useGameStore } from '@/store/gameStore';
 import { useSyncedTimer } from '@/hooks/useSyncedTimer';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { motion, Variants } from 'framer-motion';
@@ -59,8 +59,12 @@ export const WordSelectionOverlay = ({
   wordChoices,
   onSelect,
 }: WordSelectionOverlayProps) => {
+  const { localPhaseEndTime } = useGameStore();
   // Calculate progress against the absolute server start time
-  const { progress, timeLeft } = useSyncedTimer(GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS);
+  const { progress } = useSyncedTimer(
+    localPhaseEndTime,
+    GAME_CONSTANTS.WORD_SELECTION_TIMEOUT_SECONDS,
+  );
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">

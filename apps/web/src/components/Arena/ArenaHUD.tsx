@@ -44,7 +44,9 @@ interface ArenaHUDProps {
  * @returns An animated `<span>` showing the remaining seconds.
  */
 const HUDTimer = ({ duration }: { duration: number }) => {
-  const { timeLeft } = useSyncedTimer(duration);
+  const { localPhaseEndTime } = useGameStore();
+
+  const { timeLeft } = useSyncedTimer(localPhaseEndTime, duration);
   const isDangerTime = timeLeft <= 10;
 
   return (

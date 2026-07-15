@@ -89,7 +89,7 @@ export interface RoomState {
   wordChoices: string[] | null;
   usedWords: string[]; //Tracks all words used in previous rounds to prevent repeats
   correctGuessers: Set<string>;
-  roundStartTime: number | null;
+  phaseEndTime: number | null;
   wordSelectionTimer: ReturnType<typeof setTimeout> | null;
   drawingTimer: ReturnType<typeof setTimeout> | null;
   intermissionTimer: ReturnType<typeof setTimeout> | null;
@@ -116,7 +116,7 @@ export interface SerializedRoom {
   revealedHintIndexes: number[];
   currentHint: string;
   correctGuessers: string[];
-  roundStartTime: number | null;
+  phaseEndTime: number | null;
   teamA?: string[];
   teamB?: string[];
   roundWinner?: 'team-a' | 'team-b' | null;
