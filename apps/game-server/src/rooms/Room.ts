@@ -9,6 +9,7 @@ import { RoomState, Player, RoomConfig, GameState, ErrorCode } from '@scribblitz
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { GameFSM } from '../fsm/GameFSM';
 import { clearTimer, clearIntervalTimer } from '../utils/timerCleanUp';
+import logger from '../utils/logger';
 
 /**
  * ServerRoomState extends the shared RoomState to include the server-side GameFSM.
@@ -194,11 +195,24 @@ export class Room {
 
   /**
    * Transitions the FSM to the next state and syncs the raw state data string.
+   * Never throws — an illegal transition is logged and safely ignored instead of
+   * propagating up through synchronous socket/timer handlers, which would otherwise
+   * crash the entire game server process for every active room, not just this one.
    * @param nextState The GameState to transition to.
+   * @returns true if the transition succeeded, false if it was illegal and was safely blocked.
    */
-  transitionState(nextState: GameState): void {
-    this.state.fsm.transition(nextState);
-    this.state.gameState = this.state.fsm.getState();
+  transitionState(nextState: GameState): boolean {
+    try {
+      this.state.fsm.transition(nextState);
+      this.state.gameState = this.state.fsm.getState();
+      return true;
+    } catch (err) {
+      logger.error(
+        { err, roomCode: this.getRoomCode(), attemptedState: nextState },
+        'Illegal FSM transition blocked — ignoring instead of crashing',
+      );
+      return false;
+    }
   }
 
   /**

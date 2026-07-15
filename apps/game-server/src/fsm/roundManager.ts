@@ -47,10 +47,16 @@ export const startGame = (io: Server, roomCode: string): void => {
   if (!room) return;
 
   const state = room.getState();
+  if (state.gameState !== GameState.LOBBY) return; //Guard: prevents double-start crash
   if (state.players.size < GAME_CONSTANTS.MIN_PLAYERS) return;
 
-  //Transition FSM TO ROUND_STARTING
-  room.transitionState(GameState.ROUND_STARTING);
+  //Transition FSM TO ROUND_STARTING and validate
+  const transitioned = room.transitionState(GameState.ROUND_STARTING);
+  if (!transitioned) {
+    logger.error({ roomCode }, 'startGame: failed to transition to ROUND_STARTING');
+    return;
+  }
+
   state.currentRound = 0;
   state.roundId = 0;
 
@@ -86,15 +92,22 @@ export const startNextRound = (io: Server, roomCode: string): void => {
   //Guard: Ensure we have enough players to start the next round
   const activePlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
   if (activePlayers.length < GAME_CONSTANTS.MIN_PLAYERS) {
-    // If we don't have enough active players, end the game immediately
-    endGame(io, roomCode);
+    // If we don't have enough active players, abort the game immediately
+    void abortGame(io, roomCode); // Fire-and-forget since abortGame is async
     return;
   }
 
   // FSM Transition for more than one Round - If we're starting the next round after the first one,
   // we need to transition the FSM back to ROUND_STARTING
   if (state.gameState === GameState.ROUND_END) {
-    room.transitionState(GameState.ROUND_STARTING);
+    const transitioned = room.transitionState(GameState.ROUND_STARTING);
+    if (!transitioned) {
+      logger.error(
+        { roomCode },
+        'startNextRound: failed to transition ROUND_END -> ROUND_STARTING',
+      );
+      return;
+    }
     io.to(roomCode).emit(ServerEvents.GAME_STATE_CHANGED, {
       state: GameState.ROUND_STARTING,
     });
@@ -189,8 +202,13 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
   if (state.gameState !== GameState.ROUND_STARTING) return; //Can only select a word during the ROUND_STARTING phase
   if (!state.wordChoices?.includes(word)) return; //Invalid word choice
 
-  const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
+  const transitioned = room.transitionState(GameState.DRAWING);
+  if (!transitioned) {
+    logger.error({ roomCode, word }, 'selectWord: failed to transition ROUND_STARTING -> DRAWING');
+    return;
+  }
 
+  const currentRoundId = state.roundId; //capture the current round ID for timer callbacks
   //Cancel the AFK timer since the drawer has made a selection
   state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
 
@@ -208,8 +226,6 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
   //Initialize hints for this round
   state.revealedHintIndexes.clear();
   state.currentHint = generateHint(word, state.revealedHintIndexes);
-
-  room.transitionState(GameState.DRAWING);
 
   io.to(roomCode).emit(ServerEvents.ROUND_STARTED, {
     drawerId: state.currentDrawerId,
@@ -276,7 +292,7 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
  * @param roomCode The unique code identifying the game room
  * @param reason The reason for ending the round
  */
-export const endRound = (io: Server, roomCode: string, reason: string): void => {
+export const endRound = async (io: Server, roomCode: string, reason: string): Promise<void> => {
   const room = roomManager.getRoom(roomCode);
   if (!room) return;
 
@@ -284,6 +300,15 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   if (state.gameState === GameState.ROUND_END) return; //Guard against multiple round end calls
 
   const currentRoundId = state.roundId; // SNAPSHOT
+
+  // Transition FIRST — if illegal, abort before touching timers or Redis,
+  // so the room stays in its current, still-consistent state instead of
+  // a half-cleaned one.
+  const transitioned = room.transitionState(GameState.ROUND_END);
+  if (!transitioned) {
+    logger.error({ roomCode, reason }, 'endRound: illegal transition blocked, aborting cleanup');
+    return;
+  }
 
   const isLastRound = state.currentRound >= state.config.roundCount;
 
@@ -297,11 +322,11 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
   // REDIS CLEANUP: Wipe the canvas history so the Time Machine
   // doesn't serve overlapping drawings for the next round.
   // ==========================================
-  redis
-    .del(`room:${roomCode}:canvas`)
-    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for room'));
-
-  room.transitionState(GameState.ROUND_END);
+  try {
+    await redis.del(`room:${roomCode}:canvas`);
+  } catch (err) {
+    logger.error({ err, roomCode }, 'Failed to clear canvas for room');
+  }
 
   // Emit round end event with correct word, reason, and updated scores
   io.to(roomCode).emit(ServerEvents.ROUND_END, {
@@ -326,7 +351,7 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
     if (latestState.roundId !== currentRoundId) return;
 
     if (latestState.currentRound >= latestState.config.roundCount) {
-      endGame(io, roomCode); //end the game if we've reached the configured number of rounds
+      void endGame(io, roomCode); //end the game if we've reached the configured number of rounds
     } else {
       startNextRound(io, roomCode); //otherwise start the next round
     }
@@ -339,13 +364,18 @@ export const endRound = (io: Server, roomCode: string, reason: string): void => 
  * @param io The Socket.IO server instance
  * @param roomCode The unique code identifying the game room
  */
-export const endGame = (io: Server, roomCode: string): void => {
+export const endGame = async (io: Server, roomCode: string): Promise<void> => {
   const room = roomManager.getRoom(roomCode);
   if (!room) return;
 
   const state = room.getState();
-
   if (state.gameState === GameState.GAME_END) return; //Guard against multiple game end calls
+
+  const transitioned = room.transitionState(GameState.GAME_END);
+  if (!transitioned) {
+    logger.error({ roomCode }, 'endGame: illegal transition blocked, aborting cleanup');
+    return;
+  }
 
   // FULL LIFECYCLE CLEANUP: Kill all active timers to prevent any future callbacks from
   // executing after the game has ended intentionally or abruptly due to disconnections
@@ -357,11 +387,11 @@ export const endGame = (io: Server, roomCode: string): void => {
   // ==========================================
   // REDIS CLEANUP: Destroy the canvas history to free server RAM immediately
   // ==========================================
-  redis
-    .del(`room:${roomCode}:canvas`)
-    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for ended room'));
-
-  room.transitionState(GameState.GAME_END);
+  try {
+    await redis.del(`room:${roomCode}:canvas`);
+  } catch (err) {
+    logger.error({ err, roomCode }, 'Failed to clear canvas for ended room');
+  }
 
   const standings = [...state.players.values()]
     .sort((a, b) => b.score - a.score)
@@ -379,7 +409,7 @@ export const endGame = (io: Server, roomCode: string): void => {
  * @param io The Socket.IO server instance
  * @param roomCode The unique code identifying the game room
  */
-export const abortGame = (io: Server, roomCode: string): void => {
+export const abortGame = async (io: Server, roomCode: string): Promise<void> => {
   const room = roomManager.getRoom(roomCode);
   if (!room) return;
 
@@ -388,6 +418,12 @@ export const abortGame = (io: Server, roomCode: string): void => {
   // Guard: only abort from active gameplay states
   if (state.gameState === GameState.LOBBY || state.gameState === GameState.GAME_END) return;
 
+  const transitioned = room.transitionState(GameState.GAME_END);
+  if (!transitioned) {
+    logger.error({ roomCode }, 'abortGame: illegal transition blocked, aborting cleanup');
+    return;
+  }
+
   // Kill ALL timers
   state.wordSelectionTimer = clearTimer(state.wordSelectionTimer);
   state.drawingTimer = clearTimer(state.drawingTimer);
@@ -395,13 +431,11 @@ export const abortGame = (io: Server, roomCode: string): void => {
   state.intermissionTimer = clearTimer(state.intermissionTimer);
 
   // Redis cleanup
-  redis
-    .del(`room:${roomCode}:canvas`)
-    .catch((err) => logger.error({ err, roomCode }, 'Failed to clear canvas for aborted room'));
-
-  // Transition to GAME_END internally
-  room.transitionState(GameState.GAME_END);
-
+  try {
+    await redis.del(`room:${roomCode}:canvas`);
+  } catch (err) {
+    logger.error({ err, roomCode }, 'Failed to clear canvas for aborted room');
+  }
   // Emit the ABORT signal
   io.to(roomCode).emit(ServerEvents.GAME_ABORTED, {
     reason: 'insufficient_players',
