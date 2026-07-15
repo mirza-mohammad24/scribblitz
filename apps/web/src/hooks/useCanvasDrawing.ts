@@ -66,6 +66,10 @@ export const useCanvasDrawing = (
   const currentStrokeId = useRef<string>(''); //Tracks the current continuous line
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const hasRequestedSync = useRef(false); //To prevent multiple sync requests on re-renders
+  const isDrawerRef = useRef(isDrawer);
+  useEffect(() => {
+    isDrawerRef.current = isDrawer;
+  }, [isDrawer]);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -273,7 +277,7 @@ export const useCanvasDrawing = (
 
     const handleIncomingBatch = (payload: { strokes: StrokeEvent[] }) => {
       const ctx = ctxRef.current;
-      if (!ctx || isDrawer) return;
+      if (!ctx || isDrawerRef.current) return;
       const dpr = window.devicePixelRatio || 1;
 
       payload.strokes.forEach((stroke) => {
@@ -333,7 +337,7 @@ export const useCanvasDrawing = (
       socket.off(ServerEvents.CANVAS_HISTORY, handleHistorySync);
       socket.off(ServerEvents.ROOM_JOINED, handleMidRoundReconnect);
     };
-  }, [socket, isDrawer, roomCode]);
+  }, [socket, roomCode]);
 
   /**
    * Clears the entire canvas for the local drawer.

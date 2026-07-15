@@ -258,8 +258,21 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         return;
       }
 
+      const currentRoundId = state.roundId; //SNAPSHOT before any await, to ensure we are still in the same round when we process the undo
+
       const streamKey = `room:${roomCode}:canvas`;
       const rawStream = await redis.xrange(streamKey, '-', '+');
+
+      // GUARD: re-verify nothing changed while this await was pending — a concurrent
+      // endRound() could have transitioned state and wiped this exact stream.
+      const stateAfterFetch = room.getState();
+      if (
+        stateAfterFetch.roundId !== currentRoundId ||
+        stateAfterFetch.gameState === GameState.ROUND_END
+      ) {
+        return;
+      }
+
       if (!rawStream || rawStream.length === 0) return;
 
       let strokeIdToUndo: string | null = null;
@@ -287,6 +300,12 @@ export const registerCanvasHandlers = (io: Server, socket: Socket) => {
         if (Array.isArray(strokes) && strokes[0]?.strokeId === strokeIdToUndo) {
           await redis.xdel(streamKey, id);
         }
+      }
+
+      // GUARD: the xdel loop above also awaited — round could have ended mid-loop.
+      const finalState = room.getState();
+      if (finalState.roundId !== currentRoundId || finalState.gameState === GameState.ROUND_END) {
+        return;
       }
 
       io.to(roomCode).emit(ServerEvents.CANVAS_UNDONE, { strokeId: strokeIdToUndo });

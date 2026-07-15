@@ -22,7 +22,7 @@ import {
 } from './socket/handlers/gameHandlers';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
 import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
-import { endRound, endGame, abortGame } from './fsm/roundManager';
+import { endRound, abortGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
@@ -133,6 +133,26 @@ io.on('connection', (socket: Socket) => {
   const userId = getUserIdBySocket(socket);
   if (!userId) return;
 
+  // SINGLE-SESSION ENFORCEMENT: if this userId already has an active socket
+  // elsewhere (e.g. a second tab), disconnect the OLD one. Without this, two
+  // sockets sharing a userId can both be treated as "the" player — closing
+  // either tab would incorrectly mark them disconnected even while the other
+  // tab is still live.
+  for (const [existingSocketId, existingSocket] of io.sockets.sockets) {
+    if (existingSocketId !== socket.id && existingSocket.data.userId === userId) {
+      logger.info(
+        { userId, oldSocketId: existingSocketId, newSocketId: socket.id },
+        'Duplicate session detected — disconnecting older socket for this userId',
+      );
+      existingSocket.emit(ServerEvents.ERROR, {
+        message: 'You have connected from another tab or device.',
+        code: ErrorCode.SESSION_EXPIRED,
+        isFatal: true,
+      });
+      existingSocket.disconnect(true);
+    }
+  }
+
   // Log new connections with user ID for better traceability in logs
   logger.info({ userId }, 'User connected');
 
@@ -231,9 +251,10 @@ io.on('connection', (socket: Socket) => {
         socket.emit(ServerEvents.ROOM_JOINED, {
           room: serializedRoom, //this strips off the word choices for security reasons.
           // Therefore we add below explicit emit for the drawer reconnecting during the word selection phase
+          serverNow: Date.now(), //send the server timestamp so the client can calculate the remaining time accurately
         });
 
-        //  If the rejoining player is the active drawer during word selection,
+        // If the rejoining player is the active drawer during word selection,
         // re-emit their private word choices array so their UI overlay populates correctly!
         if (
           state.gameState === GameState.ROUND_STARTING &&

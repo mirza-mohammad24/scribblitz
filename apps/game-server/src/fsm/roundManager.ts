@@ -268,6 +268,13 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
     //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase
     state.hintTimer = setInterval(() => {
       try {
+        // GUARD: If the room was deleted (e.g. last player left), stop this interval
+        // immediately.
+        if (!roomManager.getRoom(roomCode)) {
+          clearIntervalTimer(state.hintTimer);
+          return;
+        }
+
         const latestState = room.getState();
 
         //GUARD: Abort and clear if round has changed or word is missing

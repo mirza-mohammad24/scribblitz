@@ -132,12 +132,12 @@ export const ArenaOrchestrator = () => {
 
       //RECONNECT DRIFT CALCULATION
       let localPhaseEndTime = null;
-      const phaseEndsAt = room.phaseEndTime;
+      const phaseEndsAt = room.phaseEndTime; //received from server
 
       if (phaseEndsAt) {
-        const referenceTime = serverNow || Date.now();
-        const timeRemainingMs = Math.max(0, phaseEndsAt - referenceTime);
-        localPhaseEndTime = Date.now() + timeRemainingMs;
+        const referenceTime = serverNow || Date.now(); //serverNow is sent from the server to account for client-server clock drift
+        const timeRemainingMs = Math.max(0, phaseEndsAt - referenceTime); // Calculate remaining time based on server timestamps (no drift)
+        localPhaseEndTime = Date.now() + timeRemainingMs; // Convert to local timestamp for the countdown timer
       }
       // Reset chat messages on join to avoid showing stale messages from previous sessions
       setRoomState({
