@@ -158,7 +158,7 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
 
     //EARLY ROUND COMPLETION
     if (hasEveryoneGuessedCorrectly(state)) {
-      endRound(io, roomCode, 'all_guessed');
+      void endRound(io, roomCode, 'all_guessed');
     }
   } else {
     // INCORRECT GUESS

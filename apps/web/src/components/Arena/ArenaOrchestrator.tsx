@@ -38,7 +38,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useGameStore } from '@/store/gameStore';
+import { useGameStore, PlayerStanding, ChatMessage } from '@/store/gameStore';
 import { useToastStore } from '@/store/toastStore';
 import { useGameSocket, ACTIVE_ROOM_KEY } from '@/hooks/useGameSocket';
 import {
@@ -48,6 +48,8 @@ import {
   RoomConfig,
   GameError,
   ErrorCode,
+  Player,
+  SerializedRoom,
 } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { MessageCircle, X } from 'lucide-react';
@@ -112,60 +114,71 @@ export const ArenaOrchestrator = () => {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on(ServerEvents.ROOM_CREATED, ({ room }) => {
+    const handleRoomCreated = ({ room }: { room: SerializedRoom }) => {
       // Save active room code to localStorage for smart reconnection
       localStorage.setItem(ACTIVE_ROOM_KEY, room.roomCode);
       setRoomState(room);
-    });
+    };
 
-    socket.on(ServerEvents.ROOM_JOINED, ({ room }) => {
+    const handleRoomJoined = ({ room }: { room: SerializedRoom }) => {
       // Save active room code to localStorage for smart reconnection
       localStorage.setItem(ACTIVE_ROOM_KEY, room.roomCode);
       // Reset chat messages on join to avoid showing stale messages from previous sessions
       setRoomState({
         ...room,
         chatMessages: [],
-        totalRounds: room.totalRounds || room.config?.roundCount || 0,
+        totalRounds: room.config?.roundCount ?? 0,
       });
-    });
+    };
 
-    socket.on(ServerEvents.LOBBY_RESET, ({ room }) => {
+    const handleLobbyReset = ({ room }: { room: SerializedRoom }) => {
       // Ensure the key is restored if the user refresh during the post-game lobby
       localStorage.setItem(ACTIVE_ROOM_KEY, room.roomCode);
       resetGame();
       setRoomState(room);
-    });
+    };
 
-    socket.on(ServerEvents.PLAYER_JOINED, ({ player }) => {
+    const handlePlayerJoined = ({ player }: { player: Player }) => {
       const existing = useGameStore.getState().players;
       const filtered = existing.filter((p) => p.id !== player.id);
       setRoomState({ players: [...filtered, player] });
-    });
+    };
 
-    socket.on(ServerEvents.PLAYER_LEFT, ({ playerId }) =>
-      setRoomState({ players: useGameStore.getState().players.filter((p) => p.id !== playerId) }),
-    );
+    const handlePlayerLeft = ({ playerId }: { playerId: string }) =>
+      setRoomState({ players: useGameStore.getState().players.filter((p) => p.id !== playerId) });
 
     //  Handle disconnections and host migrations
-    socket.on(ServerEvents.PLAYER_DISCONNECTED, ({ playerId }) => {
+    const handlePlayerDisconnected = ({ playerId }: { playerId: string }) => {
       const updatedPlayers = useGameStore
         .getState()
         .players.map((p) => (p.id === playerId ? { ...p, isConnected: false } : p));
       setRoomState({ players: updatedPlayers });
-    });
+    };
 
-    socket.on(ServerEvents.HOST_CHANGED, ({ newHostId }) => {
+    const handleHostChanged = ({ newHostId }: { newHostId: string }) => {
       setRoomState({ hostId: newHostId });
-    });
+    };
 
-    socket.on(ServerEvents.ROOM_CONFIG_UPDATED, ({ config }) => setRoomState({ config }));
+    const handleRoomConfigUpdated = ({ config }: { config: RoomConfig }) =>
+      setRoomState({ config });
 
-    socket.on(ServerEvents.GAME_STATE_CHANGED, ({ state }) => setRoomState({ gameState: state }));
+    const handleGameStateChanged = ({ state }: { state: GameState }) =>
+      setRoomState({ gameState: state });
 
     // ==========================================
     // ROUND MANAGER FLOW
     // ==========================================
-    socket.on(ServerEvents.ROUND_STARTING, ({ drawerId, round, totalRounds, roundId }) => {
+    const handleRoundStarting = ({
+      drawerId,
+      round,
+      totalRounds,
+      roundId,
+    }: {
+      drawerId: string;
+      round: number;
+      totalRounds: number;
+      roundId: number;
+    }) => {
       //Capture the current scores before the round starts so we can use
       //them for the "score delta" in the post-round overlay
       const currentStore = useGameStore.getState();
@@ -174,7 +187,6 @@ export const ArenaOrchestrator = () => {
       currentStore.players.forEach((p) => {
         previousScores[p.id] = p.score;
       });
-
       // Reset the "hasGuessedCorrectly" status for all players at the start of each round
       const resetPlayers = currentStore.players.map((p) => ({
         ...p,
@@ -190,13 +202,23 @@ export const ArenaOrchestrator = () => {
         players: resetPlayers, // Reset guessing status at the start of each round
         previousScores,
       });
-    });
+    };
 
-    socket.on(ServerEvents.WORD_CHOICES, ({ words }) => {
+    const handleWordChoices = ({ words }: { words: string[] }) => {
       setRoomState({ wordChoices: words });
-    });
+    };
 
-    socket.on(ServerEvents.ROUND_STARTED, ({ drawerId, wordLength, wordHint, roundStartTime }) => {
+    const handleRoundStarted = ({
+      drawerId,
+      wordLength,
+      wordHint,
+      roundStartTime,
+    }: {
+      drawerId: string;
+      wordLength: number;
+      wordHint: string;
+      roundStartTime: number;
+    }) => {
       setRoomState({
         currentDrawerId: drawerId,
         wordLength,
@@ -205,45 +227,42 @@ export const ArenaOrchestrator = () => {
         gameState: GameState.DRAWING,
         wordChoices: [],
       });
-    });
+    };
 
-    socket.on(
-      ServerEvents.ROUND_END,
-      ({
+    const handleRoundEnd = ({
+      correctWord,
+      reason,
+      scores,
+      isFinalRound,
+    }: {
+      correctWord: string;
+      reason: string;
+      scores: Array<{ id: string; username: string; score: number }>;
+      isFinalRound?: boolean;
+    }) => {
+      const currentPlayers = useGameStore.getState().players;
+
+      const updatedPlayers = currentPlayers.map((p) => {
+        const updated = scores.find((s) => s.id === p.id);
+        return updated ? { ...p, score: updated.score } : p;
+      });
+      setRoomState({
+        gameState: GameState.ROUND_END,
         correctWord,
-        reason,
+        roundEndReason: reason,
         scores,
-        isFinalRound,
-      }: {
-        correctWord: string;
-        reason: string;
-        scores: Array<{ id: string; username: string; score: number }>;
-        isFinalRound?: boolean;
-      }) => {
-        const currentPlayers = useGameStore.getState().players;
+        players: updatedPlayers,
+        isFinalRound: isFinalRound || false,
+      });
+    };
 
-        const updatedPlayers = currentPlayers.map((p) => {
-          const updated = scores.find((s) => s.id === p.id);
-          return updated ? { ...p, score: updated.score } : p;
-        });
-        setRoomState({
-          gameState: GameState.ROUND_END,
-          correctWord,
-          roundEndReason: reason,
-          scores,
-          players: updatedPlayers,
-          isFinalRound: isFinalRound || false,
-        });
-      },
-    );
-
-    socket.on(ServerEvents.GAME_END, ({ standings }) => {
+    const handleGameEnd = ({ standings }: { standings: PlayerStanding[] }) => {
       //We don't delete the active room key from localstorage here because the user may want to return to the
       //post-game lobby to play again
       setRoomState({ gameState: GameState.GAME_END, standings });
-    });
+    };
 
-    socket.on(ServerEvents.GAME_ABORTED, ({ reason }) => {
+    const handleGameAborted = ({ reason }: { reason: string }) => {
       //We will delete the active room key from local storage here because now this room will never be
       //reused. I have already added to remove the active room key in the leave room handler, but if the
       //person did not click leave room and refreshes the page so deleting as soon as the server sends the
@@ -251,25 +270,25 @@ export const ArenaOrchestrator = () => {
       localStorage.removeItem(ACTIVE_ROOM_KEY);
 
       setRoomState({
-        gameState: GameState.GAME_END, // Use GAME_END to transition to the modal zone safely
+        gameState: GameState.GAME_END,
         isGameAborted: true,
         abortReason: reason,
       });
-    });
+    };
 
     // ==========================================
     // CHAT & GAMEPLAY LISTENERS
     // ==========================================
-    socket.on(ServerEvents.WORD_HINT_UPDATED, ({ hint }) => {
+    const handleWordHintUpdated = ({ hint }: { hint: string }) => {
       setRoomState({ currentHint: hint });
-    });
+    };
 
-    socket.on(ServerEvents.CHAT_BROADCAST, (msg) => {
+    const handleChatBroadcast = (msg: ChatMessage) => {
       const currentMessages = useGameStore.getState().chatMessages || [];
       setRoomState({ chatMessages: [...currentMessages, msg] });
-    });
+    };
 
-    socket.on(ServerEvents.GUESS_CLOSE, ({ message }) => {
+    const handleGuessClose = ({ message }: { message: string }) => {
       const currentMessages = useGameStore.getState().chatMessages || [];
       setRoomState({
         chatMessages: [
@@ -283,13 +302,19 @@ export const ArenaOrchestrator = () => {
           },
         ],
       });
-    });
+    };
 
-    socket.on(ServerEvents.PLAYER_GUESSED, ({ playerId, username }) => {
+    const handlePlayerGuessed = ({
+      playerId,
+      username,
+    }: {
+      playerId: string;
+      username: string;
+    }) => {
       //Fresh state snapshot from gameStore
       const currentState = useGameStore.getState();
 
-      // Update the UI to show this player guessed correctly (turn their name green)
+      //Update the UI to show this player guessed correctly (turn their name green)
       const updatedPlayers = useGameStore
         .getState()
         .players.map((p) => (p.id === playerId ? { ...p, hasGuessedCorrectly: true } : p));
@@ -310,32 +335,29 @@ export const ArenaOrchestrator = () => {
         addToast(`${username} guessed the word!`, 'success');
       }
 
-      //Update both the player list and the chat simultaneously
+      // Update both the player list and the chat simultaneously
       setRoomState({
         players: updatedPlayers,
         chatMessages: [...currentMessages, systemMessage],
       });
-    });
+    };
 
     // Instantly updates the Zustand store with new scores whenever the server
     // broadcasts a score update (after a correct guess or at round end)
-    socket.on(
-      ServerEvents.SCORE_UPDATE,
-      ({ scores }: { scores: Array<{ id: string; score: number }> }) => {
-        const updatedPlayers = useGameStore.getState().players.map((p) => {
-          const updated = scores.find((s) => s.id === p.id);
-          return updated ? { ...p, score: updated.score } : p;
-        });
-        setRoomState({ players: updatedPlayers });
-      },
-    );
+    const handleScoreUpdate = ({ scores }: { scores: Array<{ id: string; score: number }> }) => {
+      const updatedPlayers = useGameStore.getState().players.map((p) => {
+        const updated = scores.find((s) => s.id === p.id);
+        return updated ? { ...p, score: updated.score } : p;
+      });
+      setRoomState({ players: updatedPlayers });
+    };
 
-    socket.on(ServerEvents.GUESS_CORRECT, ({ pointsEarned }) => {
+    const handleGuessCorrect = ({ pointsEarned }: { pointsEarned: number }) => {
       addToast(`Correct! You earned +${pointsEarned} points!`, 'success');
-    });
+    };
 
     // Deterministic Error Handling with standardized payload from the server
-    socket.on(ServerEvents.ERROR, (error: GameError) => {
+    const handleError = (error: GameError) => {
       // Fallback just in case a raw string slips through during transition
       const isFatal = error?.isFatal ?? false;
       const message = error?.message || JSON.stringify(error);
@@ -351,7 +373,7 @@ export const ArenaOrchestrator = () => {
         }
         resetGame();
 
-        // Only show a scary red error toast if it was an active user failure
+        //Only show a scary red error toast if it was an active user failure
         if (error.code !== ErrorCode.SESSION_EXPIRED) {
           addToast(message, 'error');
         }
@@ -359,35 +381,60 @@ export const ArenaOrchestrator = () => {
         // Just a standard notice (e.g., UNAUTHORIZED for clicking start as a non-host)
         addToast(message, 'info');
       }
-    });
-
-    // Clean up listeners on unmount
-    // Explicitly remove ONLY Arena listeners.
-    return () => {
-      socket.off(ServerEvents.ROOM_CREATED);
-      socket.off(ServerEvents.ROOM_JOINED);
-      socket.off(ServerEvents.LOBBY_RESET);
-      socket.off(ServerEvents.PLAYER_JOINED);
-      socket.off(ServerEvents.PLAYER_LEFT);
-      socket.off(ServerEvents.PLAYER_DISCONNECTED);
-      socket.off(ServerEvents.HOST_CHANGED);
-      socket.off(ServerEvents.ROOM_CONFIG_UPDATED);
-      socket.off(ServerEvents.GAME_STATE_CHANGED);
-      socket.off(ServerEvents.ROUND_STARTING);
-      socket.off(ServerEvents.WORD_CHOICES);
-      socket.off(ServerEvents.ROUND_STARTED);
-      socket.off(ServerEvents.ROUND_END);
-      socket.off(ServerEvents.GAME_END);
-      socket.off(ServerEvents.GAME_ABORTED);
-      socket.off(ServerEvents.WORD_HINT_UPDATED);
-      socket.off(ServerEvents.CHAT_BROADCAST);
-      socket.off(ServerEvents.GUESS_CLOSE);
-      socket.off(ServerEvents.PLAYER_GUESSED);
-      socket.off(ServerEvents.SCORE_UPDATE);
-      socket.off(ServerEvents.GUESS_CORRECT);
-      socket.off(ServerEvents.ERROR);
     };
-  }, [socket, setRoomState, resetGame, addToast]);
+
+    socket.on(ServerEvents.ROOM_CREATED, handleRoomCreated);
+    socket.on(ServerEvents.ROOM_JOINED, handleRoomJoined);
+    socket.on(ServerEvents.LOBBY_RESET, handleLobbyReset);
+    socket.on(ServerEvents.PLAYER_JOINED, handlePlayerJoined);
+    socket.on(ServerEvents.PLAYER_LEFT, handlePlayerLeft);
+    socket.on(ServerEvents.PLAYER_DISCONNECTED, handlePlayerDisconnected);
+    socket.on(ServerEvents.HOST_CHANGED, handleHostChanged);
+    socket.on(ServerEvents.ROOM_CONFIG_UPDATED, handleRoomConfigUpdated);
+    socket.on(ServerEvents.GAME_STATE_CHANGED, handleGameStateChanged);
+    socket.on(ServerEvents.ROUND_STARTING, handleRoundStarting);
+    socket.on(ServerEvents.WORD_CHOICES, handleWordChoices);
+    socket.on(ServerEvents.ROUND_STARTED, handleRoundStarted);
+    socket.on(ServerEvents.ROUND_END, handleRoundEnd);
+    socket.on(ServerEvents.GAME_END, handleGameEnd);
+    socket.on(ServerEvents.GAME_ABORTED, handleGameAborted);
+    socket.on(ServerEvents.WORD_HINT_UPDATED, handleWordHintUpdated);
+    socket.on(ServerEvents.CHAT_BROADCAST, handleChatBroadcast);
+    socket.on(ServerEvents.GUESS_CLOSE, handleGuessClose);
+    socket.on(ServerEvents.PLAYER_GUESSED, handlePlayerGuessed);
+    socket.on(ServerEvents.SCORE_UPDATE, handleScoreUpdate);
+    socket.on(ServerEvents.GUESS_CORRECT, handleGuessCorrect);
+    socket.on(ServerEvents.ERROR, handleError);
+
+    // Clean up listeners on unmount.
+    // Passing the exact handler reference (not just the event name) ensures other
+    // components' listeners for the same event — e.g. useCanvasDrawing's ROOM_JOINED /
+    // ROUND_STARTING / ROUND_END listeners — are never accidentally wiped out.
+    return () => {
+      socket.off(ServerEvents.ROOM_CREATED, handleRoomCreated);
+      socket.off(ServerEvents.ROOM_JOINED, handleRoomJoined);
+      socket.off(ServerEvents.LOBBY_RESET, handleLobbyReset);
+      socket.off(ServerEvents.PLAYER_JOINED, handlePlayerJoined);
+      socket.off(ServerEvents.PLAYER_LEFT, handlePlayerLeft);
+      socket.off(ServerEvents.PLAYER_DISCONNECTED, handlePlayerDisconnected);
+      socket.off(ServerEvents.HOST_CHANGED, handleHostChanged);
+      socket.off(ServerEvents.ROOM_CONFIG_UPDATED, handleRoomConfigUpdated);
+      socket.off(ServerEvents.GAME_STATE_CHANGED, handleGameStateChanged);
+      socket.off(ServerEvents.ROUND_STARTING, handleRoundStarting);
+      socket.off(ServerEvents.WORD_CHOICES, handleWordChoices);
+      socket.off(ServerEvents.ROUND_STARTED, handleRoundStarted);
+      socket.off(ServerEvents.ROUND_END, handleRoundEnd);
+      socket.off(ServerEvents.GAME_END, handleGameEnd);
+      socket.off(ServerEvents.GAME_ABORTED, handleGameAborted);
+      socket.off(ServerEvents.WORD_HINT_UPDATED, handleWordHintUpdated);
+      socket.off(ServerEvents.CHAT_BROADCAST, handleChatBroadcast);
+      socket.off(ServerEvents.GUESS_CLOSE, handleGuessClose);
+      socket.off(ServerEvents.PLAYER_GUESSED, handlePlayerGuessed);
+      socket.off(ServerEvents.SCORE_UPDATE, handleScoreUpdate);
+      socket.off(ServerEvents.GUESS_CORRECT, handleGuessCorrect);
+      socket.off(ServerEvents.ERROR, handleError);
+    };
+  }, [socket, setRoomState, resetGame, addToast, userId]);
 
   // ==========================================
   // ACTIONS

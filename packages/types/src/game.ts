@@ -98,3 +98,26 @@ export interface RoomState {
   teamB?: Set<string>;
   roundWinner?: 'team-a' | 'team-b' | null;
 }
+
+/**
+ * The shape of a room as sent to clients over Socket.IO, after serializeRoom()
+ * converts Maps/Sets to arrays and strips server-only secret fields
+ * (currentWord, wordChoices, usedWords, timers, fsm).
+ */
+export interface SerializedRoom {
+  roomCode: string;
+  hostId: string;
+  players: Player[];
+  config: RoomConfig;
+  gameState: GameState;
+  currentRound: number;
+  roundId: number;
+  currentDrawerId: string | null;
+  revealedHintIndexes: number[];
+  currentHint: string;
+  correctGuessers: string[];
+  roundStartTime: number | null;
+  teamA?: string[];
+  teamB?: string[];
+  roundWinner?: 'team-a' | 'team-b' | null;
+}

@@ -320,7 +320,7 @@ io.on('connection', (socket: Socket) => {
     // the startNextRound() (will be called inside endRound() which we called after appropriate checks)
     //  will gracefully catch it and trigger endGame().
     if (state.currentDrawerId === userId && isGameActive) {
-      endRound(io, roomCode, 'drawer-disconnected');
+      void endRound(io, roomCode, 'drawer-disconnected');
     }
 
     //Clear any existing timer just in case (this handles the case where a user disconnects, reconnects,
@@ -368,7 +368,7 @@ io.on('connection', (socket: Socket) => {
         if (remainingPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && stillActive) {
           //Too few players to continue playing - abort the game immediately (server emit is handled in abortGame function)
           logger.info({ roomCode }, 'Aborting game — insufficient players after timeout');
-          abortGame(io, roomCode);
+          void abortGame(io, roomCode);
         }
       }
 

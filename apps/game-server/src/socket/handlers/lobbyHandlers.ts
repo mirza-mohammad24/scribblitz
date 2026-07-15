@@ -282,7 +282,7 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
   // The leaving player's socket has already left the room, so they won't receive this.
   if (wasDrawerInActiveGame) {
     logger.info({ userId, roomCode }, 'Active drawer left room — aborting turn');
-    endRound(io, roomCode, 'drawer-left');
+    void endRound(io, roomCode, 'drawer-left');
   }
 
   //Now safely remove the player from the server memory.
@@ -309,7 +309,7 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
     // After removal, if the game was active and we're below MIN_PLAYERS, abort immediately.
     const connectedPlayers = Array.from(state.players.values()).filter((p) => p.isConnected);
     if (connectedPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && isGameActive) {
-      abortGame(io, roomCode);
+      void abortGame(io, roomCode);
     }
   }
 };

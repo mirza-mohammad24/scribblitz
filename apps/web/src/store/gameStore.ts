@@ -14,6 +14,14 @@ export interface PlayerStanding {
   rank: number;
 }
 
+export interface ChatMessage {
+  senderId: string;
+  senderName: string;
+  message: string;
+  isSystem: boolean;
+  isCloseGuess?: boolean;
+}
+
 interface GameStore {
   //Core Room State
   //If gameState is null, we are on the Splash screen (screen before waiting room)
@@ -38,13 +46,7 @@ interface GameStore {
   scores: Array<{ id: string; username: string; score: number }>;
   standings: PlayerStanding[];
   previousScores: Record<string, number>;
-  chatMessages: Array<{
-    senderId: string;
-    senderName: string;
-    message: string;
-    isSystem: boolean;
-    isCloseGuess?: boolean;
-  }>;
+  chatMessages: ChatMessage[];
   drawTimeSeconds: number;
   roundStartTime: number | null;
   isGameAborted: boolean;
