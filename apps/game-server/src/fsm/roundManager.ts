@@ -265,6 +265,17 @@ export const selectWord = (io: Server, roomCode: string, word: string): void => 
       timeRemainingMs,
     });
 
+    // Privately reveal the actual word to the drawer only — everyone else only
+    // ever receives the dashed wordHint above. Since selectWord() is the single
+    // entry point for both a manual pick and the AFK auto-pick timer, this
+    // automatically covers both cases.
+    if (state.currentDrawerId) {
+      const drawerSocket = getSocketByUserId(io, state.currentDrawerId, roomCode);
+      if (drawerSocket) {
+        drawerSocket.emit(ServerEvents.DRAWER_WORD_REVEAL, { word });
+      }
+    }
+
     //Start PERIODIC HINT TIMER to reveal new hints at regular intervals during the drawing phase
     state.hintTimer = setInterval(() => {
       try {

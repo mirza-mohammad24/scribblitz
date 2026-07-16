@@ -30,6 +30,8 @@ interface ArenaHUDProps {
   onRequestLeave: () => void;
   /** Callback to toggle the mobile player list dropdown. */
   onToggleMobilePlayers: () => void;
+  /** The current user's ID, used to determine if they are the drawer. */
+  userId: string | null;
 }
 
 /**
@@ -72,9 +74,10 @@ const HUDTimer = ({ duration }: { duration: number }) => {
  * @param props - {@link ArenaHUDProps}
  * @param props.onRequestLeave - Opens the leave-confirmation modal.
  * @param props.onToggleMobilePlayers - Toggles the mobile player list popup.
+ * @param props.userId - The current user's ID, used to determine if they are the drawer.
  * @returns The HUD bar element.
  */
-export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProps) => {
+export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: ArenaHUDProps) => {
   const {
     gameState,
     currentRound,
@@ -85,6 +88,7 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
     players,
     roundId,
     wordLength,
+    correctWord,
   } = useGameStore();
 
   // We default the timer to whatever the room config is set to
@@ -93,7 +97,8 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers }: ArenaHUDProp
   const drawer = players.find((p) => p.id === currentDrawerId);
 
   // DYNAMIC FONT SCALING LOGIC
-  const hintText = currentHint || '? ? ?';
+  const isDrawer = userId === currentDrawerId;
+  const hintText = isDrawer && correctWord ? correctWord : currentHint || '? ? ?';
   const charCount = hintText.length;
 
   // Scale down the font size and the letter-spacing (tracking) as the word gets longer

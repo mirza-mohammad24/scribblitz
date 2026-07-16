@@ -220,6 +220,7 @@ export const ArenaOrchestrator = () => {
         gameState: GameState.ROUND_STARTING,
         players: resetPlayers, // Reset guessing status at the start of each round
         previousScores,
+        correctWord: null, // Reset the correct word at the start of each round
         localPhaseEndTime: Date.now() + timeRemainingMs,
       });
     };
@@ -247,6 +248,10 @@ export const ArenaOrchestrator = () => {
         gameState: GameState.DRAWING,
         wordChoices: [],
       });
+    };
+
+    const handleDrawerWordReveal = ({ word }: { word: string }) => {
+      setRoomState({ correctWord: word });
     };
 
     const handleRoundEnd = ({
@@ -418,6 +423,7 @@ export const ArenaOrchestrator = () => {
     socket.on(ServerEvents.ROUND_STARTING, handleRoundStarting);
     socket.on(ServerEvents.WORD_CHOICES, handleWordChoices);
     socket.on(ServerEvents.ROUND_STARTED, handleRoundStarted);
+    socket.on(ServerEvents.DRAWER_WORD_REVEAL, handleDrawerWordReveal);
     socket.on(ServerEvents.ROUND_END, handleRoundEnd);
     socket.on(ServerEvents.GAME_END, handleGameEnd);
     socket.on(ServerEvents.GAME_ABORTED, handleGameAborted);
@@ -446,6 +452,7 @@ export const ArenaOrchestrator = () => {
       socket.off(ServerEvents.ROUND_STARTING, handleRoundStarting);
       socket.off(ServerEvents.WORD_CHOICES, handleWordChoices);
       socket.off(ServerEvents.ROUND_STARTED, handleRoundStarted);
+      socket.off(ServerEvents.DRAWER_WORD_REVEAL, handleDrawerWordReveal);
       socket.off(ServerEvents.ROUND_END, handleRoundEnd);
       socket.off(ServerEvents.GAME_END, handleGameEnd);
       socket.off(ServerEvents.GAME_ABORTED, handleGameAborted);
@@ -570,6 +577,7 @@ export const ArenaOrchestrator = () => {
           <ArenaHUD
             onRequestLeave={() => setIsLeaveModalOpen(true)}
             onToggleMobilePlayers={() => setShowPlayersMobile(!showPlayersMobile)}
+            userId={userId}
           />
 
           {/* Mobile Players Popup (Hidden on Desktop) */}

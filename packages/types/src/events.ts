@@ -56,4 +56,5 @@ export const ServerEvents = {
   HOST_CHANGED: 'room:host_changed',
   LOBBY_RESET: 'room:lobby_reset',
   GAME_ABORTED: 'game:aborted',
+  DRAWER_WORD_REVEAL: 'drawer:word_reveal',
 } as const;
