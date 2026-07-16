@@ -233,8 +233,8 @@ export const ArenaChat = () => {
                       : msg.isGhost
                         ? // VIP GHOST CHAT STYLING
                           msg.senderId === userId
-                          ? 'bg-emerald-600 dark:bg-emerald-800 text-white self-end rounded-2xl rounded-br-sm border-2 border-emerald-400 border-dashed drop-shadow-md'
-                          : 'bg-emerald-50 dark:bg-emerald-900/40 border-2 border-emerald-400 border-dashed dark:text-emerald-100 self-start rounded-2xl rounded-bl-sm drop-shadow-md'
+                          ? 'bg-emerald-600 dark:bg-blue-900/80 text-white dark:text-blue-50 self-end rounded-2xl rounded-br-sm border-2 border-emerald-400 dark:border-neon-blue border-dashed drop-shadow-md'
+                          : 'bg-emerald-50 dark:bg-discord-main border-2 border-emerald-400 dark:border-neon-blue border-dashed dark:text-blue-100 self-start rounded-2xl rounded-bl-sm drop-shadow-md'
                         : // STANDARD CHAT STYLING
                           msg.senderId === userId
                           ? 'bg-green-500 dark:bg-neon-blue text-white self-end rounded-2xl rounded-br-sm'
@@ -264,9 +264,17 @@ export const ArenaChat = () => {
                   >
                     {msg.senderName}
                     {isMessageFromDrawer ? (
-                      <Brush size={12} strokeWidth={3} className="shrink-0" />
+                      <Brush
+                        size={12}
+                        strokeWidth={3}
+                        className="shrink-0 text-emerald-300 dark:text-neon-blue"
+                      />
                     ) : msg.isGhost ? (
-                      <Ghost size={12} strokeWidth={3} className="shrink-0" />
+                      <Ghost
+                        size={12}
+                        strokeWidth={3}
+                        className="shrink-0 text-emerald-300 dark:text-neon-blue"
+                      />
                     ) : null}
                   </span>
                 )}
@@ -310,7 +318,7 @@ export const ArenaChat = () => {
       >
         <div className="relative flex-1 min-w-0">
           {isVIP && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 dark:text-emerald-400 pointer-events-none">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 dark:text-neon-blue pointer-events-none">
               <HatGlasses size={18} strokeWidth={2.5} />
             </div>
           )}
@@ -321,7 +329,7 @@ export const ArenaChat = () => {
             onChange={(e) => setMessage(e.target.value)}
             disabled={false}
             placeholder={isVIP ? 'Secret VIP Chat...' : 'Type guess...'}
-            className={`w-full py-2 pr-4 bg-gray-100 dark:bg-discord-main border-2 border-gray-200 dark:border-gray-800 rounded-xl font-bold text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:border-green-500 dark:focus:border-neon-blue transition-colors ${isVIP ? 'pl-10' : 'pl-4'}`}
+            className={`w-full py-2 pr-4 bg-gray-100 dark:bg-discord-main border-2 border-gray-200 dark:border-gray-800 rounded-xl font-bold text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:border-green-500 dark:focus:border-neon-blue transition-colors ${isVIP ? 'pl-10 placeholder-emerald-500/70 dark:placeholder-neon-blue/70' : 'pl-4'}`}
           />
         </div>
         <motion.button
