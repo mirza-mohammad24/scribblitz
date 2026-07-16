@@ -347,11 +347,14 @@ export const ArenaOrchestrator = () => {
         .getState()
         .players.map((p) => (p.id === playerId ? { ...p, hasGuessedCorrectly: true } : p));
 
+      const isMe = playerId === userId;
+      const systemMessageText = isMe ? 'You guessed the word!' : `${username} guessed the word!`;
+
       // Create the system message for the chat box
       const systemMessage = {
         senderId: 'system',
         senderName: 'System',
-        message: `${username} guessed the word!`,
+        message: systemMessageText,
         isSystem: true,
       };
 

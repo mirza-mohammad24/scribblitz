@@ -20,6 +20,7 @@ export interface ChatMessage {
   message: string;
   isSystem: boolean;
   isCloseGuess?: boolean;
+  isGhost?: boolean; //for ghost messages that are sent between correct guessers and the drawer, but not to other players
 }
 
 interface GameStore {

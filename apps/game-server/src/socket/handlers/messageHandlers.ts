@@ -14,6 +14,7 @@ import { GAME_CONSTANTS } from '@scribblitz/shared/dist/constants';
 import { ServerRoomState } from '../../rooms/Room';
 import { roomManager } from '../../rooms/RoomManager';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
+import { getSocketByUserId } from '../utils/getSocketByUserId';
 import { levenshteinDistance } from '../../utils/levenshtein';
 import { endRound } from '../../fsm/roundManager';
 import logger from '../../utils/logger';
@@ -98,11 +99,28 @@ export const handleChatMessage = (io: Server, socket: Socket) => (payload: unkno
     return;
   }
 
-  // GUARD: Muzzle the Drawer and Correct Guessers during the round
+  // GUARD: The VIP Ghost Chat: The drawer and correct guessers can chat privately during the drawing phase,
+  // but their messages are not broadcast to others.
   if (isDrawer || hasAlreadyGuessed) {
-    // Silently drop their chat message. They are not allowed to talk
-    // to the rest of the room while a drawing is active.
-    return;
+    const vipUserIds = Array.from(state.correctGuessers);
+    if (state.currentDrawerId && !vipUserIds.includes(state.currentDrawerId)) {
+      vipUserIds.push(state.currentDrawerId);
+    }
+
+    vipUserIds.forEach((id) => {
+      const targetSocket = getSocketByUserId(io, id, roomCode);
+      if (targetSocket) {
+        targetSocket.emit(ServerEvents.CHAT_BROADCAST, {
+          senderId: userId,
+          senderName: player.username,
+          message: text,
+          isSystem: false,
+          isGhost: true,
+        });
+      }
+    });
+
+    return; //Exit to prevent guess evaluation for VIP chat messages
   }
 
   //GUESS EVALUATION LOGIC

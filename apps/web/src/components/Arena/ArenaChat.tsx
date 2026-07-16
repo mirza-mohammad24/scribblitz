@@ -32,7 +32,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useGameSocket } from '@/hooks/useGameSocket';
 import { useGameStore } from '@/store/gameStore';
 import { ClientEvents } from '@scribblitz/types';
-import { SendHorizontal, ChevronDown, Sparkles } from 'lucide-react';
+import { SendHorizontal, ChevronDown, Sparkles, Brush, Ghost, HatGlasses } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
@@ -62,7 +62,12 @@ export const ArenaChat = () => {
 
   // Track local player state for the confetti pop
   const localPlayer = players.find((p) => p.id === userId);
+  const hasGuessedCorrectly = localPlayer?.hasGuessedCorrectly || false;
   const prevGuessedRef = useRef(false);
+
+  //Determine if they are in the VIP  Ghost Chat: The drawer and correct guessers
+  //can chat privately during the drawing phase, but their messages are not broadcast to others.
+  const isVIP = isDrawer || hasGuessedCorrectly;
 
   //  ARCADE SHOWER CONFETTI LOGIC
   useEffect(() => {
@@ -146,7 +151,10 @@ export const ArenaChat = () => {
   // Global Keyboard Listener: Auto-focus the chat when typing starts (Desktop UX)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't steal focus if they are using hotkeys, already in an input, or are the drawer
+      // Don't steal focus if they are using hotkeys, already in an input,
+      // or are the drawer(left this so the don't accidentally go to chatbox
+      // while drawing if the drawer wants to chat in vip room he will
+      // specifically click the input box)
       if (
         isDrawer ||
         e.ctrlKey ||
@@ -176,7 +184,8 @@ export const ArenaChat = () => {
    */
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim() || !socket || isDrawer) return;
+    //drawer can chat in vip chat but not in the public chat so we don't disable the input box for them
+    if (!message.trim() || !socket) return;
 
     // Emit the message to the server, attaching the roundId to prevent cross-round leaks
     socket.emit(ClientEvents.CHAT_MESSAGE, { message: message.trim(), roundId });
@@ -202,6 +211,7 @@ export const ArenaChat = () => {
           {chatMessages.map((msg, idx) => {
             const isCorrectGuess = msg.isSystem && msg.message.toLowerCase().includes('guessed');
             const isCloseGuess = msg.isSystem && msg.isCloseGuess === true;
+            const isMessageFromDrawer = msg.senderId === currentDrawerId;
 
             return (
               <motion.div
@@ -220,9 +230,15 @@ export const ArenaChat = () => {
                           ? //AMBER STYLING FOR CLOSE GUESSES
                             'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 font-black self-center text-center border-2 border-amber-400 dark:border-amber-600 rounded-xl px-4 py-2 flex items-center justify-center gap-2 drop-shadow-sm'
                           : 'bg-yellow-100 dark:bg-discord-main text-yellow-800 dark:text-gray-300 font-bold self-center text-center border-2 border-yellow-300 dark:border-gray-700 rounded-xl px-4 py-2 text-xs'
-                      : msg.senderId === userId
-                        ? 'bg-green-500 dark:bg-neon-blue text-white self-end rounded-2xl rounded-br-sm'
-                        : 'bg-white dark:bg-discord-main border-2 border-gray-100 dark:border-gray-800 dark:text-gray-200 self-start rounded-2xl rounded-bl-sm'
+                      : msg.isGhost
+                        ? // VIP GHOST CHAT STYLING
+                          msg.senderId === userId
+                          ? 'bg-emerald-600 dark:bg-emerald-800 text-white self-end rounded-2xl rounded-br-sm border-2 border-emerald-400 border-dashed drop-shadow-md'
+                          : 'bg-emerald-50 dark:bg-emerald-900/40 border-2 border-emerald-400 border-dashed dark:text-emerald-100 self-start rounded-2xl rounded-bl-sm drop-shadow-md'
+                        : // STANDARD CHAT STYLING
+                          msg.senderId === userId
+                          ? 'bg-green-500 dark:bg-neon-blue text-white self-end rounded-2xl rounded-br-sm'
+                          : 'bg-white dark:bg-discord-main border-2 border-gray-100 dark:border-gray-800 dark:text-gray-200 self-start rounded-2xl rounded-bl-sm'
                   }
                 `}
               >
@@ -236,16 +252,29 @@ export const ArenaChat = () => {
 
                 {!msg.isSystem && (
                   <span
-                    className={`font-black text-[10px] block mb-0.5 ${
+                    className={`font-black text-[10px] flex items-center gap-1 mb-0.5 ${
                       msg.senderId === userId
-                        ? 'text-green-100 dark:text-blue-900'
-                        : 'text-gray-400 dark:text-gray-500'
+                        ? msg.isGhost
+                          ? 'text-green-100 dark:text-emerald-300'
+                          : 'text-green-100 dark:text-blue-900'
+                        : msg.isGhost
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-gray-400 dark:text-gray-500'
                     }`}
                   >
                     {msg.senderName}
+                    {isMessageFromDrawer ? (
+                      <Brush size={12} strokeWidth={3} className="shrink-0" />
+                    ) : msg.isGhost ? (
+                      <Ghost size={12} strokeWidth={3} className="shrink-0" />
+                    ) : null}
                   </span>
                 )}
-                <span className={`${msg.isSystem ? '' : 'wrap-break-word'}`}>{msg.message}</span>
+                <span
+                  className={`${msg.isSystem ? '' : 'wrap-break-word'} ${msg.isGhost ? 'italic' : ''}`}
+                >
+                  {msg.message}
+                </span>
 
                 {/* SPARKLES FOR CORRECT GUESSES */}
                 {isCorrectGuess && (
@@ -279,19 +308,26 @@ export const ArenaChat = () => {
         onSubmit={handleSend}
         className="p-3 bg-white dark:bg-discord-card border-t-4 border-gray-200 dark:border-discord-main flex gap-2 shrink-0 z-20 relative w-full"
       >
-        <input
-          ref={inputRef}
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          disabled={isDrawer}
-          placeholder={isDrawer ? "Drawers can't chat!" : 'Type guess...'}
-          className="flex-1 min-w-0 px-4 py-2 bg-gray-100 dark:bg-discord-main border-2 border-gray-200 dark:border-gray-800 rounded-xl font-bold text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:border-green-500 dark:focus:border-neon-blue disabled:opacity-50 transition-colors"
-        />
+        <div className="relative flex-1 min-w-0">
+          {isVIP && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 dark:text-emerald-400 pointer-events-none">
+              <HatGlasses size={18} strokeWidth={2.5} />
+            </div>
+          )}
+          <input
+            ref={inputRef}
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={false}
+            placeholder={isVIP ? 'Secret VIP Chat...' : 'Type guess...'}
+            className={`w-full py-2 pr-4 bg-gray-100 dark:bg-discord-main border-2 border-gray-200 dark:border-gray-800 rounded-xl font-bold text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:border-green-500 dark:focus:border-neon-blue transition-colors ${isVIP ? 'pl-10' : 'pl-4'}`}
+          />
+        </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           type="submit"
-          disabled={isDrawer || !message.trim()}
+          disabled={!message.trim()}
           className="shrink-0 bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white px-4 rounded-xl font-black disabled:opacity-50 border-b-4 border-green-700 dark:border-blue-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center"
         >
           <SendHorizontal size={18} strokeWidth={2.5} />
