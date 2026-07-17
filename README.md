@@ -21,14 +21,8 @@
 
   > A high-performance multiplayer drawing and guessing game powered by a server-authoritative state machine, Redis-backed canvas history, and strict runtime payload validation.
  
-
   <img src="./assets/hero.gif" alt="Scribblitz Gameplay Demo" width="100%">
 </div>
-
-
-<p align="center">
-  <img src="./assets/hero.gif" alt="Scribblitz Gameplay Demo" width="100%">
-</p>
 
 ## ✨ Engineering Highlights
 
@@ -303,7 +297,7 @@ The `apps/worker` service and a few reserved event types (`emote:send`, `emote:b
 
 ## 👨‍💻 Author
 
-Built by **Mirza Mohammad Abbas** — [LinkedIn](https://www.linkedin.com/in/mirza-mohammad-abbas)
+Written by **Mirza Mohammad Abbas** — [LinkedIn](https://www.linkedin.com/in/mirza-mohammad-abbas)
 
 ## 📄 License
 
