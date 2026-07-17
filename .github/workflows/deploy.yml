@@ -8,7 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    environment:
+      name: production
+      url: https://scribblitz.xyz
     steps:
       - name: Execute Deployment Commands via SSH
         uses: appleboy/ssh-action@v1.0.3
