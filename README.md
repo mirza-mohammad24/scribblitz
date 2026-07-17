@@ -10,9 +10,25 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](#)
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=flat&logo=turborepo&logoColor=white)](#)
 
+
+<video autoplay loop muted playsinline width="100%">
+    <source src=https://github.com/user-attachments/assets/fb7c48bc-05c6-4a09-a760-50afd7e80fbf
+    type="video/mp4">
+</video>
+
+
 > A high-performance multiplayer drawing and guessing game powered by a server-authoritative state machine, Redis-backed canvas history, and strict runtime payload validation.
 
-**[Play the Live Demo]** _(add link)_ · **[Watch a Gameplay Clip]** _(add link)_
+## ✨ Engineering Highlights
+
+- **Server-authoritative Finite State Machine (FSM)** enforces valid game-state transitions and prevents illegal client actions.
+- **Redis Streams** provide durable event sourcing for collaborative canvas reconstruction and reconnect recovery.
+- **Persistent session mapping** allows players to reconnect without losing game state or identity.
+- **Shared TypeScript contracts** eliminate payload inconsistencies between the Next.js frontend and Express backend.
+- **Runtime Zod validation** rejects malformed Socket.IO payloads before they reach business logic.
+- **16ms batched canvas synchronization** minimizes WebSocket overhead while preserving a smooth real-time drawing experience.
+- **Automatic host migration** ensures multiplayer lobbies survive unexpected disconnects.
+- **Graceful shutdown routines** clean up timers, Redis resources, and room state to prevent orphaned sessions.
 
 ---
 
@@ -113,17 +129,6 @@ sequenceDiagram
 
 - **Progressive Hint System:**
   To maintain engagement throughout each round, the server progressively reveals characters of the target word as the timer advances. Hint generation is entirely server-authoritative, ensuring every client receives synchronized updates through `word:hint_updated` events while preventing client-side manipulation.
-
-### 🚀 Engineering Highlights
-
-- **Server-authoritative Finite State Machine (FSM)** enforces valid game-state transitions and prevents illegal client actions.
-- **Redis Streams** provide durable event sourcing for collaborative canvas reconstruction and reconnect recovery.
-- **Persistent session mapping** allows players to reconnect without losing game state or identity.
-- **Shared TypeScript contracts** eliminate payload inconsistencies between the Next.js frontend and Express backend.
-- **Runtime Zod validation** rejects malformed Socket.IO payloads before they reach business logic.
-- **16ms batched canvas synchronization** minimizes WebSocket overhead while preserving a smooth real-time drawing experience.
-- **Automatic host migration** ensures multiplayer lobbies survive unexpected disconnects.
-- **Graceful shutdown routines** clean up timers, Redis resources, and room state to prevent orphaned sessions.
 
 ---
 
@@ -276,7 +281,7 @@ The `apps/worker` service and a few reserved event types (`emote:send`, `emote:b
 
 ---
 
-## ⚠️ Known Limitations (V1)
+## ⚠️ Known Limitations (v1)
 
 - **In-memory game state** — all active rooms live in the game-server's process memory; a restart clears them. Redis is used for canvas history, not for cross-instance state.
 - **No authentication** — player identity is a client-generated UUID in `localStorage`. The Prisma `User` model exists but isn't wired up yet.
