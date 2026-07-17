@@ -12,7 +12,7 @@
 
 
 <video autoplay loop muted playsinline width="100%">
-    <source src=https://github.com/user-attachments/assets/fb7c48bc-05c6-4a09-a760-50afd7e80fbf
+    <source src="https://github.com/user-attachments/assets/fb7c48bc-05c6-4a09-a760-50afd7e80fbf"
     type="video/mp4">
 </video>
 
