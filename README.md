@@ -11,10 +11,6 @@
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=flat&logo=turborepo&logoColor=white)](#)
 
 
-https://github.com/user-attachments/assets/fb7c48bc-05c6-4a09-a760-50afd7e80fbf
-    
-
-
 > A high-performance multiplayer drawing and guessing game powered by a server-authoritative state machine, Redis-backed canvas history, and strict runtime payload validation.
 
 ## ✨ Engineering Highlights
