@@ -31,9 +31,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useGameSocket } from '@/hooks/useGameSocket';
 import { useGameStore } from '@/store/gameStore';
-import { ClientEvents } from '@scribblitz/types';
+import { ClientEvents, GameState } from '@scribblitz/types';
 import { SendHorizontal, ChevronDown, Sparkles, Brush, Ghost, HatGlasses } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { EmoteBar } from './EmoteBar';
 import confetti from 'canvas-confetti';
 
 /**
@@ -47,7 +48,7 @@ import confetti from 'canvas-confetti';
  */
 export const ArenaChat = () => {
   const { socket, userId } = useGameSocket();
-  const { chatMessages, roundId, currentDrawerId, players } = useGameStore();
+  const { chatMessages, roundId, currentDrawerId, players, gameState } = useGameStore();
 
   const [message, setMessage] = useState('');
 
@@ -68,6 +69,10 @@ export const ArenaChat = () => {
   //Determine if they are in the VIP  Ghost Chat: The drawer and correct guessers
   //can chat privately during the drawing phase, but their messages are not broadcast to others.
   const isVIP = isDrawer || hasGuessedCorrectly;
+
+  const isDrawingPhase =
+    gameState === GameState.DRAWING || gameState === GameState.PARALLEL_DRAWING;
+  const canEmote = !isDrawer && isDrawingPhase;
 
   //  ARCADE SHOWER CONFETTI LOGIC
   useEffect(() => {
@@ -305,12 +310,15 @@ export const ArenaChat = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             onClick={scrollToBottom}
-            className="absolute bottom-18 left-1/2 -translate-x-1/2 bg-red-500 dark:bg-neon-pink text-white px-4 py-1.5 rounded-full font-black text-xs shadow-xl flex items-center gap-1 border-2 border-white dark:border-discord-main z-10 hover:bg-red-600 transition-colors"
+            className="absolute bottom-18 left-1/2 -translate-x-1/2 bg-red-500 dark:bg-neon-pink text-white px-4 py-1.5 rounded-full font-black text-xs shadow-xl flex items-center gap-1 border-2 border-white dark:border-discord-main z-10 hover:bg-red-600 dark:hover:bg-neon-pink-hover transition-colors"
           >
             New messages <ChevronDown size={14} strokeWidth={3} />
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/*Emote bar */}
+      {canEmote && <EmoteBar />}
 
       <form
         onSubmit={handleSend}

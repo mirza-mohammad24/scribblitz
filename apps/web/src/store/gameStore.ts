@@ -23,6 +23,13 @@ export interface ChatMessage {
   isGhost?: boolean; //for ghost messages that are sent between correct guessers and the drawer, but not to other players
 }
 
+export interface EmoteMessage {
+  id: string; //Unique ID for react rendering mapping
+  emoji: string;
+  senderId: string;
+  startX: number; //random starting position for the floating animation (between 10% and 90% of screen width)
+}
+
 interface GameStore {
   //Core Room State
   //If gameState is null, we are on the Splash screen (screen before waiting room)

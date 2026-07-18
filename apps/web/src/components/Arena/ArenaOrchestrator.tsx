@@ -71,6 +71,7 @@ import { ArenaHUD } from './ArenaHUD';
 import { ArenaCanvas } from './ArenaCanvas';
 import { ArenaChat } from './ArenaChat';
 import { ArenaLeaderboard } from './ArenaLeaderboard';
+import { FloatingEmotes } from './FloatingEmotes';
 
 /**
  * Top-level orchestrator component that manages the full game lifecycle.
@@ -621,6 +622,8 @@ export const ArenaOrchestrator = () => {
 
             {/* CENTER COLUMN: CANVAS & TOOLBOX */}
             <div className="flex-1 flex flex-col gap-3 min-h-0 relative w-full lg:max-w-275 mx-auto">
+              <FloatingEmotes />
+
               {/*  Mobile Peek Chat Button strictly for the Drawer */}
               {canDraw && (
                 <div className="lg:hidden flex justify-end w-full shrink-0 -mb-2 z-10 relative px-2">
