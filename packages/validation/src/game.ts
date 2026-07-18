@@ -56,3 +56,8 @@ export const CanvasSyncRequestSchema = z.object({
     .toUpperCase()
     .length(6, { message: 'Room code must be 6 characters' }),
 });
+
+export const emoteSchema = z.object({
+  // Limit to a single emoji (max 10 chars handles complex emojis with modifiers)
+  emoji: z.string().min(1, 'Emote cannot be empty').max(10, 'Emote cannot exceed 10 characters'),
+});

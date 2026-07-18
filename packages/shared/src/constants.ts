@@ -35,4 +35,8 @@ export const GAME_CONSTANTS = {
   MAX_CUSTOM_WORDS: 250,
   MAX_WORD_LENGTH: 20,
   MAX_WORDS_PER_PHRASE: 2,
+
+  //Emote constants
+  EMOTE_RATE_LIMIT_MAX: 5, //max 5 emotes
+  EMOTE_RATE_LIMIT_WINDOW_MS: 3000, //per 3 seconds
 } as const;

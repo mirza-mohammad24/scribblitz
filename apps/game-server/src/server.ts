@@ -21,6 +21,7 @@ import {
   handleReturnToLobby,
 } from './socket/handlers/gameHandlers';
 import { handleChatMessage } from './socket/handlers/messageHandlers';
+import { handleEmote } from './socket/handlers/emoteHandler';
 import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
 import { endRound, abortGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
@@ -288,6 +289,7 @@ io.on('connection', (socket: Socket) => {
   socket.on(ClientEvents.GAME_START, handleGameStart(io, socket));
   socket.on(ClientEvents.WORD_SELECT, handleWordSelect(io, socket));
   socket.on(ClientEvents.CHAT_MESSAGE, handleChatMessage(io, socket));
+  socket.on(ClientEvents.EMOTE_SEND, handleEmote(io, socket));
 
   /**
    * Canvas event listener - this will trigger the drawing flow
