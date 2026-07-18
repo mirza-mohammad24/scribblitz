@@ -4,15 +4,15 @@ import { useGameSocket } from '@/hooks/useGameSocket';
 import { ClientEvents } from '@scribblitz/types';
 import { motion } from 'framer-motion';
 
-// Configure which emojis show up on mobile vs desktop
+// Configure which emojis show up on mobile vs desktop (currently showing all)
 const EMOTES = [
   { char: '👍', mobile: true },
   { char: '👎', mobile: true },
   { char: '❤️', mobile: true },
   { char: '🔥', mobile: true },
-  { char: '😂', mobile: false },
-  { char: '😭', mobile: false },
-  { char: '🤯', mobile: false },
+  { char: '😂', mobile: true },
+  { char: '😭', mobile: true },
+  { char: '🤯', mobile: true },
 ];
 
 export const EmoteBar = () => {
