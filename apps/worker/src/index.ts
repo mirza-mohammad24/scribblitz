@@ -193,6 +193,7 @@ async function startWorker() {
       logger.info('Worker is connected to Redis and listening for jobs on [ai-theme-queue]');
     });
   } catch (error) {
+    console.error('STARTUP ERROR:', error);
     logger.fatal({ error }, 'Fatal error starting worker');
     process.exit(1);
   }
@@ -202,11 +203,13 @@ async function startWorker() {
 // CRASH HANDLERS & GRACEFUL SHUTDOWN
 // ==========================================
 process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err);
   logger.fatal({ err }, 'FATAL: uncaughtException in worker');
   setTimeout(() => process.exit(1), 100);
 });
 
 process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason);
   logger.fatal({ reason }, 'FATAL: unhandledRejection in worker');
   setTimeout(() => process.exit(1), 100);
 });

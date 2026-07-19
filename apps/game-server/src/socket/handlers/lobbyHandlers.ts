@@ -468,7 +468,7 @@ export const handleGenerateTheme = (io: Server, socket: Socket) => async (rawPay
     //Notify the host that the theme generation was successful
     socket.emit(ServerEvents.THEME_GENERATED_SUCCESS);
   } catch (error) {
-    logger.error({ roomCode, error }, 'AI theme generation failed or timed out');
+    logger.error({ roomCode, err: error }, 'AI theme generation failed or timed out');
     emitError(
       socket,
       ErrorCode.THEME_GENERATION_FAILED,
