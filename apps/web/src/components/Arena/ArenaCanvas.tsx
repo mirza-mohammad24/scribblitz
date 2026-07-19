@@ -24,7 +24,8 @@
 import { useRef, useEffect, useState } from 'react';
 import { useCanvasDrawing, CANVAS_CONFIG } from '@/hooks/useCanvasDrawing';
 import { useGameSocket } from '@/hooks/useGameSocket';
-import { Pencil, Eraser, PaintBucket, Undo2, Trash2, Palette } from 'lucide-react';
+import { Pencil, Eraser, PaintBucket, Undo2, Trash2, Palette, ChevronUp } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
 
 interface ArenaCanvasProps {
@@ -83,6 +84,9 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
   const [size, setSize] = useState(5);
   const [tool, setTool] = useState<'draw' | 'erase' | 'fill'>('draw');
 
+  // Mobile pop-up menu state
+  const [showMobileSizeMenu, setShowMobileSizeMenu] = useState(false);
+
   // Retina / High-DPI Display Setup
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,7 +118,7 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
   return (
     <div className="w-full h-full flex flex-col gap-3 min-h-0">
       {/* CANVAS WRAPPER */}
-      <div className="flex-1 w-full min-h-0 flex justify-center items-center bg-gray-100/50 dark:bg-discord-main/30 rounded-3xl relative overflow-hidden shrink-0">
+      <div className="flex-1 w-full min-h-0 flex justify-center items-center relative shrink-0">
         <canvas
           ref={canvasRef}
           className={`max-w-full max-h-full aspect-4/3 object-contain bg-[#FAFAF8] rounded-2xl shadow-md border-4 border-gray-200 dark:border-discord-main touch-none ${
@@ -138,30 +142,98 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
           className="w-full bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-discord-main p-2.5 md:p-3 rounded-3xl shadow-sm flex flex-col gap-3 shrink-0"
         >
           {/* TOP ROW: Tools | Size Buttons | Undo/Clear */}
-          <div className="flex justify-start md:justify-between items-center gap-2 overflow-x-auto w-full pb-1 md:pb-0 hide-scrollbar">
+          <div className="flex justify-between items-center gap-1 sm:gap-2 w-full pb-1 md:pb-0">
             {/* Tools */}
-            <div className="flex gap-1 bg-gray-100 dark:bg-discord-main p-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-800">
+            <div className="flex gap-0.5 sm:gap-1 bg-gray-100 dark:bg-discord-main p-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-800">
               <button
-                onClick={() => setTool('draw')}
+                onClick={() => {
+                  setTool('draw');
+                  setShowMobileSizeMenu(false);
+                }}
                 className={`p-2 rounded-lg transition-all ${tool === 'draw' ? 'bg-green-500 dark:bg-neon-blue text-white shadow-md' : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'}`}
               >
                 <Pencil size={18} strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => setTool('fill')}
+                onClick={() => {
+                  setTool('fill');
+                  setShowMobileSizeMenu(false);
+                }}
                 className={`p-2 rounded-lg transition-all ${tool === 'fill' ? 'bg-green-500 dark:bg-neon-blue text-white shadow-md' : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'}`}
               >
                 <PaintBucket size={18} strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => setTool('erase')}
+                onClick={() => {
+                  setTool('erase');
+                  setShowMobileSizeMenu(false);
+                }}
                 className={`p-2 rounded-lg transition-all ${tool === 'erase' ? 'bg-green-500 dark:bg-neon-blue text-white shadow-md' : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'}`}
               >
                 <Eraser size={18} strokeWidth={2.5} />
               </button>
             </div>
 
-            <div className="flex-1 flex justify-center items-center gap-1 md:gap-2 px-2 bg-gray-100 dark:bg-discord-main p-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-800">
+            {/* --- MOBILE BRUSH SIZE (Pop-up Toggle) --- */}
+            <div className="md:hidden relative flex-1 flex justify-center items-center">
+              <button
+                onClick={() => setShowMobileSizeMenu(!showMobileSizeMenu)}
+                disabled={tool === 'fill'}
+                className={`flex items-center justify-center gap-1 w-full max-w-16 h-10 bg-gray-100 dark:bg-discord-main rounded-xl border-2 transition-all disabled:opacity-30 ${showMobileSizeMenu ? 'border-green-500 dark:border-neon-blue' : 'border-gray-200 dark:border-gray-800 active:scale-95'}`}
+              >
+                <div
+                  className={`${tool !== 'fill' ? 'bg-green-600 dark:bg-neon-blue' : 'bg-gray-700 dark:bg-gray-300'} rounded-full`}
+                  style={{
+                    width: Math.max(4, size / 1.5),
+                    height: Math.max(4, size / 1.5),
+                  }}
+                />
+                <ChevronUp size={14} className="text-gray-400 shrink-0" strokeWidth={3} />
+              </button>
+
+              {/* Invisible overlay to close menu when tapping outside */}
+              {showMobileSizeMenu && (
+                <div className="fixed inset-0 z-40" onClick={() => setShowMobileSizeMenu(false)} />
+              )}
+
+              <AnimatePresence>
+                {showMobileSizeMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                    className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-gray-700 p-2 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] z-50"
+                  >
+                    {/* Reverse order so biggest is at the top */}
+                    {[...BRUSH_SIZES].reverse().map((s) => (
+                      <button
+                        key={s.label}
+                        onClick={() => {
+                          setSize(s.value);
+                          setShowMobileSizeMenu(false);
+                        }}
+                        className={`flex items-center justify-center w-12 h-12 rounded-xl transition-colors ${
+                          size === s.value
+                            ? 'bg-green-200 dark:bg-neon-blue/20 shadow-inner'
+                            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <div
+                          className={`${size === s.value ? 'bg-green-600 dark:bg-neon-blue' : 'bg-gray-700 dark:bg-gray-300'} rounded-full transition-all`}
+                          style={{
+                            width: Math.max(4, s.value / 1.5),
+                            height: Math.max(4, s.value / 1.5),
+                          }}
+                        />
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* --- DESKTOP BRUSH SIZES (Inline) --- */}
+            <div className="hidden md:flex flex-1 justify-center items-center gap-1 md:gap-2 px-2 bg-gray-100 dark:bg-discord-main p-1.5 rounded-xl border-2 border-gray-200 dark:border-gray-800">
               {BRUSH_SIZES.map((s) => (
                 <button
                   key={s.label}
@@ -188,13 +260,19 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
             {/* Actions */}
             <div className="flex gap-1.5">
               <button
-                onClick={executeUndo}
+                onClick={() => {
+                  executeUndo();
+                  setShowMobileSizeMenu(false);
+                }}
                 className="p-2.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-500 border-2 border-yellow-200 dark:border-yellow-700/50 rounded-xl hover:bg-yellow-200 active:scale-95 transition-all"
               >
                 <Undo2 size={18} strokeWidth={2.5} />
               </button>
               <button
-                onClick={executeClear}
+                onClick={() => {
+                  executeClear();
+                  setShowMobileSizeMenu(false);
+                }}
                 className="p-2.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 border-2 border-red-200 dark:border-red-700/50 rounded-xl hover:bg-red-200 active:scale-95 transition-all"
               >
                 <Trash2 size={18} strokeWidth={2.5} />

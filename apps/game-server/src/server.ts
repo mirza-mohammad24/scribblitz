@@ -3,7 +3,6 @@
  * This file sets up the Express server, initializes Socket.IO for real-time communication,
  * and handles connection routing, reconnection logic, and graceful shutdown.
  */
-
 import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
@@ -14,6 +13,7 @@ import {
   handleJoinRoom,
   handleLeaveRoom,
   handleUpdateConfig,
+  handleGenerateTheme,
 } from './socket/handlers/lobbyHandlers';
 import {
   handleGameStart,
@@ -27,10 +27,12 @@ import { endRound, abortGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
 import { serializeRoom } from './socket/utils/serializeRoom';
+import { sanitizeConfig } from './socket/utils/sanitizeConfig';
 import { clearTimer, clearIntervalTimer } from './utils/timerCleanUp';
 import { redis } from './lib/redis';
 import { emitError } from './utils/emitError';
 import logger from './utils/logger';
+import { aiThemeQueue, aiThemeQueueEvents } from './services/aiQueue';
 
 // ==========================================
 // FLIGHT DATA RECORDER: CRASH HANDLERS
@@ -247,11 +249,17 @@ io.on('connection', (socket: Socket) => {
 
         // Send the exact same payload as a fresh join
         const serializedRoom = serializeRoom(state);
+        const isHost = state.hostId === userId; //find if the rejoining player is the host
+        const roomPayload = isHost
+          ? serializedRoom //host gets full config including raw word list
+          : { ...serializedRoom, config: sanitizeConfig(serializedRoom.config) }; //non-host gets sanitized config
+
         // Emit the ROOM_JOINED event to the rejoining player with the current room state so
         // their client can sync up
         socket.emit(ServerEvents.ROOM_JOINED, {
-          room: serializedRoom, //this strips off the word choices for security reasons.
+          room: roomPayload, //this strips off the word choices for security reasons and also sanitizes the config for non-hosts.
           // Therefore we add below explicit emit for the drawer reconnecting during the word selection phase
+
           serverNow: Date.now(), //send the server timestamp so the client can calculate the remaining time accurately
         });
 
@@ -285,6 +293,7 @@ io.on('connection', (socket: Socket) => {
   // these will trigger the game flow
   socket.on(ClientEvents.ROOM_LEAVE, handleLeaveRoom(io, socket));
   socket.on(ClientEvents.ROOM_UPDATE_CONFIG, handleUpdateConfig(io, socket));
+  socket.on(ClientEvents.GENERATE_THEME, handleGenerateTheme(io, socket));
   socket.on(ClientEvents.RETURN_TO_LOBBY, handleReturnToLobby(io, socket));
   socket.on(ClientEvents.GAME_START, handleGameStart(io, socket));
   socket.on(ClientEvents.WORD_SELECT, handleWordSelect(io, socket));
@@ -440,7 +449,10 @@ const gracefulShutdown = async (signal: string) => {
 
   httpServer.close(async () => {
     try {
-      // FIX: Cleanly shut down the Redis connection to prevent socket leaks in the DB
+      //Cleanly close the AI Queues to prevent orphaned BullMQ jobs/listeners
+      await aiThemeQueue.close();
+      await aiThemeQueueEvents.close();
+      // Cleanly shut down the main redis connection
       await redis.quit();
       logger.info('Redis connection closed.');
     } catch (err) {

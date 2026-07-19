@@ -21,6 +21,7 @@ export const ClientEvents = {
   ROOM_UPDATE_CONFIG: 'room:update_config',
   RETURN_TO_LOBBY: 'game:return_to_lobby',
   EMOTE_SEND: 'emote:send',
+  GENERATE_THEME: 'theme:generate',
 } as const;
 
 /**
@@ -57,4 +58,5 @@ export const ServerEvents = {
   LOBBY_RESET: 'room:lobby_reset',
   GAME_ABORTED: 'game:aborted',
   DRAWER_WORD_REVEAL: 'drawer:word_reveal',
+  THEME_GENERATED_SUCCESS: 'theme:generated_success',
 } as const;

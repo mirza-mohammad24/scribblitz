@@ -32,6 +32,11 @@ export enum ErrorCode {
   /** The user's session has expired. This will trigger silent background cleanup */
   SESSION_EXPIRED = 'SESSION_EXPIRED',
 
+  /** AI theme-based word generation failed or timed out. Non-fatal — host can retry or fall back to default/custom words. */
+  THEME_GENERATION_FAILED = 'THEME_GENERATION_FAILED',
+
+  RATE_LIMITED = 'RATE_LIMITED',
+
   /** Generic server error for unexpected conditions. */
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
 }

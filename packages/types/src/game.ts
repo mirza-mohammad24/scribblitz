@@ -68,6 +68,7 @@ export interface RoomConfig {
   customWordList?: string[]; // Optional custom word list for the game (provided by the host)
   difficulty: 'easy' | 'medium' | 'hard'; // Difficulty for the game (affects the reveal % of the chosen word)
   customWordsOnly: boolean;
+  customWordCount?: number; // Count of custom words, used for sanitization when sending config to non-host players
 }
 
 /**

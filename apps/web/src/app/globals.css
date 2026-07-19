@@ -37,24 +37,25 @@
    look for the "dark" class that `next-themes` injects into our HTML. */
 @variant dark (&:where(.dark, .dark *));
 
-::view-transition-old(root),
-::view-transition-new(root) {
+
+::view-transition-old(root) {
   animation: none;
   mix-blend-mode: normal;
 }
-::view-transition-old(root) {
-  z-index: 1;
-}
 ::view-transition-new(root) {
-  z-index: 2;
-}
-.dark::view-transition-old(root) {
-  z-index: 2;
-}
-.dark::view-transition-new(root) {
-  z-index: 1;
+  animation: circle-reveal 600ms ease-in-out forwards;
+  mix-blend-mode: normal;
+  will-change: clip-path;
 }
 
+@keyframes circle-reveal {
+  from {
+    clip-path: circle(0px at var(--click-x, 50%) var(--click-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--click-radius, 150%) at var(--click-x, 50%) var(--click-y, 50%));
+  }
+}
 
 /* Hides the scrollbar but allows scrolling (used for the mobile toolbox) */
 .hide-scrollbar {

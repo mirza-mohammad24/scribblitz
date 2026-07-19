@@ -112,6 +112,24 @@ export const roomConfigSchema = z.object({
     .optional(),
 });
 
+//Validation schema for generating AI theme-based words
+export const generateThemeSchema = z.object({
+  theme: z
+    .string()
+    .min(3, 'Theme must be at least 3 characters')
+    .max(
+      GAME_CONSTANTS.AI_THEME_MAX_CHARS,
+      `Theme cannot exceed ${GAME_CONSTANTS.AI_THEME_MAX_CHARS} characters`,
+    )
+    // First strip """ to prevent prompt injection, then replace newlines and trim
+    .transform((str) =>
+      str
+        .replace(/"""/g, '')
+        .replace(/[\r\n]+/g, ' ')
+        .trim(),
+    ),
+});
+
 export const createRoomSchema = z.object({
   username: usernameSchema,
   avatarSeed: z.string().min(1),

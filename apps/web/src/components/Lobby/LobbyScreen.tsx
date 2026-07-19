@@ -11,7 +11,18 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Player, RoomConfig } from '@scribblitz/types';
-import { Crown, Users, Settings2, LogOut, Copy, Check, Info, BookOpen } from 'lucide-react';
+import {
+  Crown,
+  Users,
+  Settings2,
+  LogOut,
+  Copy,
+  Check,
+  Info,
+  BookOpen,
+  Bot,
+  Sparkles,
+} from 'lucide-react';
 import Image from 'next/image';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { CustomWordsDrawer } from './CustomWordsDrawer';
@@ -23,9 +34,11 @@ interface LobbyScreenProps {
   config: RoomConfig;
   isHost: boolean;
   hostId: string;
+  isGeneratingThemedWords: boolean; //Indicates if the AI theme-based word generation is currently in progress
   onUpdateConfig: (newConfig: Partial<RoomConfig>) => void;
   onStartGame: () => void;
   onRequestLeave: () => void;
+  onGenerateTheme: (theme: string) => void; //Callback for generating a themed word list
 }
 
 // Framer Motion variants for the staggered list
@@ -58,9 +71,11 @@ export const LobbyScreen = ({
   config,
   isHost,
   hostId,
+  isGeneratingThemedWords,
   onUpdateConfig,
   onStartGame,
   onRequestLeave,
+  onGenerateTheme,
 }: LobbyScreenProps) => {
   // Track when the user copies the code
   const [copied, setCopied] = useState(false);
@@ -100,7 +115,7 @@ export const LobbyScreen = ({
       const minRequired =
         (config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT) +
         GAME_CONSTANTS.CUSTOM_WORD_BUFFER;
-      const customCount = config.customWordList?.length || 0;
+      const customCount = config.customWordList?.length ?? config.customWordCount ?? 0;
 
       if (customCount < minRequired) {
         setIsWarningOpen(true);
@@ -121,11 +136,36 @@ export const LobbyScreen = ({
     <>
       {isHost ? (
         <motion.button
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: isGeneratingThemedWords ? 1 : 0.95 }}
           onClick={handleStartGameClick}
-          className="w-full bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white py-4 md:py-5 rounded-2xl font-black text-xl md:text-2xl border-b-[6px] border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1.5 transition-all shadow-lg"
+          disabled={isGeneratingThemedWords}
+          className={`w-full py-4 md:py-5 rounded-2xl font-black text-xl md:text-2xl border-b-[6px] transition-all shadow-lg flex justify-center items-center gap-3
+            ${
+              isGeneratingThemedWords
+                ? 'bg-gray-400 dark:bg-gray-700 text-gray-200 border-gray-500 dark:border-gray-800 cursor-not-allowed translate-y-1.5 border-b-0'
+                : 'bg-green-500 dark:bg-neon-blue hover:bg-green-600 dark:hover:bg-neon-blue-hover text-white border-green-700 dark:border-neon-blue-border active:border-b-0 active:translate-y-1.5'
+            }`}
         >
-          START GAME
+          {isGeneratingThemedWords ? (
+            <>
+              <motion.div
+                animate={{
+                  y: [0, -2, 0],
+                  rotate: [-2, 2, -2],
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <Bot size={24} strokeWidth={2.5} />
+              </motion.div>
+              Cooking Up Words...
+            </>
+          ) : (
+            'START GAME'
+          )}
         </motion.button>
       ) : (
         // The Active Waiting State
@@ -544,13 +584,17 @@ export const LobbyScreen = ({
                   : 'bg-gray-100 dark:bg-discord-main border-gray-200 dark:border-gray-800 text-gray-400 opacity-70 cursor-not-allowed'
               }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <BookOpen size={18} className="text-green-500 dark:text-neon-blue" />
                 <span>Custom Words</span>
+                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-neon-pink/20 text-red-600 dark:text-neon-pink border border-red-200 dark:border-neon-pink/30 text-[9px] font-black uppercase tracking-wider ml-1">
+                  <Sparkles size={10} strokeWidth={3} />
+                  Powered by AI
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-discord-main px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">
-                  {config.customWordList?.length || 0} Added
+                  {config.customWordList?.length ?? config.customWordCount ?? 0} Added
                 </span>
               </div>
             </button>
@@ -698,6 +742,8 @@ export const LobbyScreen = ({
       <CustomWordsDrawer
         isOpen={isDrawerOpen}
         initialWords={config.customWordList || []}
+        isGenerating={isGeneratingThemedWords}
+        onGenerateTheme={onGenerateTheme}
         onClose={() => setIsDrawerOpen(false)}
         onSave={(words) => {
           onUpdateConfig({ customWordList: words });
@@ -707,7 +753,7 @@ export const LobbyScreen = ({
 
       <StrictModeWarningOverlay
         isOpen={isWarningOpen}
-        customWordCount={config.customWordList?.length || 0}
+        customWordCount={config.customWordList?.length ?? config.customWordCount ?? 0}
         minRequired={
           (config.roundCount || GAME_CONSTANTS.DEFAULT_ROUND_COUNT) +
           GAME_CONSTANTS.CUSTOM_WORD_BUFFER

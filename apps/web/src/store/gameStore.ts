@@ -59,6 +59,7 @@ interface GameStore {
   localPhaseEndTime: number | null;
   isGameAborted: boolean;
   abortReason: string | null;
+  isGeneratingThemedWords: boolean; //Indicates if the AI theme-based word generation is currently in progress
 
   //Actions
   setRoomState: (payload: Partial<GameStore>) => void;
@@ -90,6 +91,7 @@ const initialState = {
   localPhaseEndTime: null,
   isGameAborted: false,
   abortReason: null,
+  isGeneratingThemedWords: false,
 };
 
 export const useGameStore = create<GameStore>((set) => ({

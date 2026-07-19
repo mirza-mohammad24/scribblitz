@@ -97,6 +97,7 @@ export const ArenaOrchestrator = () => {
     isGameAborted,
     setRoomState,
     resetGame, //Needed for leaving the room
+    isGeneratingThemedWords, //Needed for AI theme generation state
   } = useGameStore();
 
   const addToast = useToastStore((state) => state.addToast);
@@ -182,6 +183,18 @@ export const ArenaOrchestrator = () => {
 
     const handleGameStateChanged = ({ state }: { state: GameState }) =>
       setRoomState({ gameState: state });
+
+    const handleThemeGeneratedSuccess = () => {
+      setRoomState({ isGeneratingThemedWords: false });
+
+      //The word count is already updated by ROOM_CONFIG_UPDATED which arrives slightly before this
+      const customWordCount =
+        useGameStore.getState().config?.customWordList?.length ??
+        useGameStore.getState().config?.customWordCount ??
+        0;
+
+      addToast(`Successfully generated ${customWordCount} themed words!`, 'success');
+    };
 
     // ==========================================
     // ROUND MANAGER FLOW
@@ -394,6 +407,14 @@ export const ArenaOrchestrator = () => {
       const isFatal = error?.isFatal ?? false;
       const message = error?.message || JSON.stringify(error);
 
+      // Catch AI Generation failures to unlock the UI
+      if (
+        error?.code === ErrorCode.THEME_GENERATION_FAILED ||
+        error?.code === ErrorCode.RATE_LIMITED
+      ) {
+        setRoomState({ isGeneratingThemedWords: false });
+      }
+
       if (isFatal) {
         // Backend explicitly commanded a disconnect (e.g., ROOM_FULL, ROOM_NOT_FOUND)
         // Clear active room from localStorage on fatal error to prevent reconnection loops
@@ -423,6 +444,7 @@ export const ArenaOrchestrator = () => {
     socket.on(ServerEvents.PLAYER_DISCONNECTED, handlePlayerDisconnected);
     socket.on(ServerEvents.HOST_CHANGED, handleHostChanged);
     socket.on(ServerEvents.ROOM_CONFIG_UPDATED, handleRoomConfigUpdated);
+    socket.on(ServerEvents.THEME_GENERATED_SUCCESS, handleThemeGeneratedSuccess);
     socket.on(ServerEvents.GAME_STATE_CHANGED, handleGameStateChanged);
     socket.on(ServerEvents.ROUND_STARTING, handleRoundStarting);
     socket.on(ServerEvents.WORD_CHOICES, handleWordChoices);
@@ -452,6 +474,7 @@ export const ArenaOrchestrator = () => {
       socket.off(ServerEvents.PLAYER_DISCONNECTED, handlePlayerDisconnected);
       socket.off(ServerEvents.HOST_CHANGED, handleHostChanged);
       socket.off(ServerEvents.ROOM_CONFIG_UPDATED, handleRoomConfigUpdated);
+      socket.off(ServerEvents.THEME_GENERATED_SUCCESS, handleThemeGeneratedSuccess);
       socket.off(ServerEvents.GAME_STATE_CHANGED, handleGameStateChanged);
       socket.off(ServerEvents.ROUND_STARTING, handleRoundStarting);
       socket.off(ServerEvents.WORD_CHOICES, handleWordChoices);
@@ -488,6 +511,15 @@ export const ArenaOrchestrator = () => {
    */
   const updateConfig = (newConfig: Partial<RoomConfig>) =>
     socket?.emit(ClientEvents.ROOM_UPDATE_CONFIG, newConfig);
+
+  /**
+   * Handles the generation of a themed word list.
+   * @param theme  - The theme string to generate words for.
+   */
+  const handleGenerateTheme = (theme: string) => {
+    setRoomState({ isGeneratingThemedWords: true });
+    socket?.emit(ClientEvents.GENERATE_THEME, { theme });
+  };
 
   /**
    * Emits the drawer's word selection to the server during the ROUND_STARTING phase.
@@ -568,6 +600,8 @@ export const ArenaOrchestrator = () => {
           config={config}
           isHost={isHost}
           hostId={hostId!}
+          isGeneratingThemedWords={isGeneratingThemedWords}
+          onGenerateTheme={handleGenerateTheme}
           onUpdateConfig={updateConfig}
           onStartGame={handleStartGame}
           onRequestLeave={requestLeaveRoom}

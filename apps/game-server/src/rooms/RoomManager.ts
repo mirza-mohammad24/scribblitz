@@ -8,6 +8,7 @@ import { Player, RoomConfig, ErrorCode } from '@scribblitz/types';
 import { Room, ServerRoomState } from './Room';
 import { redis } from '../lib/redis';
 import logger from '../utils/logger';
+import { clearThemeState } from '../rateLimiters/themeRateLimiter';
 
 export class RoomManager {
   // Using a Map for O(1) lookups and efficient addition/removal of rooms
@@ -49,7 +50,9 @@ export class RoomManager {
   }
 
   /**
-   * Safely deletes a room from memory, ensuring all internal timers are cleaned up first.
+   * Safely deletes a room from memory, ensuring all internal timers are cleaned up first as well as
+   * removing all player references to prevent memory leaks. Also cleans up the Redis canvas stream
+   * and AI theme rate limiter.
    * @param roomCode The 6-character room identifier.
    */
   deleteRoom(roomCode: string): void {
@@ -65,6 +68,9 @@ export class RoomManager {
     for (const playerId of room.getState().players.keys()) {
       this.playerRoomIndex.delete(playerId);
     }
+
+    //Clean up the AI Theme rate limiter to prevent memory leaks
+    clearThemeState(roomCode);
 
     // Delete the Redis canvas stream to free up database RAM
     // (Using fire-and-forget catch so we don't block room deletion if Redis hiccups)

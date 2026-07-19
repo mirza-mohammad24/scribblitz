@@ -14,8 +14,9 @@ import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { wordSelectSchema } from '@scribblitz/validation';
 import { GameState, ServerEvents, ErrorCode } from '@scribblitz/types';
 import { serializeRoom } from '../utils/serializeRoom';
+import { sanitizeConfig } from '../utils/sanitizeConfig';
 import { GAME_CONSTANTS } from '@scribblitz/shared/dist/constants';
-
+import { isGenerationActive } from '../../rateLimiters/themeRateLimiter';
 /**
  * Handles the game start event
  * @param io The Socket.IO server instance
@@ -52,6 +53,16 @@ export const handleGameStart = (io: Server, socket: Socket) => () => {
       socket,
       ErrorCode.NOT_ENOUGH_PLAYERS,
       `Need at least ${GAME_CONSTANTS.MIN_PLAYERS} players to start the game.`,
+    );
+    return;
+  }
+
+  // SECURITY GUARD: Prevent game start if an AI word generation is still in progress
+  if (isGenerationActive(roomCode)) {
+    emitError(
+      socket,
+      ErrorCode.INVALID_STATE,
+      'Please wait for AI word generation to finish before starting.',
     );
     return;
   }
@@ -122,7 +133,13 @@ export const handleReturnToLobby = (io: Server, socket: Socket) => () => {
 
   room.resetForNewGame();
 
-  //Send the refreshed lobby state to everyone
-  //We use LOBBY_RESET here because we actually want the UI to completely reset
-  io.to(roomCode).emit(ServerEvents.LOBBY_RESET, { room: serializeRoom(room.getState()) });
+  const serializedRoom = serializeRoom(room.getState());
+  //Host ( the acting socket - already verified as host above) gets the full room state
+  // including the raw custom word list if applicable
+  socket.emit(ServerEvents.LOBBY_RESET, { room: serializedRoom });
+
+  //Everyone else gets the sanitized version
+  socket.broadcast.to(roomCode).emit(ServerEvents.LOBBY_RESET, {
+    room: { ...serializedRoom, config: sanitizeConfig(serializedRoom.config) },
+  });
 };

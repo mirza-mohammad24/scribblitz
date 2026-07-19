@@ -5,7 +5,8 @@
 import { Socket } from 'socket.io';
 import { ServerEvents, ErrorCode, GameError } from '@scribblitz/types';
 
-//THE BOUNCER LIST: Only these specific codes will force the frontend to disconnect
+//THE BOUNCER LIST: Only these specific codes will force the frontend to disconnect (all others are non-fatal
+// and can be handled gracefully)
 const FATAL_ERRORS: ErrorCode[] = [
   ErrorCode.NOT_FOUND,
   ErrorCode.ROOM_FULL,

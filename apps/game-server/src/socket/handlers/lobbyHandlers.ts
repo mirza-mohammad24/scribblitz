@@ -10,16 +10,29 @@
  */
 
 import { Server, Socket } from 'socket.io';
-import { ServerEvents, GameState, Player, ErrorCode } from '@scribblitz/types';
-import { createRoomSchema, joinRoomSchema, roomConfigSchema } from '@scribblitz/validation';
+import { ServerEvents, ClientEvents, GameState, Player, ErrorCode } from '@scribblitz/types';
+import {
+  createRoomSchema,
+  joinRoomSchema,
+  roomConfigSchema,
+  generateThemeSchema,
+} from '@scribblitz/validation';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { roomManager } from '../../rooms/RoomManager';
 import { ServerRoomState } from '../../rooms/Room';
 import { emitError } from '../../utils/emitError';
 import { serializeRoom } from '../utils/serializeRoom';
+import { sanitizeConfig } from '../utils/sanitizeConfig';
 import { getUserIdBySocket } from '../utils/getUserIdBySocket';
 import { endRound, abortGame } from '../../fsm/roundManager';
 import logger from '../../utils/logger';
+import { aiThemeQueue, aiThemeQueueEvents } from '../../services/aiQueue';
+import {
+  getLastThemeRequest,
+  setThemeRequest,
+  addActiveGeneration,
+  removeActiveGeneration,
+} from '../../rateLimiters/themeRateLimiter';
 
 /**
  * Handles the creation of a new game room. Validates input,
@@ -180,7 +193,10 @@ export const handleJoinRoom = (io: Server, socket: Socket) => (rawPayload: unkno
   const serializedRoom = serializeRoom(room.getState());
 
   //Joining player informed that they got in and provide the full room state
-  socket.emit(ServerEvents.ROOM_JOINED, { room: serializedRoom });
+  //but sanitized config (no raw word list if custom words are used)
+  socket.emit(ServerEvents.ROOM_JOINED, {
+    room: { ...serializedRoom, config: sanitizeConfig(serializedRoom.config) },
+  });
 
   //Tell every other player in room that a player joined
   socket.to(roomCode).emit(ServerEvents.PLAYER_JOINED, { player });
@@ -233,11 +249,27 @@ export const handleUpdateConfig = (io: Server, socket: Socket) => (rawPayload: u
   //Server State Mutation
   room.updateConfig(result.data);
 
-  //Logging for debug
-  logger.info({ roomCode, config: result.data }, 'Host updated room config');
+  const { customWordList, ...loggableConfig } = result.data; //Don't log the raw word list for security reasons and disk space
 
-  //Client Communication: Broadcast the new config so all UI sliders snap to the new values
-  io.to(roomCode).emit(ServerEvents.ROOM_CONFIG_UPDATED, { config: room.getState().config });
+  logger.info(
+    {
+      roomCode,
+      config: {
+        ...loggableConfig,
+        ...(customWordList !== undefined && { customWordCount: customWordList.length }),
+      },
+    },
+    'Host updated room config',
+  );
+
+  //Client Communication: Broadcast the new config so host and all other players can update their UI.
+  //The host gets the full config (including raw custom word list if applicable), while everyone else
+  //gets a sanitized version.
+  const updatedConfig = room.getState().config;
+  socket.emit(ServerEvents.ROOM_CONFIG_UPDATED, { config: updatedConfig });
+  socket.broadcast.to(roomCode).emit(ServerEvents.ROOM_CONFIG_UPDATED, {
+    config: sanitizeConfig(updatedConfig),
+  });
 };
 
 /**
@@ -311,5 +343,139 @@ export const handleLeaveRoom = (io: Server, socket: Socket) => () => {
     if (connectedPlayers.length < GAME_CONSTANTS.MIN_PLAYERS && isGameActive) {
       void abortGame(io, roomCode);
     }
+  }
+};
+
+/**
+ * Handles the generation of a new theme for the room.
+ * @param io The Socket.IO server instance
+ * @param socket The Socket.IO socket instance for the connected client
+ * @returns A function that processes a request to generate a new theme. It validates the user's session,
+ * checks rate limits, dispatches an AI generation job, and updates the room configuration with the new theme.
+ * The function also handles success and error cases, emitting appropriate events back to the client.
+ * It ensures that only the host can generate a theme and that the game is still in the lobby state.
+ * The function also manages active generation locks to prevent concurrent requests and ensures that
+ * the host does not start the game before the AI theme generation is complete.
+ */
+export const handleGenerateTheme = (io: Server, socket: Socket) => async (rawPayload: unknown) => {
+  const roomCode = socket.data.roomCode;
+  const userId = getUserIdBySocket(socket);
+
+  if (!roomCode || !userId) return;
+
+  const room = roomManager.getRoom(roomCode);
+  if (!room) {
+    emitError(socket, ErrorCode.NOT_FOUND, 'Room not found');
+    return;
+  }
+
+  const state = room.getState();
+
+  //Security & State Check
+  if (state.gameState !== GameState.LOBBY) {
+    emitError(socket, ErrorCode.INVALID_STATE, 'Cannot generate theme after the game has started');
+    return;
+  }
+  if (state.hostId !== userId) {
+    emitError(socket, ErrorCode.UNAUTHORIZED, 'Only the host can generate a theme');
+    return;
+  }
+
+  //Rate Limiting Check
+  const now = Date.now();
+  const lastRequest = getLastThemeRequest(roomCode);
+  if (now - lastRequest < GAME_CONSTANTS.AI_THEME_RATE_LIMIT_MS) {
+    const remainingSecs = Math.ceil(
+      (GAME_CONSTANTS.AI_THEME_RATE_LIMIT_MS - (now - lastRequest)) / 1000,
+    );
+    emitError(
+      socket,
+      ErrorCode.RATE_LIMITED,
+      `Please wait ${remainingSecs} before generating again.`,
+    );
+    return;
+  }
+
+  //Payload validation
+  const result = generateThemeSchema.safeParse(rawPayload);
+  if (!result.success) {
+    emitError(
+      socket,
+      ErrorCode.BAD_REQUEST,
+      result.error.issues[0]?.message || 'Invalid theme data',
+    );
+    return;
+  }
+
+  const { theme } = result.data;
+
+  //Lock in the rate limit now that the request is valid
+  setThemeRequest(roomCode, now);
+
+  try {
+    //Mark this room as having an active AI generation job
+    addActiveGeneration(roomCode);
+
+    logger.info({ roomCode, theme }, 'Dispatching AI theme generation Job');
+
+    //Dispatch the job to BullMQ
+    const job = await aiThemeQueue.add(
+      'generate',
+      { theme },
+      {
+        removeOnComplete: true, //Don't clog up
+        removeOnFail: true,
+      },
+    );
+
+    //Wait for the worker to finish, WITH a strict AI_GENERATION_TIMEOUT_MS timeout
+    //we race the worker's promise against a timeout promise to ensure we don't wait indefinitely
+    const customWords = (await Promise.race([
+      //if the worker takes too long, we will reject the promise and catch it below
+      job.waitUntilFinished(aiThemeQueueEvents), //our worker will resolve this promise when the job is done
+      new Promise(
+        (
+          _,
+          reject, //timeout guard as a promise
+        ) =>
+          setTimeout(
+            () => reject(new Error('Job timeout')),
+            GAME_CONSTANTS.AI_GENERATION_TIMEOUT_MS,
+          ),
+      ),
+    ])) as string[];
+
+    // Mutate the Server State (apply the words and force Strict mode)
+    room.updateConfig({
+      customWordList: customWords,
+      customWordsOnly: true,
+    });
+
+    logger.info(
+      { roomCode, wordCount: customWords.length },
+      'AI theme generation successful — updated room config',
+    );
+
+    //Client communication
+    //Broadcast the new config to all players. The host gets the full config (including raw custom word
+    //list if applicable), while everyone else gets a sanitized version.
+    const updatedConfig = room.getState().config;
+    socket.emit(ServerEvents.ROOM_CONFIG_UPDATED, { config: updatedConfig });
+    socket.broadcast.to(roomCode).emit(ServerEvents.ROOM_CONFIG_UPDATED, {
+      config: sanitizeConfig(updatedConfig),
+    });
+
+    //Notify the host that the theme generation was successful
+    socket.emit(ServerEvents.THEME_GENERATED_SUCCESS);
+  } catch (error) {
+    logger.error({ roomCode, error }, 'AI theme generation failed or timed out');
+    emitError(
+      socket,
+      ErrorCode.THEME_GENERATION_FAILED,
+      'AI generation timed out or failed. Please try again or use default words.',
+    );
+  } finally {
+    //Remove the room from the active generation set regardless of success or failure
+    removeActiveGeneration(roomCode);
   }
 };
