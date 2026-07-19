@@ -46,6 +46,6 @@ export const GAME_CONSTANTS = {
   AI_WORD_MAX_CHARS: 20,
   AI_WORD_MAX_PHRASE_WORDS: 2,
   AI_THEME_MAX_CHARS: 250,
-  AI_THEME_RATE_LIMIT_MS: 30_000,
-  AI_GENERATION_TIMEOUT_MS: 20_000,
+  AI_GENERATION_TIMEOUT_MS: 60_000, // each AI generation request must complete within 60 seconds
+  AI_THEME_RATE_LIMIT_MS: 80_000, // each user can only request a new AI theme every 80 seconds
 } as const;
