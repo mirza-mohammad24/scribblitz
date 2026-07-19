@@ -57,6 +57,31 @@ services:
           cpus: '0.25'
           memory: 512M
 
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - ./worker-logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - backend
+    deploy: # LIMITS AND RESERVATIONS ACCORDING TO HOSTINGER KVM2 PLAN PURCHASED
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 128M
+
   postgres:
     image: postgres:16-alpine
     environment:
