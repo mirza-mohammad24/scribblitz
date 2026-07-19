@@ -21,11 +21,13 @@ import logger from './utils/logger';
 
 //Environment check
 if (!process.env.GEMINI_API_KEY) {
+  console.error('FATAL: GEMINI_API_KEY is not defined in the environment variables');
   logger.fatal('FATAL: GEMINI_API_KEY is not defined in the environment variables');
   process.exit(1);
 }
 
 if (!process.env.REDIS_URL) {
+  console.error('FATAL: REDIS_URL is not defined in the environment variables');
   logger.fatal('FATAL: REDIS_URL is not defined in the environment variables');
   process.exit(1);
 }
