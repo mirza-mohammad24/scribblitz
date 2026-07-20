@@ -35,7 +35,11 @@ export enum ErrorCode {
   /** AI theme-based word generation failed or timed out. Non-fatal — host can retry or fall back to default/custom words. */
   THEME_GENERATION_FAILED = 'THEME_GENERATION_FAILED',
 
+  /** The user has exceeded the rate limit for this action. */
   RATE_LIMITED = 'RATE_LIMITED',
+
+  /** Voice chat functionality failed. */
+  VOICE_CHAT_FAILED = 'VOICE_CHAT_FAILED',
 
   /** Generic server error for unexpected conditions. */
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',

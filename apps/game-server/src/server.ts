@@ -23,6 +23,7 @@ import {
 import { handleChatMessage } from './socket/handlers/messageHandlers';
 import { registerEmoteHandlers } from './socket/handlers/emoteHandler';
 import { registerCanvasHandlers } from './socket/handlers/canvasHandlers';
+import { registerVoiceHandlers } from './socket/handlers/voiceHandlers';
 import { endRound, abortGame } from './fsm/roundManager';
 import { roomManager } from './rooms/RoomManager';
 import { getUserIdBySocket } from './socket/utils/getUserIdBySocket';
@@ -311,6 +312,15 @@ io.on('connection', (socket: Socket) => {
    * other game logic handlers.
    */
   registerCanvasHandlers(io, socket);
+
+  /**
+   * Voice chat event listener - this will trigger the voice chat flow
+   * We register the voice handlers separately because they have their own validation and security logic.
+   * This separation allows us to optimize the voice event handling without affecting the other game logic handlers.
+   * The voice chat flow is also dependent on external configuration (LIVEKIT_API_KEY, LIVEKIT_API_SECRET, LIVEKIT_URL),
+   * so we check for their presence before enabling voice chat features.
+   */
+  registerVoiceHandlers(io, socket);
 
   // ---------------------------------------------------------
   // DISCONNECT & GRACE PERIOD LOGIC

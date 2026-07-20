@@ -22,6 +22,7 @@ export const ClientEvents = {
   RETURN_TO_LOBBY: 'game:return_to_lobby',
   EMOTE_SEND: 'emote:send',
   GENERATE_THEME: 'theme:generate',
+  VOICE_TOKEN_REQUEST: 'voice:token_request',
 } as const;
 
 /**
@@ -59,4 +60,5 @@ export const ServerEvents = {
   GAME_ABORTED: 'game:aborted',
   DRAWER_WORD_REVEAL: 'drawer:word_reveal',
   THEME_GENERATED_SUCCESS: 'theme:generated_success',
+  VOICE_TOKEN_ISSUED: 'voice:token_issued',
 } as const;
