@@ -391,7 +391,7 @@ export const handleGenerateTheme = (io: Server, socket: Socket) => async (rawPay
     emitError(
       socket,
       ErrorCode.RATE_LIMITED,
-      `Please wait ${remainingSecs} before generating again.`,
+      `Please wait ${remainingSecs} seconds before generating again.`,
     );
     return;
   }

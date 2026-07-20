@@ -8,6 +8,8 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { useGameStore } from '../store/gameStore';
+import { GameState } from '@scribblitz/types';
 
 /**
  * ThemeToggle component for switching between light and dark modes.
@@ -15,6 +17,8 @@ import { flushSync } from 'react-dom';
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const gameState = useGameStore((state) => state.gameState);
 
   useEffect(() => {
     // Avoid the synchronous state update warning during hydration
@@ -45,20 +49,32 @@ export function ThemeToggle() {
     const isCurrentlyDark = resolvedTheme === 'dark';
     const newTheme = isCurrentlyDark ? 'light' : 'dark';
 
-    // Fallback for older browsers without View Transitions
-    if (!document.startViewTransition) {
+    const isMobile = window.innerWidth < 768;
+    //Evaluate the FSM
+    const isGameInProgress = gameState !== null && gameState !== GameState.LOBBY;
+
+    // Fallback for older browsers without View Transitions and to avoid the transition effect during mobile gameplay
+    if (!document.startViewTransition || (isMobile && isGameInProgress)) {
       setTheme(newTheme);
       return;
     }
 
+    //animation only for desktop (for all states even in game in progress) and for mobile only in lobby state and landing page
     const x = e.clientX;
     const y = e.clientY;
     const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-
     const dpr = window.devicePixelRatio || 1;
+
+    // Calculate dynamic speed: 0.75ms per pixel of distance
+    // Clamped between 400ms (fastest for tiny phones) and 1000ms (slowest for huge ultra-wides)
+    const baseDuration = Math.min(Math.max(endRadius * 0.75, 400), 1000);
+    const dynamicDuration = baseDuration * dpr; // Adjust for device pixel ratio
+
     document.documentElement.style.setProperty('--click-x', `${x * dpr}px`);
     document.documentElement.style.setProperty('--click-y', `${y * dpr}px`);
     document.documentElement.style.setProperty('--click-radius', `${endRadius * dpr}px`);
+
+    document.documentElement.style.setProperty('--transition-duration', `${dynamicDuration}ms`);
 
     document.startViewTransition(() => {
       flushSync(() => {

@@ -230,7 +230,7 @@ export const LobbyScreen = ({
 
         {/* LEFT COLUMN: SETTINGS */}
         <div
-          className={`flex-1 flex-col gap-6 overflow-y-auto custom-scrollbar md:pr-2 ${activeTab === 'settings' ? 'flex' : 'hidden md:flex'}`}
+          className={`flex-1 flex-col gap-6 overflow-y-auto overflow-x-hidden custom-scrollbar md:pr-2 ${activeTab === 'settings' ? 'flex' : 'hidden md:flex'}`}
         >
           <div className="flex justify-between items-center shrink-0">
             <div className="flex items-center gap-3">
@@ -574,37 +574,38 @@ export const LobbyScreen = ({
           </div>
 
           {/* Custom Words Button Trigger & Strict Mode Toggle  */}
+          {/* Custom Words Button Trigger & Strict Mode Toggle  */}
           <div className="flex flex-col gap-3 mt-2 border-t-2 border-gray-200 dark:border-gray-800 pt-5">
             <button
               onClick={() => setIsDrawerOpen(true)}
               disabled={!isHost}
-              className={`w-full py-3.5 px-4 rounded-xl flex items-center justify-between font-black text-sm border-2 transition-all ${
+              className={`w-full py-3.5 px-3 sm:px-4 rounded-xl flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 font-black text-sm border-2 transition-all ${
                 isHost
                   ? 'bg-white dark:bg-discord-card border-gray-300 dark:border-gray-700 hover:border-green-400 dark:hover:border-neon-blue text-gray-700 dark:text-gray-200 hover:shadow-sm active:scale-[0.98]'
                   : 'bg-gray-100 dark:bg-discord-main border-gray-200 dark:border-gray-800 text-gray-400 opacity-70 cursor-not-allowed'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <BookOpen size={18} className="text-green-500 dark:text-neon-blue" />
-                <span>Custom Words</span>
-                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-neon-pink/20 text-red-600 dark:text-neon-pink border border-red-200 dark:border-neon-pink/30 text-[9px] font-black uppercase tracking-wider ml-1">
+              <div className="flex items-center flex-wrap gap-2 text-left flex-1 min-w-0">
+                <BookOpen size={18} className="text-green-500 dark:text-neon-blue shrink-0" />
+                <span className="shrink-0">Custom Words</span>
+                <span className="pointer-events-none shrink-0 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-neon-pink/20 text-red-600 dark:text-neon-pink border border-red-200 dark:border-neon-pink/30 text-[9px] font-black uppercase tracking-wider">
                   <Sparkles size={10} strokeWidth={3} />
                   Powered by AI
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-discord-main px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">
+              <div className="shrink-0 ml-auto">
+                <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-discord-main px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 whitespace-nowrap">
                   {config.customWordList?.length ?? config.customWordCount ?? 0} Added
                 </span>
               </div>
             </button>
 
-            <div className="flex items-center justify-between pl-2">
+            <div className="flex items-center justify-between pl-1 sm:pl-2 gap-4">
               <div className="flex flex-col">
                 <span className="font-black text-gray-700 dark:text-gray-200 text-sm">
                   Strict Mode
                 </span>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold">
+                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold mt-0.5 leading-tight">
                   Forbid all default game words and play with only custom words.
                 </span>
               </div>
@@ -614,7 +615,7 @@ export const LobbyScreen = ({
                   isHost && onUpdateConfig({ customWordsOnly: !config.customWordsOnly })
                 }
                 disabled={!isHost}
-                className={`relative w-12 h-7 rounded-full transition-colors border-2 ${
+                className={`relative shrink-0 w-12 h-7 rounded-full transition-colors border-2 ${
                   config.customWordsOnly
                     ? 'bg-green-500 dark:bg-neon-blue border-green-600 dark:border-blue-900'
                     : 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600'

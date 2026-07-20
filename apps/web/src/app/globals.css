@@ -43,7 +43,7 @@
   mix-blend-mode: normal;
 }
 ::view-transition-new(root) {
-  animation: circle-reveal 600ms ease-in-out forwards;
+  animation: circle-reveal var(--transition-duration, 600ms) ease-in-out forwards;
   mix-blend-mode: normal;
   will-change: clip-path;
 }
