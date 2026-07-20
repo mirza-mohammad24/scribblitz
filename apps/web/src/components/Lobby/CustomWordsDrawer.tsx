@@ -101,7 +101,7 @@ export const CustomWordsDrawer = ({
 
   // Handle Swipe-to-Close for Mobile
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (info.offset.y > 100 || info.velocity.y > 500) {
+    if (info.offset.y > 50 || info.velocity.y > 200) {
       if (!isGenerating) onClose();
     }
   };
@@ -209,8 +209,8 @@ export const CustomWordsDrawer = ({
         >
           <motion.div
             drag="y" // Enables vertical dragging
-            dragConstraints={{ top: 0, bottom: 0 }} // Prevents dragging upwards
-            dragElastic={0.2}
+            dragConstraints={{ top: 0 }} // Prevents dragging upwards
+            dragElastic={{ top: 0, bottom: 0.8 }}
             onDragEnd={handleDragEnd}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}

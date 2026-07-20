@@ -230,7 +230,7 @@ export const LobbyScreen = ({
 
         {/* LEFT COLUMN: SETTINGS */}
         <div
-          className={`flex-1 flex-col gap-6 overflow-y-auto overflow-x-hidden custom-scrollbar md:pr-2 ${activeTab === 'settings' ? 'flex' : 'hidden md:flex'}`}
+          className={`flex-1 flex-col gap-6 overflow-y-auto overflow-x-hidden scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] md:pr-2 ${activeTab === 'settings' ? 'flex' : 'hidden md:flex'}`}
         >
           <div className="flex justify-between items-center shrink-0">
             <div className="flex items-center gap-3">
@@ -670,7 +670,7 @@ export const LobbyScreen = ({
             variants={listVariants}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-2 min-[400px]:grid-cols-3 md:flex md:flex-col gap-3 mt-4 overflow-y-auto custom-scrollbar pr-1 md:pr-2 pb-2 flex-1 min-h-0 content-start"
+            className="grid grid-cols-2 min-[400px]:grid-cols-3 md:flex md:flex-col gap-3 mt-4 overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] pr-1 md:pr-2 pb-2 flex-1 min-h-0 content-start"
           >
             <AnimatePresence mode="popLayout">
               {players.map((p) => (
