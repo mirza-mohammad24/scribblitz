@@ -24,7 +24,8 @@ const nextConfig: NextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
           },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          //kept microphone permission for voice chat, but disabled camera and geolocation
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(self), geolocation=()' },
         ],
       },
     ];

@@ -41,6 +41,7 @@ import { useState, useEffect } from 'react';
 import { useGameStore, PlayerStanding, ChatMessage } from '@/store/gameStore';
 import { useToastStore } from '@/store/toastStore';
 import { useGameSocket, ACTIVE_ROOM_KEY } from '@/hooks/useGameSocket';
+import { useVoiceChat } from '@/hooks/useVoiceChat';
 import {
   ClientEvents,
   ServerEvents,
@@ -72,6 +73,7 @@ import { ArenaCanvas } from './ArenaCanvas';
 import { ArenaChat } from './ArenaChat';
 import { ArenaLeaderboard } from './ArenaLeaderboard';
 import { FloatingEmotes } from './FloatingEmotes';
+import { VoiceControls } from './VoiceControls';
 
 /**
  * Top-level orchestrator component that manages the full game lifecycle.
@@ -85,6 +87,8 @@ import { FloatingEmotes } from './FloatingEmotes';
  */
 export const ArenaOrchestrator = () => {
   const { socket, userId } = useGameSocket();
+  const voice = useVoiceChat(socket, userId); // Lifeline for Voice Chat
+
   const {
     gameState,
     roomCode,
@@ -537,6 +541,10 @@ export const ArenaOrchestrator = () => {
     resetGame();
     localStorage.removeItem(ACTIVE_ROOM_KEY);
     setIsLeaveModalOpen(false);
+
+    // Disconnect voice before leaving
+    voice.disconnect();
+
     socket?.emit(ClientEvents.ROOM_LEAVE);
   };
 
@@ -566,6 +574,25 @@ export const ArenaOrchestrator = () => {
   const isAssignedDrawer = currentDrawerId === userId;
   // SECURE CANVAS LOCK: Only true if it is explicitly your turn AND the timer is actively ticking
   const canDraw = isAssignedDrawer && gameState === GameState.DRAWING;
+
+  // Extract voice props for the Arena layout
+  const voiceProps = {
+    status: voice.status,
+    error: voice.error,
+    isMuted: voice.isMuted,
+    isDeafened: voice.isDeafened,
+    connectedCount: voice.connectedUserIds.size,
+    audioInputs: voice.audioInputs,
+    audioOutputs: voice.audioOutputs,
+    selectedAudioInput: voice.selectedAudioInput,
+    selectedAudioOutput: voice.selectedAudioOutput,
+    onConnect: voice.connect,
+    onDisconnect: voice.disconnect,
+    onToggleMute: voice.toggleMute,
+    onToggleDeafen: voice.toggleDeafen,
+    onSwitchAudioInput: voice.switchAudioInput,
+    onSwitchAudioOutput: voice.switchAudioOutput,
+  };
 
   return (
     <>
@@ -605,6 +632,7 @@ export const ArenaOrchestrator = () => {
           onUpdateConfig={updateConfig}
           onStartGame={handleStartGame}
           onRequestLeave={requestLeaveRoom}
+          voice={voice}
         />
       )}
 
@@ -649,9 +677,17 @@ export const ArenaOrchestrator = () => {
 
           {/* THE DESKTOP 3-COLUMN / MOBILE STACK GRID */}
           <div className="w-full h-full flex flex-col lg:flex-row gap-3 md:gap-4 min-h-0 overflow-hidden justify-center">
-            {/* LEFT COLUMN: LEADERBOARD */}
-            <div className="hidden lg:flex w-60 xl:w-70 shrink-0 min-h-0 flex-col">
-              <ArenaLeaderboard />
+            {/* LEFT COLUMN: LEADERBOARD & VOICE */}
+            <div className="hidden lg:flex w-60 xl:w-70 shrink-0 min-h-0 flex-col gap-3">
+              {/* Leaderboard  */}
+              <div className="flex-1 min-h-0 flex flex-col">
+                <ArenaLeaderboard />
+              </div>
+
+              {/* Voice Controls cleanly docked at the bottom */}
+              <div className="shrink-0 w-full">
+                <VoiceControls {...voiceProps} variant="compact" />
+              </div>
             </div>
 
             {/* CENTER COLUMN: CANVAS & TOOLBOX */}

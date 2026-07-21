@@ -27,6 +27,8 @@ import Image from 'next/image';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
 import { CustomWordsDrawer } from './CustomWordsDrawer';
 import { StrictModeWarningOverlay } from '../ui/StrictModeWarningOverlay';
+import { VoiceControls } from '../Arena/VoiceControls';
+import { useVoiceChat } from '@/hooks/useVoiceChat';
 
 interface LobbyScreenProps {
   roomCode: string;
@@ -39,6 +41,7 @@ interface LobbyScreenProps {
   onStartGame: () => void;
   onRequestLeave: () => void;
   onGenerateTheme: (theme: string) => void; //Callback for generating a themed word list
+  voice: ReturnType<typeof useVoiceChat>;
 }
 
 // Framer Motion variants for the staggered list
@@ -76,6 +79,7 @@ export const LobbyScreen = ({
   onStartGame,
   onRequestLeave,
   onGenerateTheme,
+  voice,
 }: LobbyScreenProps) => {
   // Track when the user copies the code
   const [copied, setCopied] = useState(false);
@@ -123,6 +127,24 @@ export const LobbyScreen = ({
       }
     }
     onStartGame();
+  };
+
+  const voiceProps = {
+    status: voice.status,
+    error: voice.error,
+    isMuted: voice.isMuted,
+    isDeafened: voice.isDeafened,
+    connectedCount: voice.connectedUserIds.size,
+    audioInputs: voice.audioInputs,
+    audioOutputs: voice.audioOutputs,
+    selectedAudioInput: voice.selectedAudioInput,
+    selectedAudioOutput: voice.selectedAudioOutput,
+    onConnect: voice.connect,
+    onDisconnect: voice.disconnect,
+    onToggleMute: voice.toggleMute,
+    onToggleDeafen: voice.toggleDeafen,
+    onSwitchAudioInput: voice.switchAudioInput,
+    onSwitchAudioOutput: voice.switchAudioOutput,
   };
 
   // Extracted the Action UI so we can render it in the sticky bar on mobile, and the normal column on desktop
@@ -732,10 +754,16 @@ export const LobbyScreen = ({
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {/* DESKTOP VOICE CONTROLS DOCK */}
+          <div className="hidden md:block mt-auto pt-4 border-t-2 border-gray-200 dark:border-gray-800 shrink-0">
+            <VoiceControls {...voiceProps} />
+          </div>
         </div>
 
         {/* NATIVELY EMBEDDED MOBILE ACTION BAR */}
-        <div className="md:hidden shrink-0 pt-3 pb-1 border-t-2 border-gray-100 dark:border-gray-800 mt-auto">
+        <div className="md:hidden shrink-0 pt-3 pb-1 border-t-2 border-gray-100 dark:border-gray-800 mt-auto flex flex-col gap-3">
+          <VoiceControls {...voiceProps} />
           {renderActionUI()}
         </div>
       </motion.div>

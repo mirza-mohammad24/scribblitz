@@ -1,3 +1,11 @@
+/**
+ * Voice chat integration for the game server.
+ *
+ * This module is responsible for minting LiveKit access tokens when the voice
+ * environment variables are configured. If LiveKit is not configured, the
+ * module logs a warning at startup and token creation returns `null` so callers
+ * can degrade gracefully.
+ */
 import { AccessToken } from 'livekit-server-sdk';
 import logger from '../utils/logger';
 
@@ -15,6 +23,14 @@ if (!isVoiceConfigured) {
 
 const TOKEN_TTL_SECONDS = 10 * 60;
 
+/**
+ * Creates a LiveKit access token for a player joining a voice room.
+ *
+ * @param userId - The user identity embedded in the token.
+ * @param roomCode - The voice room the token should allow access to.
+ * @param username - The display name associated with the token.
+ * @returns A signed JWT when voice chat is configured, or `null` when it is disabled.
+ */
 export async function mintVoiceToken(
   userId: string,
   roomCode: string,
@@ -39,6 +55,11 @@ export async function mintVoiceToken(
   return at.toJwt();
 }
 
+/**
+ * Returns the configured LiveKit WebSocket URL, if voice chat is enabled.
+ *
+ * @returns The LiveKit server URL, or `undefined` when voice chat is disabled.
+ */
 export function getLivekitUrl(): string | undefined {
   return LIVEKIT_URL;
 }

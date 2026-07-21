@@ -1,12 +1,15 @@
 /**
- * Owns the LiveKit `Room` connection lifecycle for in-game voice chat.
+ * Custom React hook that manages the in-game LiveKit voice chat lifecycle.
  *
- * Flow: once the caller invokes `connect()`, we ask the game server (over the
- * existing authenticated Socket.IO connection) for a short-lived LiveKit token
- * via `ClientEvents.VOICE_TOKEN_REQUEST`, then use that token to connect
- * directly to LiveKit Cloud. From that point on, voice media flows entirely
- * between this browser and LiveKit's SFU — the game server is never in the
- * audio path.
+ * The hook requests a short-lived LiveKit token from the game server over the
+ * authenticated Socket.IO connection, then uses that token to connect directly
+ * to LiveKit Cloud. After the room is established, it tracks participants,
+ * device lists, mute/deafen state, and remote audio attachments so the UI can
+ * render a Discord-like voice experience.
+ *
+ * @param socket - The authenticated Socket.IO client used to request a voice token.
+ * @param userId - The current player ID. Voice chat stays idle until this is available.
+ * @returns An object containing the voice connection state, participant tracking, device lists, and voice controls.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -23,6 +26,57 @@ import { ClientEvents, ServerEvents, VoiceTokenPayload } from '@scribblitz/types
 
 export type VoiceStatus = 'idle' | 'connecting' | 'connected' | 'error';
 
+/**
+ * Chrome on Windows exposes up to 3 entries for a single physical audio device:
+ * the real device, a "default"-role alias, and a "communications"-role alias —
+ * all three sharing the same `groupId`. `Room.getLocalDevices()` only strips the
+ * literal "default" alias, leaving the "Communications -" one behind. This
+ * collapses each group down to one canonical row (preferring the plain
+ * physical-device label), matching what apps like Google Meet render.
+ *
+ * Also returns `resolveCanonicalId`, since `room.getActiveDevice()` can report
+ * the literal alias id (e.g. 'default') rather than the physical device's real
+ * id — this lets callers translate either back to whichever id the deduped
+ * list actually uses, so "currently selected" highlighting and change-detection
+ * both line up with what's rendered.
+ */
+function dedupeAudioDevices(devices: MediaDeviceInfo[]): {
+  deduped: MediaDeviceInfo[];
+  resolveCanonicalId: (deviceId: string) => string;
+} {
+  const byGroup = new Map<string, MediaDeviceInfo[]>();
+
+  for (const device of devices) {
+    const key = device.groupId || device.deviceId; // fall back if groupId is empty
+    const group = byGroup.get(key) ?? [];
+    group.push(device);
+    byGroup.set(key, group);
+  }
+
+  const deduped: MediaDeviceInfo[] = [];
+  const idToCanonical = new Map<string, string>();
+
+  for (const group of byGroup.values()) {
+    const canonical =
+      group.find(
+        (d) => !d.label.startsWith('Default -') && !d.label.startsWith('Communications -'),
+      ) ?? group[0];
+
+    deduped.push(canonical);
+    for (const d of group) {
+      idToCanonical.set(d.deviceId, canonical.deviceId);
+    }
+  }
+
+  return {
+    deduped,
+    resolveCanonicalId: (deviceId: string) => idToCanonical.get(deviceId) ?? deviceId,
+  };
+}
+
+/**
+ * Public API returned by {@link useVoiceChat}.
+ */
 interface UseVoiceChatResult {
   status: VoiceStatus;
   error: string | null;
@@ -62,6 +116,7 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
 
   const roomRef = useRef<Room | null>(null);
   const audioContainerRef = useRef<HTMLDivElement | null>(null);
+  const isConnectingRef = useRef(false);
 
   // Track deafen state in a ref so event listener closures always have the latest value
   const isDeafenedRef = useRef(isDeafened);
@@ -87,15 +142,25 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
   // Fetch available hardware devices
   const refreshDevices = useCallback(async () => {
     try {
-      const inputs = await Room.getLocalDevices('audioinput');
-      const outputs = await Room.getLocalDevices('audiooutput');
-      setAudioInputs(inputs);
-      setAudioOutputs(outputs);
+      const rawInputs = await Room.getLocalDevices('audioinput');
+      const rawOutputs = await Room.getLocalDevices('audiooutput');
+
+      const inputResult = dedupeAudioDevices(rawInputs);
+      const outputResult = dedupeAudioDevices(rawOutputs);
+      setAudioInputs(inputResult.deduped);
+      setAudioOutputs(outputResult.deduped);
+
+      const room = roomRef.current;
+      if (!room) return;
+
+      const activeInput = room.getActiveDevice('audioinput');
+      const activeOutput = room.getActiveDevice('audiooutput');
+      if (activeInput) setSelectedAudioInput(inputResult.resolveCanonicalId(activeInput));
+      if (activeOutput) setSelectedAudioOutput(outputResult.resolveCanonicalId(activeOutput));
     } catch (err) {
       console.warn('[VoiceChat] Could not enumerate audio devices:', err);
     }
   }, []);
-
   //Attach remote audio tracks to DOM so players can hear each other
   const attachRemoteTrack = useCallback(
     (track: RemoteTrack, participant: RemoteParticipant) => {
@@ -118,7 +183,7 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
     if (socket && onTokenIssuedRef.current) {
       socket.off(ServerEvents.VOICE_TOKEN_ISSUED, onTokenIssuedRef.current);
     }
-
+    isConnectingRef.current = false;
     roomRef.current?.disconnect();
     roomRef.current = null;
 
@@ -136,7 +201,8 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
   }, [socket]);
 
   const connect = useCallback(() => {
-    if (!socket || !userId || roomRef.current || status === 'connecting') return;
+    if (!socket || !userId || roomRef.current || isConnectingRef.current) return;
+    isConnectingRef.current = true;
 
     setStatus('connecting');
     setError(null);
@@ -176,6 +242,9 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
           .on(RoomEvent.ConnectionStateChanged, (state) => {
             if (state === ConnectionState.Disconnected) setStatus('idle');
           })
+          .on(RoomEvent.MediaDevicesChanged, () => {
+            refreshDevices();
+          })
           .on(RoomEvent.Disconnected, () => disconnect());
 
         //Connect directly to Livekit SFU
@@ -203,13 +272,15 @@ export function useVoiceChat(socket: Socket | null, userId: string | null): UseV
         setError(err instanceof Error ? err.message : 'Voice connection failed');
         setStatus('error');
         roomRef.current = null;
+      } finally {
+        isConnectingRef.current = false;
       }
     };
 
     onTokenIssuedRef.current = onTokenIssued;
     socket.once(ServerEvents.VOICE_TOKEN_ISSUED, onTokenIssued);
     socket.emit(ClientEvents.VOICE_TOKEN_REQUEST);
-  }, [socket, userId, status, attachRemoteTrack, detachRemoteTrack, disconnect, refreshDevices]);
+  }, [socket, userId, attachRemoteTrack, detachRemoteTrack, disconnect, refreshDevices]);
 
   //Discord like mute/deafen matrix
   const toggleMute = useCallback(() => {

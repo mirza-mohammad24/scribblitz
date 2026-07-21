@@ -1,3 +1,10 @@
+/**
+ * Socket handlers for voice chat token requests.
+ *
+ * This module handles the VOICE_TOKEN_REQUEST event by verifying that the
+ * requesting player is in a room, minting a LiveKit token when voice chat is
+ * configured, and returning the connection details to the client.
+ */
 import { Server, Socket } from 'socket.io';
 import { ClientEvents, ServerEvents, ErrorCode } from '@scribblitz/types';
 import { roomManager } from '../../rooms/RoomManager';
@@ -6,6 +13,13 @@ import { emitError } from '../../utils/emitError';
 import { mintVoiceToken, getLivekitUrl } from '../../services/voiceService';
 import logger from '../../utils/logger';
 
+/**
+ * Registers the voice chat token request handler for the connected socket.
+ *
+ * @param io The Socket.IO server instance.
+ * @param socket The Socket.IO socket instance for the connected client.
+ * @returns Nothing; the handler is registered for future VOICE_TOKEN_REQUEST events.
+ */
 export const registerVoiceHandlers = (io: Server, socket: Socket) => {
   socket.on(ClientEvents.VOICE_TOKEN_REQUEST, async () => {
     const userId = getUserIdBySocket(socket);
