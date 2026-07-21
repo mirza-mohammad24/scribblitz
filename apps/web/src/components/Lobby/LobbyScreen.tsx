@@ -596,7 +596,6 @@ export const LobbyScreen = ({
           </div>
 
           {/* Custom Words Button Trigger & Strict Mode Toggle  */}
-          {/* Custom Words Button Trigger & Strict Mode Toggle  */}
           <div className="flex flex-col gap-3 mt-2 border-t-2 border-gray-200 dark:border-gray-800 pt-5">
             <button
               onClick={() => setIsDrawerOpen(true)}
@@ -659,7 +658,6 @@ export const LobbyScreen = ({
         <div
           className={`flex-1 flex-col bg-gray-50 dark:bg-discord-main p-4 md:p-6 rounded-3xl border-2 border-gray-100 dark:border-discord-main overflow-hidden min-h-0 ${activeTab === 'players' ? 'flex' : 'hidden md:flex'}`}
         >
-          {/* Added flex-wrap so the ROOM CODE button drops down cleanly on small phones instead of smushing */}
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 pb-4 border-b-2 border-gray-200 dark:border-gray-800 shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-2 md:p-2.5 bg-red-100 dark:bg-neon-pink/20 rounded-xl text-purple-600 dark:text-purple-400 shrink-0">

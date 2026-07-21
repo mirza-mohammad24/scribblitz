@@ -53,8 +53,8 @@ import {
   SerializedRoom,
 } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
-import { MessageCircle, X } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Screens
 import { HomeScreen } from '@/components/Home/HomeScreen';
@@ -74,6 +74,7 @@ import { ArenaChat } from './ArenaChat';
 import { ArenaLeaderboard } from './ArenaLeaderboard';
 import { FloatingEmotes } from './FloatingEmotes';
 import { VoiceControls } from './VoiceControls';
+import { MobileActionMenus } from './MobileActionMenus';
 
 /**
  * Top-level orchestrator component that manages the full game lifecycle.
@@ -107,8 +108,8 @@ export const ArenaOrchestrator = () => {
   const addToast = useToastStore((state) => state.addToast);
 
   // UI State
-  // State for the mobile player list toggle
-  const [showPlayersMobile, setShowPlayersMobile] = useState(false);
+  // State for the 90% width leaderboard overlay (mobile only)
+  const [showLeaderboardOverlay, setShowLeaderboardOverlay] = useState(false);
   // State for the leave confirmation modal
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   //State for the drawer's mobile chat peek overlay
@@ -639,45 +640,47 @@ export const ArenaOrchestrator = () => {
       {/* ZONE 3: THE GAME ARENA */}
       {gameState !== null && gameState !== GameState.LOBBY && (
         <div className="w-full flex-1 flex flex-col gap-3 min-h-0 pb-2">
-          {/* HUD spans all columns. Passes leave/mobile functions via props */}
-          <ArenaHUD
-            onRequestLeave={() => setIsLeaveModalOpen(true)}
-            onToggleMobilePlayers={() => setShowPlayersMobile(!showPlayersMobile)}
-            userId={userId}
-          />
+          {/* HUD spans all columns */}
+          <ArenaHUD onRequestLeave={() => setIsLeaveModalOpen(true)} userId={userId} />
 
-          {/* Mobile Players Popup (Hidden on Desktop) */}
-          {showPlayersMobile && (
-            <div className="lg:hidden w-full bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-discord-main rounded-2xl p-4 shadow-lg shrink-0">
-              <h3 className="font-black border-b-2 border-gray-100 dark:border-discord-main pb-2 mb-2">
-                Players
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {players.map((p) => (
-                  <span
-                    key={p.id}
-                    className={`px-3 py-1 rounded-full text-xs font-bold border-2 transition-all 
-                      ${
-                        !p.isConnected
-                          ? // The Offline State (Dims them out entirely)
-                            'opacity-40 border-dashed bg-gray-200 dark:bg-gray-800 text-gray-500'
-                          : p.hasGuessedCorrectly
-                            ? // The Online + Guessed State
-                              'bg-green-100 border-green-500 text-green-700'
-                            : // The Online + Still Guessing State
-                              'bg-gray-100 dark:bg-discord-main border-gray-300 dark:border-gray-600'
-                      }`}
-                  >
-                    {p.username} {!p.isConnected && ' (Offline)'} {p.id === currentDrawerId && '✏️'}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* 90% Floating Leaderboard Overlay */}
+          <AnimatePresence>
+            {showLeaderboardOverlay && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="lg:hidden fixed inset-0 z-60 bg-black/50 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  className="w-full max-w-md h-[85vh] flex flex-col gap-3"
+                >
+                  {/* Overlay Header with Bulky 3D Close Button */}
+                  <div className="flex justify-between items-center shrink-0 px-2 mt-2">
+                    <span className="font-black text-white text-2xl drop-shadow-md">Players</span>
+                    <button
+                      onClick={() => setShowLeaderboardOverlay(false)}
+                      className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 dark:bg-neon-pink text-white text-xl font-black shadow-lg border-b-4 border-red-700 dark:border-pink-800 hover:bg-red-600 dark:hover:bg-pink-600 active:border-b-0 active:translate-y-1 transition-all"
+                    >
+                      <X size={24} strokeWidth={3.5} />
+                    </button>
+                  </div>
+
+                  {/* Leaderboard Body wrapped */}
+                  <div className="flex-1 min-h-0 relative rounded-3xl overflow-hidden shadow-2xl">
+                    <ArenaLeaderboard />
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* THE DESKTOP 3-COLUMN / MOBILE STACK GRID */}
           <div className="w-full h-full flex flex-col lg:flex-row gap-3 md:gap-4 min-h-0 overflow-hidden justify-center">
-            {/* LEFT COLUMN: LEADERBOARD & VOICE */}
+            {/* LEFT COLUMN: LEADERBOARD & VOICE(Desktop) */}
             <div className="hidden lg:flex w-60 xl:w-70 shrink-0 min-h-0 flex-col gap-3">
               {/* Leaderboard  */}
               <div className="flex-1 min-h-0 flex flex-col">
@@ -691,20 +694,10 @@ export const ArenaOrchestrator = () => {
             </div>
 
             {/* CENTER COLUMN: CANVAS & TOOLBOX */}
-            <div className="flex-1 flex flex-col gap-3 min-h-0 relative w-full lg:max-w-275 mx-auto">
+            <div
+              className={`${canDraw ? 'flex-1' : 'flex-none lg:flex-1'} flex flex-col gap-3 min-h-0 relative w-full lg:max-w-275 mx-auto`}
+            >
               <FloatingEmotes />
-
-              {/*  Mobile Peek Chat Button strictly for the Drawer */}
-              {canDraw && (
-                <div className="lg:hidden flex justify-end w-full shrink-0 -mb-2 z-10 relative px-2">
-                  <button
-                    onClick={() => setShowChatMobile(true)}
-                    className="bg-white dark:bg-discord-card border-2 border-green-500 dark:border-neon-blue text-green-600 dark:text-neon-blue px-4 py-1.5 rounded-full text-xs font-black shadow-md hover:bg-green-50 dark:hover:bg-blue-900/30 active:scale-95 transition-all flex items-center gap-2"
-                  >
-                    <MessageCircle size={20} strokeWidth={2.5} />
-                  </button>
-                </div>
-              )}
 
               {/* WORD SELECTION OVERLAY */}
               <AnimatePresence>
@@ -722,12 +715,29 @@ export const ArenaOrchestrator = () => {
                 {gameState === GameState.ROUND_END && !isGameAborted && <RoundEndOverlay />}
               </AnimatePresence>
 
-              {/* CANVAS COMPONENT */}
-              <ArenaCanvas isDrawer={canDraw} roomCode={roomCode!} />
+              {/* Canvas now handles injecting the MobileActionMenus exactly where it belongs */}
+              <ArenaCanvas
+                isDrawer={canDraw}
+                roomCode={roomCode!}
+                mobileActionMenu={
+                  <MobileActionMenus
+                    isDrawer={canDraw}
+                    onOpenPlayers={() => setShowLeaderboardOverlay(true)}
+                    onOpenChat={() => setShowChatMobile(true)}
+                    onRequestLeave={() => setIsLeaveModalOpen(true)}
+                    voiceStatus={voice.status}
+                    isMuted={voice.isMuted}
+                    isDeafened={voice.isDeafened}
+                    onConnectVoice={voice.connect}
+                    onDisconnectVoice={voice.disconnect}
+                    onToggleMute={voice.toggleMute}
+                    onToggleDeafen={voice.toggleDeafen}
+                  />
+                }
+              />
             </div>
 
             {/* RIGHT COLUMN: CHATBOX */}
-            {/* Transforms into a full-screen blurred backdrop modal on mobile for the drawer */}
             <div
               className={`
                 w-full lg:w-70 xl:w-[320px] flex-col shrink-0 min-h-0
@@ -740,9 +750,9 @@ export const ArenaOrchestrator = () => {
                 }
               `}
             >
-              {/* Modal Header with Cross Button (Only visible in mobile overlay mode) */}
+              {/* Chat Overlay Header with matching Bulky 3D Close Button */}
               {canDraw && showChatMobile && (
-                <div className="lg:hidden flex justify-between items-center mb-3 w-full max-w-md mx-auto">
+                <div className="lg:hidden flex justify-between items-center mb-3 w-full max-w-md mx-auto mt-6 px-1">
                   <span className="font-black text-white text-xl drop-shadow-md">Live Chat</span>
                   <button
                     onClick={() => setShowChatMobile(false)}

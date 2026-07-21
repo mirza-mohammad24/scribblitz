@@ -5,8 +5,7 @@
  *
  * Displays at-a-glance game metadata across three columns:
  *
- * - Left column: Current round number and a mobile-only toggle to expand
- *   the player list.
+ * - Left column: Current round number.
  * - Center column: The active drawer's username and an animated word hint
  *   that transitions on every hint update. A superscript shows the word length.
  * - Right column: A countdown timer (via {@link HUDTimer}) and a quit button.
@@ -21,15 +20,13 @@
 import { useGameStore } from '@/store/gameStore';
 import { GameState } from '@scribblitz/types';
 import { GAME_CONSTANTS } from '@scribblitz/shared';
-import { Clock, Edit2, LogOut, Users } from 'lucide-react';
+import { Clock, Edit2, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSyncedTimer } from '@/hooks/useSyncedTimer';
 
 interface ArenaHUDProps {
   /** Callback invoked when the user clicks the quit / leave button. */
   onRequestLeave: () => void;
-  /** Callback to toggle the mobile player list dropdown. */
-  onToggleMobilePlayers: () => void;
   /** The current user's ID, used to determine if they are the drawer. */
   userId: string | null;
 }
@@ -73,11 +70,10 @@ const HUDTimer = ({ duration }: { duration: number }) => {
  *
  * @param props - {@link ArenaHUDProps}
  * @param props.onRequestLeave - Opens the leave-confirmation modal.
- * @param props.onToggleMobilePlayers - Toggles the mobile player list popup.
  * @param props.userId - The current user's ID, used to determine if they are the drawer.
  * @returns The HUD bar element.
  */
-export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: ArenaHUDProps) => {
+export const ArenaHUD = ({ onRequestLeave, userId }: ArenaHUDProps) => {
   const {
     gameState,
     currentRound,
@@ -113,17 +109,9 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: Aren
 
   return (
     <div className="w-full bg-white dark:bg-discord-card border-4 border-gray-200 dark:border-discord-main rounded-2xl md:rounded-3xl shadow-sm p-3 md:p-4 flex justify-between items-center shrink-0 transition-colors">
-      {/* LEFT: Round Info & Mobile Players Toggle */}
+      {/* LEFT: Round Info  */}
       <div className="flex items-center gap-2 md:gap-4 min-w-16 md:min-w-30 shrink-0">
-        {/* Mobile-only toggle button */}
-        <button
-          onClick={onToggleMobilePlayers}
-          className="lg:hidden p-2 bg-gray-100 dark:bg-discord-main rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform"
-        >
-          <Users size={20} />
-        </button>
-
-        <div className="flex flex-col text-center">
+        <div className="flex flex-col text-center w-full">
           <span className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest">
             Round
           </span>
@@ -146,9 +134,7 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: Aren
               className="flex items-center justify-center gap-1 w-full min-w-0"
             >
               <Edit2 size={12} className="text-red-500 dark:text-neon-pink shrink-0" />
-
               <span className="truncate max-w-20 md:max-w-none">{drawer.username}</span>
-
               <span className="shrink-0">is drawing</span>
             </motion.div>
           ) : (
@@ -184,7 +170,6 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: Aren
           <span className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest flex items-center gap-1">
             <Clock size={12} /> Time
           </span>
-
           {gameState === GameState.DRAWING ? (
             <HUDTimer key={`timer-round-${roundId}`} duration={startingTime} />
           ) : (
@@ -194,14 +179,13 @@ export const ArenaHUD = ({ onRequestLeave, onToggleMobilePlayers, userId }: Aren
           )}
         </div>
 
-        {/* Integrated Quit button directly into the HUD */}
+        {/* Integrated Quit button directly into the HUD (Hidden on mobile) */}
         <button
           onClick={onRequestLeave}
-          className="p-2 md:px-4 md:py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-500 border-2 border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 active:scale-95 transition-all flex items-center gap-2 font-bold text-sm shrink-0"
-          title="Quit Game"
+          className="hidden md:flex p-2 md:px-4 md:py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-500 border-2 border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 active:scale-95 transition-all items-center gap-2 font-bold text-sm shrink-0"
         >
           <LogOut size={18} strokeWidth={2.5} />
-          <span className="hidden md:inline">Quit</span>
+          <span>Quit</span>
         </button>
       </div>
     </div>

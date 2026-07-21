@@ -33,6 +33,8 @@ interface ArenaCanvasProps {
   isDrawer: boolean;
   /** The room code used for socket event namespacing. */
   roomCode: string;
+  /** Injected mobile menu so it can sit exactly between the canvas and toolbar. */
+  mobileActionMenu?: React.ReactNode;
 }
 
 // 13 preset colors + a custom color mixer. Total 14 for 2 rows of 7 colors each.
@@ -75,7 +77,7 @@ const BRUSH_SIZES = [
  * @param props.roomCode - The current room code for socket event scoping.
  * @returns The canvas element and, when `isDrawer` is true, the toolbox UI.
  */
-export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
+export const ArenaCanvas = ({ isDrawer, roomCode, mobileActionMenu }: ArenaCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { socket } = useGameSocket();
 
@@ -133,6 +135,9 @@ export const ArenaCanvas = ({ isDrawer, roomCode }: ArenaCanvasProps) => {
         />
         {!isDrawer && <div className="absolute inset-0 z-10" />}
       </div>
+
+      {/* --- INJECTED RADIAL MENUS: Sit exactly in the gap! --- */}
+      {mobileActionMenu}
 
       {/* MULTI-LINE TOOLBOX */}
       {isDrawer && (
