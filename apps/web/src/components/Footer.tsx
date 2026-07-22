@@ -403,7 +403,7 @@ export const Footer = ({ onTriggerPlay }: FooterProps) => {
                 className={`hidden lg:inline hover:text-green-500 dark:hover:text-neon-blue transition-colors cursor-pointer select-none ${focusClasses}`}
                 aria-label="App version"
               >
-                v1.0.0
+                v2.0.0
               </button>
             </div>
 

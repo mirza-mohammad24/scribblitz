@@ -8,7 +8,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, Server, Gamepad2, Smartphone, ShieldCheck, WifiOff } from 'lucide-react';
+import { X, Zap, Server, Mic, Sparkles, Smartphone, WifiOff } from 'lucide-react';
 
 interface WhyScribblitzModalProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export const WhyScribblitzModal = ({ isOpen, onClose }: WhyScribblitzModalProps)
         'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-500 border-yellow-200 dark:border-yellow-800',
       title: 'Zero-Latency Canvas',
       description:
-        'Drawing strokes are streamed in real time with an event-sourced pipeline, keeping every canvas smooth and perfectly synchronized.',
+        'Drawing strokes are streamed at ~60fps with an event-sourced Redis pipeline, keeping every canvas smooth and perfectly synchronized.',
     },
     {
       icon: <WifiOff size={18} />,
@@ -50,20 +50,20 @@ export const WhyScribblitzModal = ({ isOpen, onClose }: WhyScribblitzModalProps)
         'Lost your connection? Scribblitz automatically reserves your seat for 60 seconds, letting you rejoin the same match without disrupting the game and preserving your progress.',
     },
     {
-      icon: <ShieldCheck size={18} />,
+      icon: <Mic size={18} />,
       badgeStyle:
         'bg-purple-50 dark:bg-purple-900/20 text-purple-500 border-purple-200 dark:border-purple-800',
-      title: 'Absolute Time Sync',
+      title: 'Built-in Voice Chat',
       description:
-        'Timers run on absolute server timestamps, meaning browser tab-throttling will never desync your game clock.',
+        'Talk to your friends while you play — no Discord needed. Low-latency WebRTC voice with mute, deafen, and device switching built right in.',
     },
     {
-      icon: <Gamepad2 size={18} />,
+      icon: <Sparkles size={18} />,
       badgeStyle:
         'bg-green-50 dark:bg-green-900/20 text-green-500 border-green-200 dark:border-green-800',
-      title: 'Strict Custom Words',
+      title: 'AI-Powered Word Packs',
       description:
-        'Play with your own custom word packs only, giving every lobby a unique theme without relying on the default dictionary.',
+        'Describe any theme and AI generates a full custom word pack in seconds. Play "80s Movies", "Anime Characters", or anything you can imagine.',
     },
     {
       icon: <Smartphone size={18} />,
@@ -71,7 +71,7 @@ export const WhyScribblitzModal = ({ isOpen, onClose }: WhyScribblitzModalProps)
         'bg-orange-50 dark:bg-orange-900/20 text-orange-500 border-orange-200 dark:border-orange-800',
       title: 'Mobile-First Design',
       description:
-        'Unlike legacy drawing games, the UI was engineered from day one to look and feel like a native mobile app.',
+        'Unlike legacy drawing games, the entire UI was engineered from day one to feel like a native mobile app — with touch-optimized controls and radial menus.',
     },
   ];
 
