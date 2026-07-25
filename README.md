@@ -33,7 +33,7 @@
     <img src="https://img.shields.io/badge/Desktop_Gameplay-FF0000?style=flat&logo=youtube&logoColor=white" alt="Desktop Gameplay Video" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://youtu.be/sDA3VqcPqL4" target="_blank">
+  <a href="https://youtu.be/Ivsr502XH4E" target="_blank">
     <img src="https://img.shields.io/badge/Mobile_Gameplay-FF0000?style=flat&logo=youtube&logoColor=white" alt="Mobile Gameplay Video" />
   </a>
 </div>
