@@ -24,6 +24,18 @@
 > A high-performance multiplayer drawing and guessing game with real-time voice chat, AI-generated themed word packs, and a server-authoritative state machine — powered by Redis-backed canvas history, LiveKit WebRTC audio, and strict runtime payload validation.
 
   <img src="./assets/hero.gif" alt="Scribblitz Gameplay Demo" width="100%">
+
+<br><br>
+
+  <h3>🎥 Watch the Full Gameplay</h3>
+
+  <a href="https://youtu.be/WKXViYVUe-A" target="_blank">
+    <img src="https://img.shields.io/badge/Desktop_Gameplay-FF0000?style=flat&logo=youtube&logoColor=white" alt="Desktop Gameplay Video" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://youtu.be/sDA3VqcPqL4" target="_blank">
+    <img src="https://img.shields.io/badge/Mobile_Gameplay-FF0000?style=flat&logo=youtube&logoColor=white" alt="Mobile Gameplay Video" />
+  </a>
 </div>
 
 ## ✨ Engineering Highlights
