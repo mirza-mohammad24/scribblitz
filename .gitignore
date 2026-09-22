@@ -44,5 +44,7 @@ graphify-out/
 graphify-out/cache/
 graphify-out/cost.json
 
-#server logs
+#server logs and worker-logs
 server-logs/
+build.log
+worker-logs/

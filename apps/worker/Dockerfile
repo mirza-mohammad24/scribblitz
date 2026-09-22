@@ -1,5 +1,5 @@
 FROM node:22-alpine AS base
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 WORKDIR /app
 
 # Copy the monorepo structural files
@@ -22,7 +22,7 @@ RUN pnpm --filter worker build
 # Create the final runner image
 FROM node:22-alpine AS runner
 WORKDIR /app
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 
 # Copy the ENTIRE built workspace so pnpm symlinks stay perfectly intact
 COPY --from=build /app ./

@@ -1,5 +1,5 @@
 FROM node:22-alpine AS base
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 WORKDIR /app
 
 # Copy the monorepo structural files
@@ -17,7 +17,7 @@ RUN pnpm install --frozen-lockfile
 # Build the game-server and its local dependencies
 FROM deps AS build
 # Generate Prisma client before building
-RUN pnpm dlx prisma generate
+RUN pnpm exec prisma generate
 # Build the shared packages first so the game server can find them
 RUN pnpm --filter "./packages/**" run --if-present build
 
@@ -26,7 +26,7 @@ RUN pnpm --filter game-server build
 # Create the final runner image
 FROM node:22-alpine AS runner
 WORKDIR /app
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 
 #Copy the ENTIRE built workspace so pnpm symlinks stay perfectly intact
 COPY --from=build /app ./

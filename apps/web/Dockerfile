@@ -1,5 +1,5 @@
 FROM node:22-alpine AS base
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 WORKDIR /app
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml turbo.json ./
@@ -21,7 +21,7 @@ RUN pnpm --filter web build
 
 FROM node:22-alpine AS runner
 WORKDIR /app
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.5.3
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
