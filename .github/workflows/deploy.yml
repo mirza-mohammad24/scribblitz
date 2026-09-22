@@ -16,8 +16,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_IP }}
-          username: root
-          password: ${{ secrets.VPS_PASSWORD }}
+          username: ubuntu
+          key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/scribblitz
             git pull origin main
